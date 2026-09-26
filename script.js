@@ -2214,13 +2214,10 @@ function enviarWhatsApp() {
 // INICIAR PÁGINA
 // ==========================================
 
-window.addEventListener(
+document.addEventListener(
     "DOMContentLoaded",
     function() {
-
         cargarPortada();
-
         cargarAlojamientos();
-
     }
 );
