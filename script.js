@@ -68,56 +68,78 @@ async function obtenerFotosPortada() {
     }
 
 
+    console.log(
+        "Archivos encontrados en carpeta portada:",
+        resultado.data
+    );
+
+
     if (
         !resultado.data ||
         resultado.data.length === 0
     ) {
+
+        console.log(
+            "No se encontraron archivos dentro de la carpeta portada."
+        );
 
         return [];
     }
 
 
     // ==========================================
-    // TOMAR SOLAMENTE ARCHIVOS DE IMAGEN
+    // FILTRAR SOLAMENTE IMÁGENES
     // ==========================================
+
+    const extensionesImagen = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+        ".gif",
+        ".avif"
+    ];
+
 
     const archivosImagen =
         resultado.data.filter(
             function(archivo) {
 
-                if (!archivo.id) {
+                if (
+                    !archivo.name
+                ) {
 
                     return false;
                 }
 
 
-                if (
-                    archivo.metadata &&
-                    archivo.metadata.mimetype
-                ) {
-
-                    return archivo.metadata.mimetype
-                        .startsWith("image/");
-                }
-
-
                 const nombre =
-                    archivo.name
-                        .toLowerCase();
+                    archivo.name.toLowerCase();
 
 
-                return (
-                    nombre.endsWith(".jpg") ||
-                    nombre.endsWith(".jpeg") ||
-                    nombre.endsWith(".png") ||
-                    nombre.endsWith(".webp") ||
-                    nombre.endsWith(".gif") ||
-                    nombre.endsWith(".avif")
+                return extensionesImagen.some(
+                    function(extension) {
+
+                        return nombre.endsWith(
+                            extension
+                        );
+
+                    }
                 );
 
             }
         );
 
+
+    console.log(
+        "Imágenes de portada encontradas:",
+        archivosImagen
+    );
+
+
+    // ==========================================
+    // CREAR URL PÚBLICA DE CADA FOTO
+    // ==========================================
 
     return archivosImagen.map(
         function(archivo) {
@@ -136,10 +158,24 @@ async function obtenerFotosPortada() {
                     );
 
 
+            if (
+                !resultadoUrl.data ||
+                !resultadoUrl.data.publicUrl
+            ) {
+
+                return null;
+            }
+
+
             return resultadoUrl
                 .data
                 .publicUrl;
 
+        }
+    ).filter(
+        function(url) {
+
+            return url !== null;
         }
     );
 }
@@ -174,12 +210,22 @@ async function cargarPortada() {
         !fondoPortadaB
     ) {
 
+        console.error(
+            "No se encontraron los elementos de la portada."
+        );
+
         return;
     }
 
 
     fotosPortada =
         await obtenerFotosPortada();
+
+
+    console.log(
+        "Fotos de portada cargadas:",
+        fotosPortada
+    );
 
 
     // ==========================================
@@ -475,6 +521,7 @@ async function obtenerFotos(
             function(archivo) {
 
                 // Ignorar carpetas
+
                 if (
                     !archivo.id
                 ) {
@@ -484,6 +531,7 @@ async function obtenerFotos(
 
 
                 // Si existe MIME, comprobarlo
+
                 if (
                     archivo.metadata &&
                     archivo.metadata.mimetype
@@ -496,6 +544,7 @@ async function obtenerFotos(
 
 
                 // Comprobar extensión
+
                 const nombre =
                     archivo.name
                         .toLowerCase();
