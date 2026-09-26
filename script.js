@@ -187,6 +187,24 @@ async function obtenerFotosPortada() {
 
 async function cargarPortada() {
 
+    // Esperar a que el HTML esté completamente cargado
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            cargarPortada,
+            {
+                once: true
+            }
+        );
+
+        return;
+    }
+
+
     fondoPortadaA =
         document.querySelector(
             ".portada-fondo-a"
@@ -205,6 +223,8 @@ async function cargarPortada() {
         );
 
 
+    // Comprobar los elementos necesarios
+
     if (
         !fondoPortadaA ||
         !fondoPortadaB
@@ -216,6 +236,11 @@ async function cargarPortada() {
 
         return;
     }
+
+
+    console.log(
+        "Elementos de portada encontrados correctamente."
+    );
 
 
     fotosPortada =
@@ -297,7 +322,9 @@ async function cargarPortada() {
         fotosPortada.length > 1
     ) {
 
-        if (intervaloPortada) {
+        if (
+            intervaloPortada
+        ) {
 
             clearInterval(
                 intervaloPortada
@@ -2187,6 +2214,13 @@ function enviarWhatsApp() {
 // INICIAR PÁGINA
 // ==========================================
 
-cargarPortada();
+window.addEventListener(
+    "DOMContentLoaded",
+    function() {
 
-cargarAlojamientos();
+        cargarPortada();
+
+        cargarAlojamientos();
+
+    }
+);
