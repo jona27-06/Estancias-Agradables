@@ -1,495 +1,1042 @@
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    color: #222;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
     background: #f7f7f7;
+    color: #333;
+}
+
+body.sin-scroll {
+    overflow: hidden;
 }
 
 
-/* ENCABEZADO */
+/* ==========================================
+   ENCABEZADO
+   ========================================== */
 
 .encabezado {
-    height: 70px;
-    background: white;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 7%;
-
-    border-bottom: 1px solid #eee;
-
-    position: sticky;
+    position: absolute;
     top: 0;
-
+    left: 0;
+    width: 100%;
+    padding: 22px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     z-index: 100;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.45),
+        rgba(0, 0, 0, 0)
+    );
 }
 
 .logo {
-    font-size: 22px;
-    font-weight: bold;
+    color: white;
+    font-size: 25px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
 }
 
 .logo span {
-    color: #d97706;
+    color: #f28c28;
 }
 
-nav {
+.encabezado nav {
     display: flex;
-    gap: 30px;
+    gap: 28px;
 }
 
-nav a {
+.encabezado nav a {
     text-decoration: none;
-    color: #333;
+    color: white;
     font-size: 15px;
+    transition: color 0.2s ease;
+}
+
+.encabezado nav a:hover {
+    color: #f28c28;
 }
 
 
-/* PORTADA */
+/* ==========================================
+   PORTADA
+   ========================================== */
 
 .portada {
-    min-height: 500px;
-
-    background:
-        linear-gradient(
-            rgba(0,0,0,.35),
-            rgba(0,0,0,.35)
-        ),
-        url("https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80");
-
-    background-size: cover;
-    background-position: center;
-
+    position: relative;
+    width: 100%;
+    height: 680px;
+    min-height: 600px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-
     text-align: center;
-
-    color: white;
+    background: #333;
 }
+
+
+/* ==========================================
+   FONDOS DE LAS FOTOGRAFÍAS
+   ========================================== */
+
+.portada-fondo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    z-index: 1;
+}
+
+.portada-fondo-a {
+    opacity: 1;
+}
+
+
+/* ==========================================
+   OSCURECIMIENTO
+   ========================================== */
+
+.portada-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.35),
+        rgba(0, 0, 0, 0.48)
+    );
+    z-index: 2;
+}
+
+
+/* ==========================================
+   CONTENIDO DE LA PORTADA
+   ========================================== */
 
 .portada-contenido {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    max-width: 850px;
+    padding: 30px;
+}
+
+.portada-contenido h1 {
+    margin: 0 0 18px 0;
+    color: white;
+    font-size: 48px;
+    line-height: 1.15;
+    font-weight: 700;
+    text-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.portada-contenido p {
+    margin: 0 auto 30px auto;
     max-width: 700px;
-    padding: 20px;
-}
-
-.portada h1 {
-    font-size: 50px;
-    margin-bottom: 20px;
-}
-
-.portada p {
+    color: white;
     font-size: 20px;
-    margin-bottom: 30px;
+    line-height: 1.5;
+    text-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.4);
 }
+
+
+/* ==========================================
+   BOTÓN PRINCIPAL
+   ========================================== */
 
 .boton-principal {
     display: inline-block;
-
-    background: #d97706;
-
+    padding: 14px 25px;
+    border: none;
+    border-radius: 9px;
+    background: #f28c28;
     color: white;
-
-    padding: 14px 28px;
-
-    border-radius: 8px;
-
+    font-size: 16px;
+    font-weight: 600;
     text-decoration: none;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
 
-    font-weight: bold;
+.boton-principal:hover {
+    background: #d97616;
+    transform: translateY(-2px);
+}
+
+.boton-principal:active {
+    transform: scale(0.97);
 }
 
 
-/* SECCIONES */
+/* ==========================================
+   INDICADORES DE PORTADA
+   ========================================== */
+
+.indicadores-portada {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.punto-portada {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.45;
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+.punto-portada.activo {
+    opacity: 1;
+    transform: scale(1.3);
+}
+
+
+/* ==========================================
+   SECCIÓN DE ALOJAMIENTOS
+   ========================================== */
 
 .seccion {
-    max-width: 1200px;
-
-    margin: auto;
-
-    padding: 70px 25px;
+    padding: 55px 30px;
 }
 
 .seccion h2 {
-    font-size: 34px;
-
     text-align: center;
-
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
+    font-size: 30px;
+    color: #222;
 }
 
 .subtitulo {
     text-align: center;
-
-    color: #777;
-
-    margin-bottom: 45px;
+    margin: 0 0 35px 0;
+    color: #666;
+    font-size: 16px;
 }
 
 
-/* ALOJAMIENTOS */
+/* ==========================================
+   TARJETAS
+   ========================================== */
 
 .alojamientos {
+    max-width: 1200px;
+    margin: 0 auto;
     display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(300px, 1fr));
-
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(330px, 1fr)
+    );
     gap: 30px;
 }
 
 .alojamiento {
     background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.10);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.alojamiento:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 7px 20px rgba(0, 0, 0, 0.14);
+}
+
+
+/* ==========================================
+   GALERÍA
+   ========================================== */
+
+.galeria-alojamiento {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: #eeeeee;
+    touch-action: pan-y;
+    user-select: none;
+}
+
+
+/*
+   LA GALERÍA SIEMPRE CONTIENE UNA SOLA
+   IMAGEN VISIBLE.
+
+   Si por cualquier motivo el HTML/JS
+   genera más de una imagen, las imágenes
+   adicionales no se mostrarán.
+*/
+
+.galeria-alojamiento > .foto-principal {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: center;
+
+    display: block;
+
+    background: #eeeeee;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+
+    cursor: zoom-in;
+}
+
+/*
+   Seguridad adicional:
+   si aparecen varias imágenes dentro
+   de la galería, solamente la primera
+   queda visible.
+*/
+
+.galeria-alojamiento > .foto-principal ~ .foto-principal {
+    display: none !important;
+}
+
+
+/* ==========================================
+   FLECHAS
+   ========================================== */
+
+.flecha-foto {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    color: white;
+    font-size: 24px;
+    line-height: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.flecha-foto:hover {
+    background: rgba(0, 0, 0, 0.70);
+}
+
+.flecha-foto:active {
+    transform:
+        translateY(-50%)
+        scale(0.92);
+}
+
+.flecha-anterior {
+    left: 12px;
+}
+
+.flecha-siguiente {
+    right: 12px;
+}
+
+
+/* ==========================================
+   INDICADORES DE FOTOS
+   ========================================== */
+
+.indicadores-fotos {
+    position: absolute;
+    left: 50%;
+    bottom: 15px;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 7px 10px;
+
+    border-radius: 20px;
+
+    background: rgba(0, 0, 0, 0.40);
+
+    z-index: 3;
+}
+
+.punto-foto {
+    width: 7px;
+    height: 7px;
+
+    display: block;
+
+    border-radius: 50%;
+
+    background: white;
+
+    opacity: 0.55;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.punto-foto.activo {
+    opacity: 1;
+    transform: scale(1.3);
+}
+
+
+/* ==========================================
+   CONTADOR DE FOTOS
+   ========================================== */
+
+.contador-fotos {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    background: rgba(0, 0, 0, 0.60);
+
+    color: white;
+
+    padding: 6px 10px;
 
     border-radius: 15px;
 
-    overflow: hidden;
+    font-size: 13px;
 
-    box-shadow:
-        0 5px 20px rgba(0,0,0,.08);
+    z-index: 4;
 }
 
-.alojamiento img {
+
+/* ==========================================
+   SIN FOTOS
+   ========================================== */
+
+.sin-fotos {
     width: 100%;
+    height: 280px;
 
-    height: 230px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    object-fit: cover;
+    background: #eeeeee;
+
+    color: #777;
+
+    text-align: center;
 }
+
+
+/* ==========================================
+   INFORMACIÓN
+   ========================================== */
 
 .alojamiento-info {
     padding: 22px;
 }
 
-.alojamiento h3 {
-    font-size: 22px;
-
-    margin-bottom: 10px;
+.alojamiento-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 23px;
+    color: #222;
 }
 
 .alojamiento-info p {
-    color: #666;
-
+    margin: 8px 0;
     line-height: 1.5;
-
-    margin-bottom: 18px;
+    color: #555;
 }
 
 .datos {
     display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
-
-    font-size: 14px;
-
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 17px 0;
 }
 
+.datos span {
+    padding: 8px 10px;
+    background: #f1f1f1;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #444;
+}
+
+
+/* ==========================================
+   PRECIO
+   ========================================== */
+
 .precio {
-    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+
+    margin-top: 18px;
+    margin-bottom: 17px;
 }
 
 .precio strong {
     font-size: 25px;
+    color: #222;
 }
 
 .precio span {
     color: #777;
+    font-size: 14px;
 }
+
+
+/* ==========================================
+   BOTÓN RESERVAR
+   ========================================== */
 
 .boton-reservar {
     width: 100%;
 
+    padding: 13px 15px;
+
     border: none;
+    border-radius: 9px;
 
-    background: #d97706;
-
+    background: #222;
     color: white;
-
-    padding: 13px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
 
     font-size: 16px;
 
-    font-weight: bold;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
 }
 
-.boton-reservar:hover,
-.boton-principal:hover {
-    background: #b45309;
+.boton-reservar:hover {
+    background: #444;
+}
+
+.boton-reservar:active {
+    transform: scale(0.98);
 }
 
 
-/* MODAL */
+/* ==========================================
+   VISOR DE FOTOGRAFÍAS
+   ========================================== */
+
+#visorFotos {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.94);
+
+    z-index: 5000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+}
+
+#visorFotos.visor-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.visor-contenido {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 60px;
+}
+
+.visor-imagen {
+    max-width: 100%;
+    max-height: 100%;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    display: block;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+.visor-cerrar {
+    position: absolute;
+
+    top: 20px;
+    right: 25px;
+
+    width: 45px;
+    height: 45px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: white;
+
+    font-size: 34px;
+    line-height: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    z-index: 10;
+}
+
+.visor-cerrar:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.visor-flecha {
+    position: absolute;
+
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 50px;
+    height: 50px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: white;
+
+    font-size: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    cursor: pointer;
+
+    z-index: 10;
+}
+
+.visor-flecha:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.visor-anterior {
+    left: 25px;
+}
+
+.visor-siguiente {
+    right: 25px;
+}
+
+.visor-contador {
+    position: absolute;
+
+    left: 50%;
+    bottom: 20px;
+
+    transform: translateX(-50%);
+
+    background: rgba(0, 0, 0, 0.55);
+
+    color: white;
+
+    padding: 7px 13px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+
+    z-index: 10;
+}
+
+
+/* ==========================================
+   MODAL DE RESERVA
+   ========================================== */
 
 .modal {
     display: none;
 
     position: fixed;
 
-    inset: 0;
+    top: 0;
+    left: 0;
 
-    background: rgba(0,0,0,.6);
+    width: 100%;
+    height: 100%;
 
-    z-index: 200;
+    background: rgba(0, 0, 0, 0.65);
+
+    z-index: 1000;
 
     padding: 20px;
-
-    overflow-y: auto;
 }
 
 .modal-contenido {
+    position: relative;
+
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    margin: 5vh auto;
+
+    padding: 25px;
+
     background: white;
 
-    max-width: 500px;
-
-    margin: 40px auto;
-
-    padding: 30px;
-
     border-radius: 15px;
-
-    position: relative;
 }
 
 .modal-contenido h2 {
-    margin-bottom: 8px;
+    margin-top: 0;
+    color: #222;
 }
 
-#nombreAlojamiento {
-    color: #777;
-
-    margin-bottom: 25px;
-}
-
-.cerrar {
-    position: absolute;
-
-    right: 20px;
-    top: 15px;
-
-    border: none;
-
-    background: none;
-
-    font-size: 30px;
-
-    cursor: pointer;
-}
-
-.modal label {
+.modal-contenido label {
     display: block;
 
-    margin-top: 15px;
+    margin-top: 10px;
+    margin-bottom: 5px;
 
-    margin-bottom: 6px;
+    font-size: 14px;
 
-    font-weight: bold;
+    color: #444;
 }
 
-.modal input {
+.modal-contenido input {
     width: 100%;
 
-    padding: 12px;
+    padding: 11px;
+
+    margin-bottom: 15px;
 
     border: 1px solid #ccc;
 
     border-radius: 7px;
 
     font-size: 15px;
+
+    background: white;
+}
+
+.cerrar {
+    position: absolute;
+
+    top: 12px;
+    right: 15px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #555;
+
+    font-size: 30px;
+
+    cursor: pointer;
 }
 
 .resumen {
+    margin-top: 10px;
+
+    padding: 15px;
+
     background: #f5f5f5;
 
-    padding: 18px;
-
-    margin-top: 20px;
-
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 .resumen p {
-    margin-bottom: 8px;
+    margin: 7px 0;
 }
 
 .boton-whatsapp {
     width: 100%;
 
-    margin-top: 20px;
-
-    padding: 14px;
+    padding: 13px;
 
     border: none;
 
-    border-radius: 8px;
+    border-radius: 9px;
 
-    background: #25D366;
+    background: #25d366;
 
     color: white;
 
     font-size: 16px;
 
-    font-weight: bold;
+    font-weight: 600;
 
     cursor: pointer;
 }
 
 
-/* PIE */
+/* ==========================================
+   PIE DE PÁGINA
+   ========================================== */
 
 footer {
+    margin-top: 20px;
+
+    padding: 35px 20px;
+
     background: #222;
 
     color: white;
 
     text-align: center;
-
-    padding: 45px 20px;
 }
 
 footer h3 {
-    margin-bottom: 10px;
-}
-
-footer p {
-    margin: 7px;
-    color: #ccc;
+    margin-top: 0;
 }
 
 
-/* CELULAR */
+/* ==========================================
+   COMPUTADORA
+   ========================================== */
 
-@media (max-width: 700px) {
+@media (min-width: 901px) {
+
+    .galeria-alojamiento {
+        height: 300px;
+    }
+
+    .sin-fotos {
+        height: 300px;
+    }
+}
+
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+@media (min-width: 601px) and (max-width: 900px) {
 
     .encabezado {
-        padding: 0 20px;
+        padding: 20px 30px;
     }
 
-    nav {
+    .portada {
+        height: 620px;
+    }
+
+    .portada-contenido h1 {
+        font-size: 40px;
+    }
+
+    .seccion {
+        padding: 45px 20px;
+    }
+
+    .galeria-alojamiento {
+        height: 280px;
+    }
+}
+
+
+/* ==========================================
+   TELÉFONO
+   ========================================== */
+
+@media (max-width: 600px) {
+
+    .encabezado {
+        padding: 16px 20px;
+
+        flex-direction: column;
+
         gap: 12px;
+
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0)
+        );
     }
 
-    nav a {
+    .logo {
+        font-size: 22px;
+    }
+
+    .encabezado nav {
+        gap: 18px;
+    }
+
+    .encabezado nav a {
+        font-size: 14px;
+    }
+
+    .portada {
+        height: 600px;
+        min-height: 600px;
+    }
+
+    .portada-contenido {
+        padding: 30px 20px;
+    }
+
+    .portada-contenido h1 {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+
+    .portada-contenido p {
+        font-size: 17px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+    }
+
+    .boton-principal {
+        padding: 13px 22px;
+    }
+
+    .seccion {
+        padding: 35px 15px;
+    }
+
+    .seccion h2 {
+        font-size: 27px;
+    }
+
+    .alojamientos {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .galeria-alojamiento {
+        height: 260px;
+        border-radius: 0;
+    }
+
+    .foto-principal {
+        width: 100%;
+        height: 260px;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .sin-fotos {
+        height: 260px;
+    }
+
+    .flecha-foto {
+        display: none;
+    }
+
+    .visor-contenido {
+        padding: 45px 10px 55px 10px;
+    }
+
+    .visor-flecha {
+        display: none;
+    }
+
+    .visor-cerrar {
+        top: 12px;
+        right: 12px;
+
+        width: 40px;
+        height: 40px;
+
+        font-size: 30px;
+    }
+
+    .visor-contador {
+        bottom: 15px;
         font-size: 13px;
     }
 
-    .portada h1 {
-        font-size: 36px;
+    .modal {
+        padding: 15px;
     }
 
-    .portada p {
-        font-size: 17px;
+    .modal-contenido {
+        margin: 3vh auto;
+        padding: 20px;
+        max-height: 94vh;
     }
-
-}
-
-.galeria-admin {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.foto-admin {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 8px;
-    background: #fff;
-}
-
-.foto-admin img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 8px;
-    display: block;
-    margin-bottom: 8px;
-}
-
-.foto-admin button {
-    width: 100%;
-    padding: 8px;
-    cursor: pointer;
-}
-
-.galeria-alojamiento {
-    position: relative;
-    width: 100%;
-    margin-bottom: 15px;
-    overflow: hidden;
-    border-radius: 12px;
-    background: #eeeeee;
-}
-
-.foto-principal {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 12px;
-    display: block;
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-.boton-galeria {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 38px;
-    height: 38px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.55);
-    color: white;
-    font-size: 28px;
-    line-height: 38px;
-    cursor: pointer;
-    z-index: 2;
-}
-
-.boton-galeria:hover {
-    background: rgba(0, 0, 0, 0.75);
-}
-
-.boton-anterior {
-    left: 10px;
-}
-
-.boton-siguiente {
-    right: 10px;
-}
-
-.contador-fotos {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 13px;
-}
-
-.sin-fotos {
-    height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eeeeee;
-    border-radius: 12px;
-    margin-bottom: 15px;
 }
