@@ -9,243 +9,914 @@
 
     <title>Administración - Estancias Agradables</title>
 
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="admin.css">
 
 </head>
 
 <body>
 
-    <header class="encabezado">
+<header class="admin-header">
 
-        <div class="logo">
-            <span>Estancias</span> Agradables
+    <div class="admin-logo">
+        <span>Estancias</span> Agradables
+    </div>
+
+    <nav>
+        <a href="index.html">Ver página</a>
+    </nav>
+
+</header>
+
+
+<main class="admin-main">
+
+    <div class="admin-titulo">
+
+        <div>
+
+            <p class="admin-etiqueta">
+                ADMINISTRACIÓN
+            </p>
+
+            <h1>
+                Panel de administración
+            </h1>
+
+            <p>
+                Administra tus alojamientos y fotografías desde aquí.
+            </p>
+
         </div>
 
-        <nav>
-            <a href="index.html">Ver página</a>
-        </nav>
-
-    </header>
+    </div>
 
 
-    <main class="seccion">
+    <!-- LOGIN -->
 
-        <h1>Panel de administración</h1>
+    <section id="login" class="login-card">
 
-        <p class="subtitulo">
-            Administración de alojamientos
+        <div class="login-icon">
+            🔐
+        </div>
+
+        <h2>
+            Iniciar sesión
+        </h2>
+
+        <p class="texto-ayuda">
+            Ingresa tus credenciales para acceder al panel.
         </p>
 
+        <div class="campo">
 
-        <!-- LOGIN -->
-
-        <section id="login">
-
-            <h2>Iniciar sesión</h2>
+            <label for="correo">
+                Correo electrónico
+            </label>
 
             <input
                 type="email"
                 id="correo"
-                placeholder="Correo electrónico"
+                placeholder="correo@ejemplo.com"
+                autocomplete="email"
             >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="contrasena">
+                Contraseña
+            </label>
 
             <input
                 type="password"
                 id="contrasena"
-                placeholder="Contraseña"
+                placeholder="Ingrese su contraseña"
+                autocomplete="current-password"
             >
 
-            <button
-                class="boton-principal"
-                onclick="iniciarSesion()"
-            >
-                Iniciar sesión
-            </button>
-
-            <p id="mensajeLogin"></p>
-
-        </section>
+        </div>
 
 
-        <!-- PANEL ADMINISTRATIVO -->
+        <button
+            class="boton boton-principal boton-ancho"
+            onclick="iniciarSesion()"
+        >
+            Iniciar sesión
+        </button>
 
-        <section id="panel" style="display: none;">
+        <p
+            id="mensajeLogin"
+            class="mensaje"
+        ></p>
 
-            <h2>Mis alojamientos</h2>
-
-            <button
-                class="boton-principal"
-                onclick="mostrarFormulario()"
-            >
-                + Nuevo alojamiento
-            </button>
+    </section>
 
 
-            <div id="listaAdmin">
+    <!-- PANEL -->
 
-                <p>Cargando...</p>
+    <section
+        id="panel"
+        class="panel"
+        style="display: none;"
+    >
+
+        <div class="panel-cabecera">
+
+            <div>
+
+                <p class="admin-etiqueta">
+                    ALOJAMIENTOS
+                </p>
+
+                <h2>
+                    Mis alojamientos
+                </h2>
+
+                <p>
+                    Crea, publica y administra tus alojamientos.
+                </p>
 
             </div>
 
 
-            <!-- FORMULARIO -->
-
-            <div
-                id="formularioAlojamiento"
-                style="display: none;"
+            <button
+                class="boton boton-principal"
+                onclick="mostrarFormulario()"
             >
+                <span class="boton-icono">+</span>
+                Nuevo alojamiento
+            </button>
 
-                <h2>Nuevo alojamiento</h2>
+        </div>
 
 
-                <label>Nombre</label>
+        <!-- LISTA -->
 
-                <input
-                    type="text"
-                    id="nombreAlojamiento"
-                    placeholder="Ej. Apartamento Mar Azul"
+        <div id="listaAdmin" class="lista-admin">
+
+            <div class="cargando">
+                Cargando alojamientos...
+            </div>
+
+        </div>
+
+
+        <!-- FORMULARIO NUEVO -->
+
+        <section
+            id="formularioAlojamiento"
+            class="formulario-card"
+            style="display: none;"
+        >
+
+            <div class="formulario-cabecera">
+
+                <div>
+
+                    <p class="admin-etiqueta">
+                        NUEVO ALOJAMIENTO
+                    </p>
+
+                    <h2>
+                        Agregar alojamiento
+                    </h2>
+
+                    <p>
+                        Completa la información para agregar un nuevo alojamiento.
+                    </p>
+
+                </div>
+
+                <button
+                    class="boton-cerrar"
+                    onclick="cancelarFormulario()"
+                    aria-label="Cerrar"
                 >
+                    ×
+                </button>
+
+            </div>
 
 
-                <label>Descripción</label>
+            <!-- INFORMACIÓN BÁSICA -->
 
-                <textarea
-                    id="descripcionAlojamiento"
-                    placeholder="Describe el alojamiento..."
-                ></textarea>
+            <div class="formulario-seccion">
 
+                <div class="seccion-formulario-titulo">
 
-                <label>Precio por noche</label>
+                    <span class="numero-seccion">
+                        1
+                    </span>
 
-                <input
-                    type="number"
-                    id="precioBase"
-                    min="0"
-                    step="0.01"
-                >
+                    <div>
 
+                        <h3>
+                            Información básica
+                        </h3>
 
-                <label>Personas incluidas</label>
+                        <p>
+                            Describe el alojamiento.
+                        </p>
 
-                <input
-                    type="number"
-                    id="personasIncluidas"
-                    min="1"
-                    value="2"
-                >
+                    </div>
+
+                </div>
 
 
-                <label>Precio por persona adicional</label>
+                <div class="grid-formulario">
 
-                <input
-                    type="number"
-                    id="precioPersona"
-                    min="0"
-                    step="0.01"
-                >
+                    <div class="campo campo-completo">
 
+                        <label for="nombreAlojamiento">
+                            Nombre del alojamiento
+                        </label>
 
-                <label>Máximo de huéspedes</label>
+                        <input
+                            type="text"
+                            id="nombreAlojamiento"
+                            placeholder="Ej. Apartamento Mar Azul"
+                        >
 
-                <input
-                    type="number"
-                    id="maxHuespedes"
-                    min="1"
-                >
+                    </div>
 
 
-                <label>Habitaciones</label>
+                    <div class="campo campo-completo">
 
-                <input
-                    type="number"
-                    id="habitaciones"
-                    min="1"
-                    value="1"
-                >
+                        <label for="descripcionAlojamiento">
+                            Descripción
+                        </label>
 
+                        <textarea
+                            id="descripcionAlojamiento"
+                            placeholder="Describe el alojamiento, sus comodidades y características..."
+                            rows="5"
+                        ></textarea>
 
-                <label>Baños</label>
-
-                <input
-                    type="number"
-                    id="banos"
-                    min="1"
-                    value="1"
-                >
+                    </div>
 
 
-                <label>Ubicación</label>
+                    <div class="campo campo-completo">
 
-                <input
-                    type="text"
-                    id="ubicacion"
-                    placeholder="Ej. Puerto Barrios, Izabal"
-                >
+                        <label for="ubicacion">
+                            Ubicación
+                        </label>
+
+                        <input
+                            type="text"
+                            id="ubicacion"
+                            placeholder="Ej. Puerto Barrios, Izabal"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
-                <label>
+            <!-- PRECIOS -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        2
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Precios
+                        </h3>
+
+                        <p>
+                            Define el precio de la estancia.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-formulario">
+
+                    <div class="campo">
+
+                        <label for="precioBase">
+                            Precio por noche
+                        </label>
+
+                        <div class="input-prefijo">
+
+                            <span>
+                                Q
+                            </span>
+
+                            <input
+                                type="number"
+                                id="precioBase"
+                                min="0"
+                                step="0.01"
+                                placeholder="350.00"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="personasIncluidas">
+                            Personas incluidas
+                        </label>
+
+                        <input
+                            type="number"
+                            id="personasIncluidas"
+                            min="1"
+                            value="2"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="precioPersona">
+                            Persona adicional
+                        </label>
+
+                        <div class="input-prefijo">
+
+                            <span>
+                                Q
+                            </span>
+
+                            <input
+                                type="number"
+                                id="precioPersona"
+                                min="0"
+                                step="0.01"
+                                placeholder="50.00"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CAPACIDAD -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        3
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Capacidad
+                        </h3>
+
+                        <p>
+                            Indica la capacidad y distribución del alojamiento.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-formulario grid-tres">
+
+                    <div class="campo">
+
+                        <label for="maxHuespedes">
+                            Máximo de huéspedes
+                        </label>
+
+                        <input
+                            type="number"
+                            id="maxHuespedes"
+                            min="1"
+                            placeholder="4"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="habitaciones">
+                            Habitaciones
+                        </label>
+
+                        <input
+                            type="number"
+                            id="habitaciones"
+                            min="1"
+                            value="1"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="banos">
+                            Baños
+                        </label>
+
+                        <input
+                            type="number"
+                            id="banos"
+                            min="1"
+                            value="1"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PUBLICACIÓN -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        4
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Publicación
+                        </h3>
+
+                        <p>
+                            Decide si el alojamiento será visible en la página.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="switch-container">
 
                     <input
                         type="checkbox"
                         id="publicado"
                     >
 
-                    Publicar alojamiento
+                    <span class="switch"></span>
+
+                    <span>
+
+                        <strong>
+                            Publicar alojamiento
+                        </strong>
+
+                        <small>
+                            El alojamiento será visible para los visitantes.
+                        </small>
+
+                    </span>
 
                 </label>
 
-
-                <br>
-                <br>
+            </div>
 
 
-                <button
-                    class="boton-principal"
-                    onclick="guardarAlojamiento()"
-                >
-                    Guardar alojamiento
-                </button>
+            <p
+                id="mensajeFormulario"
+                class="mensaje"
+            ></p>
 
+
+            <div class="formulario-botones">
 
                 <button
+                    class="boton boton-secundario"
                     onclick="cancelarFormulario()"
                 >
                     Cancelar
                 </button>
 
-
-                <p id="mensajeFormulario"></p>
+                <button
+                    class="boton boton-principal"
+                    onclick="guardarAlojamiento()"
+                >
+                    Guardar alojamiento
+                </button>
 
             </div>
 
         </section>
 
-    </main>
+
+        <!-- ===================================================== -->
+        <!-- FORMULARIO DE EDICIÓN -->
+        <!-- ===================================================== -->
+
+        <section
+            id="formularioEdicion"
+            class="formulario-card"
+            style="display: none;"
+        >
+
+            <div class="formulario-cabecera">
+
+                <div>
+
+                    <p class="admin-etiqueta">
+                        EDITAR ALOJAMIENTO
+                    </p>
+
+                    <h2>
+                        Modificar alojamiento
+                    </h2>
+
+                    <p>
+                        Cambia la información, precios, capacidad o estado del alojamiento.
+                    </p>
+
+                </div>
+
+                <button
+                    class="boton-cerrar"
+                    onclick="cancelarEdicion()"
+                    aria-label="Cerrar"
+                >
+                    ×
+                </button>
+
+            </div>
 
 
-    <footer id="contacto">
+            <!-- INFORMACIÓN BÁSICA -->
 
-        <h3>Estancias Agradables</h3>
+            <div class="formulario-seccion">
 
-        <p>
-            Un lugar para disfrutar de una estancia agradable.
-        </p>
+                <div class="seccion-formulario-titulo">
 
-        <p>
-            © 2026 Estancias Agradables
-        </p>
+                    <span class="numero-seccion">
+                        1
+                    </span>
 
-    </footer>
+                    <div>
+
+                        <h3>
+                            Información básica
+                        </h3>
+
+                        <p>
+                            Modifica la información del alojamiento.
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-    <!-- SUPABASE -->
+                <div class="grid-formulario">
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                    <div class="campo campo-completo">
+
+                        <label for="editarNombre">
+                            Nombre del alojamiento
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editarNombre"
+                            placeholder="Nombre del alojamiento"
+                        >
+
+                    </div>
 
 
-    <!-- JAVASCRIPT DEL ADMINISTRADOR -->
+                    <div class="campo campo-completo">
 
-    <script src="admin.js"></script>
+                        <label for="editarDescripcion">
+                            Descripción
+                        </label>
+
+                        <textarea
+                            id="editarDescripcion"
+                            rows="5"
+                            placeholder="Descripción del alojamiento..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <label for="editarUbicacion">
+                            Ubicación
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editarUbicacion"
+                            placeholder="Ubicación"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRECIOS -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        2
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Precios
+                        </h3>
+
+                        <p>
+                            Modifica los precios.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-formulario">
+
+                    <div class="campo">
+
+                        <label for="editarPrecioBase">
+                            Precio por noche
+                        </label>
+
+                        <div class="input-prefijo">
+
+                            <span>
+                                Q
+                            </span>
+
+                            <input
+                                type="number"
+                                id="editarPrecioBase"
+                                min="0"
+                                step="0.01"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="editarPersonasIncluidas">
+                            Personas incluidas
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editarPersonasIncluidas"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="editarPrecioPersona">
+                            Persona adicional
+                        </label>
+
+                        <div class="input-prefijo">
+
+                            <span>
+                                Q
+                            </span>
+
+                            <input
+                                type="number"
+                                id="editarPrecioPersona"
+                                min="0"
+                                step="0.01"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CAPACIDAD -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        3
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Capacidad
+                        </h3>
+
+                        <p>
+                            Modifica la capacidad y distribución.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-formulario grid-tres">
+
+                    <div class="campo">
+
+                        <label for="editarMaxHuespedes">
+                            Máximo de huéspedes
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editarMaxHuespedes"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="editarHabitaciones">
+                            Habitaciones
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editarHabitaciones"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="editarBanos">
+                            Baños
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editarBanos"
+                            min="1"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PUBLICACIÓN -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        4
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Publicación
+                        </h3>
+
+                        <p>
+                            Decide si el alojamiento será visible.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="switch-container">
+
+                    <input
+                        type="checkbox"
+                        id="editarPublicado"
+                    >
+
+                    <span class="switch"></span>
+
+                    <span>
+
+                        <strong>
+                            Publicar alojamiento
+                        </strong>
+
+                        <small>
+                            Si está activado, será visible en la página principal.
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <p
+                id="mensajeEdicion"
+                class="mensaje"
+            ></p>
+
+
+            <div class="formulario-botones">
+
+                <button
+                    class="boton boton-secundario"
+                    onclick="cancelarEdicion()"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    class="boton boton-principal"
+                    onclick="guardarEdicion()"
+                >
+                    Guardar cambios
+                </button>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <h3>
+        Estancias Agradables
+    </h3>
+
+    <p>
+        Administración de alojamientos
+    </p>
+
+    <p>
+        © 2026 Estancias Agradables
+    </p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="admin.js"></script>
 
 </body>
 
