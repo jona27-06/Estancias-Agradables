@@ -17,7 +17,6 @@ body.sin-scroll {
     overflow: hidden;
 }
 
-
 /* ==========================================
    ENCABEZADO
    ========================================== */
@@ -66,7 +65,6 @@ body.sin-scroll {
     color: #f28c28;
 }
 
-
 /* ==========================================
    PORTADA
    ========================================== */
@@ -83,11 +81,6 @@ body.sin-scroll {
     text-align: center;
     background: #333;
 }
-
-
-/* ==========================================
-   FONDOS DE LAS FOTOGRAFÍAS
-   ========================================== */
 
 .portada-fondo {
     position: absolute;
@@ -107,11 +100,6 @@ body.sin-scroll {
     opacity: 1;
 }
 
-
-/* ==========================================
-   OSCURECIMIENTO
-   ========================================== */
-
 .portada-overlay {
     position: absolute;
     top: 0;
@@ -125,11 +113,6 @@ body.sin-scroll {
     );
     z-index: 2;
 }
-
-
-/* ==========================================
-   CONTENIDO DE LA PORTADA
-   ========================================== */
 
 .portada-contenido {
     position: relative;
@@ -158,7 +141,6 @@ body.sin-scroll {
     text-shadow:
         0 2px 6px rgba(0, 0, 0, 0.4);
 }
-
 
 /* ==========================================
    BOTÓN PRINCIPAL
@@ -189,9 +171,8 @@ body.sin-scroll {
     transform: scale(0.97);
 }
 
-
 /* ==========================================
-   INDICADORES DE PORTADA
+   INDICADORES PORTADA
    ========================================== */
 
 .indicadores-portada {
@@ -220,9 +201,8 @@ body.sin-scroll {
     transform: scale(1.3);
 }
 
-
 /* ==========================================
-   SECCIÓN DE ALOJAMIENTOS
+   SECCIÓN ALOJAMIENTOS
    ========================================== */
 
 .seccion {
@@ -242,7 +222,6 @@ body.sin-scroll {
     color: #666;
     font-size: 16px;
 }
-
 
 /* ==========================================
    TARJETAS
@@ -268,174 +247,63 @@ body.sin-scroll {
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
+    cursor: pointer;
+    outline: none;
 }
 
 .alojamiento:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     box-shadow:
-        0 7px 20px rgba(0, 0, 0, 0.14);
+        0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
+.alojamiento:focus-visible {
+    box-shadow:
+        0 0 0 3px #f28c28;
+}
 
 /* ==========================================
-   GALERÍA
+   FOTO DEL ANUNCIO
    ========================================== */
 
 .galeria-alojamiento {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: 300px;
     overflow: hidden;
     background: #eeeeee;
-    touch-action: pan-y;
-    user-select: none;
 }
 
-
-/*
-   LA GALERÍA SIEMPRE CONTIENE UNA SOLA
-   IMAGEN VISIBLE.
-
-   Si por cualquier motivo el HTML/JS
-   genera más de una imagen, las imágenes
-   adicionales no se mostrarán.
-*/
-
-.galeria-alojamiento > .foto-principal {
-    position: absolute;
-    top: 0;
-    left: 0;
-
+.galeria-alojamiento .foto-principal {
     width: 100%;
     height: 100%;
-
+    display: block;
     object-fit: contain;
     object-position: center;
-
-    display: block;
-
     background: #eeeeee;
-
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
-
-    cursor: zoom-in;
 }
 
-/*
-   Seguridad adicional:
-   si aparecen varias imágenes dentro
-   de la galería, solamente la primera
-   queda visible.
-*/
-
-.galeria-alojamiento > .foto-principal ~ .foto-principal {
-    display: none !important;
-}
-
-
-/* ==========================================
-   FLECHAS
-   ========================================== */
-
-.flecha-foto {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-
-    width: 40px;
-    height: 40px;
-
-    border: none;
-    border-radius: 50%;
-
-    background: rgba(0, 0, 0, 0.45);
-
-    color: white;
-    font-size: 24px;
-    line-height: 1;
-
+.galeria-alojamiento.sin-fotos {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    padding: 0;
-
-    cursor: pointer;
-
-    z-index: 5;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+    color: #777;
 }
-
-.flecha-foto:hover {
-    background: rgba(0, 0, 0, 0.70);
-}
-
-.flecha-foto:active {
-    transform:
-        translateY(-50%)
-        scale(0.92);
-}
-
-.flecha-anterior {
-    left: 12px;
-}
-
-.flecha-siguiente {
-    right: 12px;
-}
-
 
 /* ==========================================
-   INDICADORES DE FOTOS
+   NOMBRE DEL ALOJAMIENTO
    ========================================== */
 
-.indicadores-fotos {
-    position: absolute;
-    left: 50%;
-    bottom: 15px;
-
-    transform: translateX(-50%);
-
-    display: flex;
-    align-items: center;
-    gap: 7px;
-
-    padding: 7px 10px;
-
-    border-radius: 20px;
-
-    background: rgba(0, 0, 0, 0.40);
-
-    z-index: 3;
-}
-
-.punto-foto {
-    width: 7px;
-    height: 7px;
-
-    display: block;
-
-    border-radius: 50%;
-
+.nombre-alojamiento {
+    padding: 17px 20px 19px 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #222;
     background: white;
-
-    opacity: 0.55;
-
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease;
 }
-
-.punto-foto.activo {
-    opacity: 1;
-    transform: scale(1.3);
-}
-
 
 /* ==========================================
    CONTADOR DE FOTOS
@@ -445,289 +313,280 @@ body.sin-scroll {
     position: absolute;
     top: 12px;
     right: 12px;
-
-    background: rgba(0, 0, 0, 0.60);
-
-    color: white;
-
     padding: 6px 10px;
-
     border-radius: 15px;
-
+    background: rgba(0, 0, 0, 0.60);
+    color: white;
     font-size: 13px;
-
     z-index: 4;
 }
 
-
 /* ==========================================
-   SIN FOTOS
+   MODAL DETALLE DEL ALOJAMIENTO
    ========================================== */
 
-.sin-fotos {
-    width: 100%;
-    height: 280px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: #eeeeee;
-
-    color: #777;
-
-    text-align: center;
-}
-
-
-/* ==========================================
-   INFORMACIÓN
-   ========================================== */
-
-.alojamiento-info {
-    padding: 22px;
-}
-
-.alojamiento-info h3 {
-    margin: 0 0 10px 0;
-    font-size: 23px;
-    color: #222;
-}
-
-.alojamiento-info p {
-    margin: 8px 0;
-    line-height: 1.5;
-    color: #555;
-}
-
-.datos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 17px 0;
-}
-
-.datos span {
-    padding: 8px 10px;
-    background: #f1f1f1;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #444;
-}
-
-
-/* ==========================================
-   PRECIO
-   ========================================== */
-
-.precio {
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-
-    margin-top: 18px;
-    margin-bottom: 17px;
-}
-
-.precio strong {
-    font-size: 25px;
-    color: #222;
-}
-
-.precio span {
-    color: #777;
-    font-size: 14px;
-}
-
-
-/* ==========================================
-   BOTÓN RESERVAR
-   ========================================== */
-
-.boton-reservar {
-    width: 100%;
-
-    padding: 13px 15px;
-
-    border: none;
-    border-radius: 9px;
-
-    background: #222;
-    color: white;
-
-    font-size: 16px;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.1s ease;
-}
-
-.boton-reservar:hover {
-    background: #444;
-}
-
-.boton-reservar:active {
-    transform: scale(0.98);
-}
-
-
-/* ==========================================
-   VISOR DE FOTOGRAFÍAS
-   ========================================== */
-
-#visorFotos {
+#modalAlojamiento {
     position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0, 0, 0, 0.94);
-
-    z-index: 5000;
-
+    inset: 0;
+    z-index: 4000;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.70);
     opacity: 0;
     visibility: hidden;
-
     transition:
-        opacity 0.2s ease,
-        visibility 0.2s ease;
+        opacity 0.25s ease,
+        visibility 0.25s ease;
 }
 
-#visorFotos.visor-visible {
+#modalAlojamiento.modal-alojamiento-visible {
     opacity: 1;
     visibility: visible;
 }
 
-.visor-contenido {
-    width: 100%;
-    height: 100%;
+/* ==========================================
+   CONTENIDO DEL MODAL
+   ========================================== */
 
+.modal-alojamiento-contenido {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 90vh;
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    overflow: hidden;
+    background: white;
+    border-radius: 18px;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================
+   BOTÓN CERRAR
+   ========================================== */
+
+.modal-alojamiento-cerrar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 20;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: white;
+    font-size: 29px;
+    line-height: 1;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    padding: 60px;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
-.visor-imagen {
-    max-width: 100%;
-    max-height: 100%;
+.modal-alojamiento-cerrar:hover {
+    background: rgba(0, 0, 0, 0.75);
+    transform: scale(1.05);
+}
 
-    width: auto;
-    height: auto;
+/* ==========================================
+   GALERÍA DEL MODAL
+   ========================================== */
 
-    object-fit: contain;
+.modal-alojamiento-galeria {
+    position: relative;
+    min-height: 620px;
+    background: #eeeeee;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+}
 
+.modal-alojamiento-foto {
+    width: 100%;
+    height: 100%;
+    min-height: 620px;
     display: block;
-
+    object-fit: contain;
+    object-position: center;
+    background: #eeeeee;
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
 }
 
-.visor-cerrar {
+/* ==========================================
+   FLECHAS MODAL
+   ========================================== */
+
+.modal-alojamiento-flecha {
     position: absolute;
-
-    top: 20px;
-    right: 25px;
-
-    width: 45px;
-    height: 45px;
-
-    border: none;
-    border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.15);
-
-    color: white;
-
-    font-size: 34px;
-    line-height: 1;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    z-index: 10;
-}
-
-.visor-cerrar:hover {
-    background: rgba(255, 255, 255, 0.28);
-}
-
-.visor-flecha {
-    position: absolute;
-
     top: 50%;
     transform: translateY(-50%);
-
-    width: 50px;
-    height: 50px;
-
+    width: 46px;
+    height: 46px;
+    padding: 0;
     border: none;
     border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.15);
-
+    background: rgba(0, 0, 0, 0.48);
     color: white;
-
-    font-size: 30px;
-
+    font-size: 28px;
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    padding: 0;
-
     cursor: pointer;
-
     z-index: 10;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
-.visor-flecha:hover {
-    background: rgba(255, 255, 255, 0.28);
+.modal-alojamiento-flecha:hover {
+    background: rgba(0, 0, 0, 0.72);
 }
 
-.visor-anterior {
-    left: 25px;
+.modal-alojamiento-flecha:active {
+    transform:
+        translateY(-50%)
+        scale(0.92);
 }
 
-.visor-siguiente {
-    right: 25px;
+.modal-alojamiento-anterior {
+    left: 18px;
 }
 
-.visor-contador {
+.modal-alojamiento-siguiente {
+    right: 18px;
+}
+
+/* ==========================================
+   CONTADOR MODAL
+   ========================================== */
+
+.modal-alojamiento-contador {
     position: absolute;
-
+    bottom: 18px;
     left: 50%;
-    bottom: 20px;
-
     transform: translateX(-50%);
-
-    background: rgba(0, 0, 0, 0.55);
-
-    color: white;
-
     padding: 7px 13px;
-
     border-radius: 20px;
-
+    background: rgba(0, 0, 0, 0.58);
+    color: white;
     font-size: 14px;
-
     z-index: 10;
 }
 
+/* ==========================================
+   INFORMACIÓN MODAL
+   ========================================== */
+
+.modal-alojamiento-informacion {
+    padding: 50px 38px 35px 38px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-alojamiento-informacion h2 {
+    margin: 0 45px 18px 0;
+    color: #222;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.modal-descripcion {
+    margin: 0 0 25px 0;
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   DATOS DEL ALOJAMIENTO
+   ========================================== */
+
+.modal-datos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.modal-datos span {
+    padding: 11px 13px;
+    border-radius: 9px;
+    background: #f3f3f3;
+    color: #444;
+    font-size: 15px;
+}
+
+/* ==========================================
+   UBICACIÓN
+   ========================================== */
+
+.modal-ubicacion {
+    margin: 0 0 20px 0;
+    color: #555;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* ==========================================
+   PRECIO MODAL
+   ========================================== */
+
+.modal-precio {
+    margin-top: auto;
+    padding-top: 25px;
+    padding-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.modal-precio strong {
+    font-size: 29px;
+    color: #222;
+}
+
+.modal-precio span {
+    color: #777;
+    font-size: 14px;
+}
+
+/* ==========================================
+   BOTÓN RESERVA MODAL
+   ========================================== */
+
+.modal-boton-reserva {
+    width: 100%;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 9px;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+.modal-boton-reserva:hover {
+    background: #444;
+}
+
+.modal-boton-reserva:active {
+    transform: scale(0.98);
+}
 
 /* ==========================================
    MODAL DE RESERVA
@@ -735,37 +594,25 @@ body.sin-scroll {
 
 .modal {
     display: none;
-
     position: fixed;
-
     top: 0;
     left: 0;
-
     width: 100%;
     height: 100%;
-
     background: rgba(0, 0, 0, 0.65);
-
-    z-index: 1000;
-
+    z-index: 5000;
     padding: 20px;
 }
 
 .modal-contenido {
     position: relative;
-
     width: 100%;
     max-width: 500px;
     max-height: 90vh;
-
     overflow-y: auto;
-
     margin: 5vh auto;
-
     padding: 25px;
-
     background: white;
-
     border-radius: 15px;
 }
 
@@ -776,55 +623,37 @@ body.sin-scroll {
 
 .modal-contenido label {
     display: block;
-
     margin-top: 10px;
     margin-bottom: 5px;
-
     font-size: 14px;
-
     color: #444;
 }
 
 .modal-contenido input {
     width: 100%;
-
     padding: 11px;
-
     margin-bottom: 15px;
-
     border: 1px solid #ccc;
-
     border-radius: 7px;
-
     font-size: 15px;
-
     background: white;
 }
 
 .cerrar {
     position: absolute;
-
     top: 12px;
     right: 15px;
-
     border: none;
-
     background: transparent;
-
     color: #555;
-
     font-size: 30px;
-
     cursor: pointer;
 }
 
 .resumen {
     margin-top: 10px;
-
     padding: 15px;
-
     background: #f5f5f5;
-
     border-radius: 10px;
 }
 
@@ -834,24 +663,15 @@ body.sin-scroll {
 
 .boton-whatsapp {
     width: 100%;
-
     padding: 13px;
-
     border: none;
-
     border-radius: 9px;
-
     background: #25d366;
-
     color: white;
-
     font-size: 16px;
-
     font-weight: 600;
-
     cursor: pointer;
 }
-
 
 /* ==========================================
    PIE DE PÁGINA
@@ -859,36 +679,15 @@ body.sin-scroll {
 
 footer {
     margin-top: 20px;
-
     padding: 35px 20px;
-
     background: #222;
-
     color: white;
-
     text-align: center;
 }
 
 footer h3 {
     margin-top: 0;
 }
-
-
-/* ==========================================
-   COMPUTADORA
-   ========================================== */
-
-@media (min-width: 901px) {
-
-    .galeria-alojamiento {
-        height: 300px;
-    }
-
-    .sin-fotos {
-        height: 300px;
-    }
-}
-
 
 /* ==========================================
    TABLET
@@ -912,11 +711,29 @@ footer h3 {
         padding: 45px 20px;
     }
 
+    .alojamientos {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
     .galeria-alojamiento {
-        height: 280px;
+        height: 260px;
+    }
+
+    .modal-alojamiento-contenido {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .modal-alojamiento-galeria,
+    .modal-alojamiento-foto {
+        min-height: 520px;
+    }
+
+    .modal-alojamiento-informacion {
+        padding: 40px 25px 25px 25px;
     }
 }
-
 
 /* ==========================================
    TELÉFONO
@@ -926,11 +743,8 @@ footer h3 {
 
     .encabezado {
         padding: 16px 20px;
-
         flex-direction: column;
-
         gap: 12px;
-
         background: linear-gradient(
             to bottom,
             rgba(0, 0, 0, 0.55),
@@ -987,48 +801,126 @@ footer h3 {
         gap: 22px;
     }
 
+    .alojamiento {
+        border-radius: 14px;
+    }
+
     .galeria-alojamiento {
         height: 260px;
-        border-radius: 0;
     }
 
-    .foto-principal {
+    .galeria-alojamiento .foto-principal {
+        height: 260px;
+    }
+
+    .nombre-alojamiento {
+        padding: 15px 17px 17px 17px;
+        font-size: 19px;
+    }
+
+    /* ======================================
+       MODAL DETALLE EN CELULAR
+       ====================================== */
+
+    #modalAlojamiento {
+        padding: 0;
+        align-items: flex-start;
+    }
+
+    .modal-alojamiento-contenido {
         width: 100%;
-        height: 260px;
-        object-fit: contain;
-        object-position: center;
+        height: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
     }
 
-    .sin-fotos {
-        height: 260px;
-    }
-
-    .flecha-foto {
-        display: none;
-    }
-
-    .visor-contenido {
-        padding: 45px 10px 55px 10px;
-    }
-
-    .visor-flecha {
-        display: none;
-    }
-
-    .visor-cerrar {
+    .modal-alojamiento-cerrar {
         top: 12px;
         right: 12px;
-
         width: 40px;
         height: 40px;
-
-        font-size: 30px;
+        font-size: 28px;
     }
 
-    .visor-contador {
-        bottom: 15px;
+    .modal-alojamiento-galeria {
+        flex: none;
+        width: 100%;
+        height: 310px;
+        min-height: 310px;
+    }
+
+    .modal-alojamiento-foto {
+        width: 100%;
+        height: 310px;
+        min-height: 310px;
+    }
+
+    .modal-alojamiento-flecha {
+        width: 40px;
+        height: 40px;
+        font-size: 23px;
+    }
+
+    .modal-alojamiento-anterior {
+        left: 10px;
+    }
+
+    .modal-alojamiento-siguiente {
+        right: 10px;
+    }
+
+    .modal-alojamiento-contador {
+        bottom: 12px;
         font-size: 13px;
     }
+
+    .modal-alojamiento-informacion {
+        flex: 1;
+        padding: 25px 20px 25px 20px;
+        overflow-y: visible;
+    }
+
+    .modal-alojamiento-informacion h2 {
+        font-size: 25px;
+        margin-right: 35px;
+        margin-bottom: 14px;
+    }
+
+    .modal-descripcion {
+        font-size: 15px;
+        margin-bottom: 20px;
+    }
+
+    .modal-datos {
+        gap: 8px;
+        margin-bottom: 17px;
+    }
+
+    .modal-datos span {
+        padding: 9px 11px;
+        font-size: 14px;
+    }
+
+    .modal-precio {
+        margin-top: 10px;
+        padding-top: 18px;
+        padding-bottom: 15px;
+    }
+
+    .modal-precio strong {
+        font-size: 25px;
+    }
+
+    .modal-boton-reserva {
+        padding: 13px;
+    }
+
+    /* ======================================
+       RESERVA
+       ====================================== */
 
     .modal {
         padding: 15px;
