@@ -82,7 +82,7 @@ async function obtenerFotosPortada() {
 
         const archivosImagen =
             resultado.data.filter(
-                function(archivo) {
+                function (archivo) {
 
                     if (
                         !archivo ||
@@ -95,16 +95,21 @@ async function obtenerFotosPortada() {
                         archivo.name.toLowerCase();
 
                     return extensionesImagen.some(
-                        function(extension) {
-                            return nombre.endsWith(extension);
+                        function (extension) {
+
+                            return nombre.endsWith(
+                                extension
+                            );
+
                         }
                     );
+
                 }
             );
 
         return archivosImagen
             .map(
-                function(archivo) {
+                function (archivo) {
 
                     const ruta =
                         "portada/" +
@@ -126,11 +131,14 @@ async function obtenerFotosPortada() {
                     return resultadoUrl
                         .data
                         .publicUrl;
+
                 }
             )
             .filter(
-                function(url) {
+                function (url) {
+
                     return url !== null;
+
                 }
             );
 
@@ -142,7 +150,9 @@ async function obtenerFotosPortada() {
         );
 
         return [];
+
     }
+
 }
 
 
@@ -222,16 +232,18 @@ async function cargarPortada() {
         "0";
 
     indicePortada = 0;
+
     fondoActivo = "A";
 
     fotosPortada.forEach(
-        function(url) {
+        function (url) {
 
             const imagen =
                 new Image();
 
             imagen.src =
                 url;
+
         }
     );
 
@@ -246,6 +258,7 @@ async function cargarPortada() {
             clearInterval(
                 intervaloPortada
             );
+
         }
 
         intervaloPortada =
@@ -253,7 +266,9 @@ async function cargarPortada() {
                 cambiarFotoPortada,
                 5000
             );
+
     }
+
 }
 
 
@@ -300,12 +315,15 @@ function crearIndicadoresPortada() {
             punto.classList.add(
                 "activo"
             );
+
         }
 
         indicadoresPortada.appendChild(
             punto
         );
+
     }
+
 }
 
 
@@ -329,6 +347,7 @@ function cambiarFotoPortada() {
     ) {
 
         indicePortada = 0;
+
     }
 
     const siguienteFoto =
@@ -363,9 +382,11 @@ function cambiarFotoPortada() {
             "0";
 
         fondoActivo = "A";
+
     }
 
     actualizarIndicadoresPortada();
+
 }
 
 
@@ -391,11 +412,6 @@ function actualizarIndicadoresPortada() {
     ) {
         return;
     }
-
-    /*
-     * Los puntos representan grupos de fotografías.
-     * Siempre habrá máximo 3.
-     */
 
     let puntoActivo;
 
@@ -424,18 +440,22 @@ function actualizarIndicadoresPortada() {
 
             puntoActivo =
                 puntos.length - 1;
+
         }
+
     }
 
     puntos.forEach(
-        function(punto, indice) {
+        function (punto, indice) {
 
             punto.classList.toggle(
                 "activo",
                 indice === puntoActivo
             );
+
         }
     );
+
 }
 
 
@@ -522,7 +542,7 @@ async function obtenerFotos(
 
         const archivosImagen =
             resultado.data.filter(
-                function(archivo) {
+                function (archivo) {
 
                     if (
                         !archivo ||
@@ -530,12 +550,8 @@ async function obtenerFotos(
                     ) {
 
                         return false;
-                    }
 
-                    /*
-                     * Supabase puede devolver carpetas
-                     * además de archivos.
-                     */
+                    }
 
                     if (
                         archivo.id === null ||
@@ -543,11 +559,8 @@ async function obtenerFotos(
                     ) {
 
                         return false;
-                    }
 
-                    /*
-                     * Si existe MIME, utilizarlo.
-                     */
+                    }
 
                     if (
                         archivo.metadata &&
@@ -560,25 +573,23 @@ async function obtenerFotos(
                             .startsWith(
                                 "image/"
                             );
-                    }
 
-                    /*
-                     * Si no existe MIME,
-                     * comprobar extensión.
-                     */
+                    }
 
                     const nombre =
                         archivo.name
                             .toLowerCase();
 
                     return extensionesImagen.some(
-                        function(extension) {
+                        function (extension) {
 
                             return nombre.endsWith(
                                 extension
                             );
+
                         }
                     );
+
                 }
             );
 
@@ -590,7 +601,7 @@ async function obtenerFotos(
         const fotos =
             archivosImagen
                 .map(
-                    function(archivo) {
+                    function (archivo) {
 
                         const ruta =
                             String(alojamientoId) +
@@ -613,20 +624,23 @@ async function obtenerFotos(
                         ) {
 
                             return null;
+
                         }
 
                         return resultadoUrl
                             .data
                             .publicUrl;
+
                     }
                 )
                 .filter(
-                    function(url) {
+                    function (url) {
 
                         return (
                             url &&
                             url.trim() !== ""
                         );
+
                     }
                 );
 
@@ -645,7 +659,9 @@ async function obtenerFotos(
         );
 
         return [];
+
     }
+
 }
 
 
@@ -675,7 +691,6 @@ function crearVisorFotos() {
             "visorFotos"
         )
     ) {
-
         return;
     }
 
@@ -770,13 +785,14 @@ function crearVisorFotos() {
 
     botonVisorAnterior.addEventListener(
         "click",
-        function(evento) {
+        function (evento) {
 
             evento.stopPropagation();
 
             cambiarFotoVisor(
                 indiceVisor - 1
             );
+
         }
     );
 
@@ -800,13 +816,14 @@ function crearVisorFotos() {
 
     botonVisorSiguiente.addEventListener(
         "click",
-        function(evento) {
+        function (evento) {
 
             evento.stopPropagation();
 
             cambiarFotoVisor(
                 indiceVisor + 1
             );
+
         }
     );
 
@@ -816,7 +833,7 @@ function crearVisorFotos() {
 
     visorFotos.addEventListener(
         "click",
-        function(evento) {
+        function (evento) {
 
             if (
                 evento.target ===
@@ -824,17 +841,20 @@ function crearVisorFotos() {
             ) {
 
                 cerrarVisorFotos();
+
             }
+
         }
     );
 
     visorFotos.addEventListener(
         "touchstart",
-        function(evento) {
+        function (evento) {
 
             visorTouchInicio =
                 evento.touches[0]
                     .clientX;
+
         },
         {
             passive: true
@@ -843,7 +863,7 @@ function crearVisorFotos() {
 
     visorFotos.addEventListener(
         "touchend",
-        function(evento) {
+        function (evento) {
 
             visorTouchFin =
                 evento.changedTouches[0]
@@ -858,6 +878,7 @@ function crearVisorFotos() {
             ) {
 
                 return;
+
             }
 
             if (
@@ -873,7 +894,9 @@ function crearVisorFotos() {
                 cambiarFotoVisor(
                     indiceVisor - 1
                 );
+
             }
+
         },
         {
             passive: true
@@ -883,6 +906,7 @@ function crearVisorFotos() {
     document.body.appendChild(
         visorFotos
     );
+
 }
 
 
@@ -901,6 +925,7 @@ function abrirVisorFotos(
     ) {
 
         return;
+
     }
 
     crearVisorFotos();
@@ -920,6 +945,7 @@ function abrirVisorFotos(
     document.body.classList.add(
         "sin-scroll"
     );
+
 }
 
 
@@ -934,6 +960,7 @@ function cerrarVisorFotos() {
     ) {
 
         return;
+
     }
 
     visorFotos.classList.remove(
@@ -943,6 +970,7 @@ function cerrarVisorFotos() {
     document.body.classList.remove(
         "sin-scroll"
     );
+
 }
 
 
@@ -960,6 +988,7 @@ function cambiarFotoVisor(
     ) {
 
         return;
+
     }
 
     if (
@@ -968,6 +997,7 @@ function cambiarFotoVisor(
 
         nuevoIndice =
             fotosVisor.length - 1;
+
     }
 
     if (
@@ -976,12 +1006,14 @@ function cambiarFotoVisor(
     ) {
 
         nuevoIndice = 0;
+
     }
 
     indiceVisor =
         nuevoIndice;
 
     actualizarVisor();
+
 }
 
 
@@ -999,6 +1031,7 @@ function actualizarVisor() {
     ) {
 
         return;
+
     }
 
     imagenVisor.src =
@@ -1028,7 +1061,9 @@ function actualizarVisor() {
 
         botonVisorSiguiente.style.display =
             "";
+
     }
+
 }
 
 
@@ -1038,7 +1073,7 @@ function actualizarVisor() {
 
 document.addEventListener(
     "keydown",
-    function(evento) {
+    function (evento) {
 
         if (
             !visorFotos ||
@@ -1048,6 +1083,7 @@ document.addEventListener(
         ) {
 
             return;
+
         }
 
         if (
@@ -1071,7 +1107,9 @@ document.addEventListener(
             cambiarFotoVisor(
                 indiceVisor + 1
             );
+
         }
+
     }
 );
 
@@ -1096,6 +1134,7 @@ async function cargarAlojamientos() {
         );
 
         return;
+
     }
 
     const resultado =
@@ -1126,6 +1165,7 @@ async function cargarAlojamientos() {
             "<p>No se pudieron cargar los alojamientos.</p>";
 
         return;
+
     }
 
     const alojamientos =
@@ -1140,6 +1180,7 @@ async function cargarAlojamientos() {
             "<p>No hay alojamientos disponibles.</p>";
 
         return;
+
     }
 
     contenedor.innerHTML =
@@ -1200,7 +1241,7 @@ async function cargarAlojamientos() {
                 "lazy";
 
             imagen.onerror =
-                function() {
+                function () {
 
                     console.error(
                         "No se pudo cargar la imagen:",
@@ -1213,18 +1254,20 @@ async function cargarAlojamientos() {
                     galeria.classList.add(
                         "error-foto"
                     );
+
                 };
 
             let indiceFoto = 0;
 
             imagen.addEventListener(
                 "click",
-                function() {
+                function () {
 
                     abrirVisorFotos(
                         fotos,
                         indiceFoto
                     );
+
                 }
             );
 
@@ -1301,16 +1344,19 @@ async function cargarAlojamientos() {
                         punto.classList.add(
                             "activo"
                         );
+
                     }
 
                     indicadores.appendChild(
                         punto
                     );
+
                 }
 
                 galeria.appendChild(
                     indicadores
                 );
+
             }
 
 
@@ -1328,6 +1374,7 @@ async function cargarAlojamientos() {
 
                     nuevoIndice =
                         fotos.length - 1;
+
                 }
 
                 if (
@@ -1336,6 +1383,7 @@ async function cargarAlojamientos() {
                 ) {
 
                     nuevoIndice = 0;
+
                 }
 
                 indiceFoto =
@@ -1380,20 +1428,28 @@ async function cargarAlojamientos() {
 
                             puntoActivo =
                                 puntos.length - 1;
+
                         }
+
                     }
 
                     puntos.forEach(
-                        function(punto, indice) {
+                        function (
+                            punto,
+                            indice
+                        ) {
 
                             punto.classList.toggle(
                                 "activo",
                                 indice ===
                                 puntoActivo
                             );
+
                         }
                     );
+
                 }
+
             }
 
 
@@ -1432,13 +1488,14 @@ async function cargarAlojamientos() {
 
                 botonAnterior.addEventListener(
                     "click",
-                    function(evento) {
+                    function (evento) {
 
                         evento.stopPropagation();
 
                         cambiarFoto(
                             indiceFoto - 1
                         );
+
                     }
                 );
 
@@ -1468,19 +1525,21 @@ async function cargarAlojamientos() {
 
                 botonSiguiente.addEventListener(
                     "click",
-                    function(evento) {
+                    function (evento) {
 
                         evento.stopPropagation();
 
                         cambiarFoto(
                             indiceFoto + 1
                         );
+
                     }
                 );
 
                 galeria.appendChild(
                     botonSiguiente
                 );
+
             }
 
 
@@ -1493,11 +1552,12 @@ async function cargarAlojamientos() {
 
             galeria.addEventListener(
                 "touchstart",
-                function(evento) {
+                function (evento) {
 
                     posicionInicialX =
                         evento.touches[0]
                             .clientX;
+
                 },
                 {
                     passive: true
@@ -1506,7 +1566,7 @@ async function cargarAlojamientos() {
 
             galeria.addEventListener(
                 "touchend",
-                function(evento) {
+                function (evento) {
 
                     posicionFinalX =
                         evento.changedTouches[0]
@@ -1533,7 +1593,9 @@ async function cargarAlojamientos() {
                         cambiarFoto(
                             indiceFoto - 1
                         );
+
                     }
+
                 },
                 {
                     passive: true
@@ -1556,6 +1618,7 @@ async function cargarAlojamientos() {
 
             galeria.innerHTML =
                 "<p>Sin fotografías disponibles</p>";
+
         }
 
         tarjeta.appendChild(
@@ -1609,7 +1672,6 @@ async function cargarAlojamientos() {
             );
 
         informacion.innerHTML = `
-
             <h3>
                 ${alojamiento.nombre || ""}
             </h3>
@@ -1681,12 +1743,302 @@ async function cargarAlojamientos() {
         contenedor.appendChild(
             tarjeta
         );
+
     }
 
     console.log(
         "Alojamientos cargados:",
         alojamientos
     );
+
+}
+
+
+// ==========================================
+// CREAR APARTADO DE PERSONAS ADICIONALES
+// ==========================================
+
+function crearSolicitudPersonasExtra() {
+
+    const campoPersonas =
+        document.getElementById(
+            "personas"
+        );
+
+    if (
+        !campoPersonas
+    ) {
+
+        console.error(
+            "No se encontró el campo de personas."
+        );
+
+        return null;
+
+    }
+
+    let contenedor =
+        document.getElementById(
+            "solicitudPersonasExtra"
+        );
+
+    if (
+        contenedor
+    ) {
+
+        return contenedor;
+
+    }
+
+    contenedor =
+        document.createElement(
+            "div"
+        );
+
+    contenedor.id =
+        "solicitudPersonasExtra";
+
+    contenedor.style.display =
+        "none";
+
+    contenedor.style.marginTop =
+        "12px";
+
+    contenedor.style.padding =
+        "12px";
+
+    contenedor.style.border =
+        "1px solid #ddd";
+
+    contenedor.style.borderRadius =
+        "8px";
+
+    contenedor.style.backgroundColor =
+        "#f8f8f8";
+
+    const titulo =
+        document.createElement(
+            "div"
+        );
+
+    titulo.id =
+        "tituloSolicitudExtra";
+
+    titulo.style.fontWeight =
+        "600";
+
+    titulo.style.marginBottom =
+        "8px";
+
+    contenedor.appendChild(
+        titulo
+    );
+
+    const label =
+        document.createElement(
+            "label"
+        );
+
+    label.style.display =
+        "flex";
+
+    label.style.alignItems =
+        "flex-start";
+
+    label.style.gap =
+        "8px";
+
+    label.style.cursor =
+        "pointer";
+
+    const checkbox =
+        document.createElement(
+            "input"
+        );
+
+    checkbox.type =
+        "checkbox";
+
+    checkbox.id =
+        "aceptarPersonasExtra";
+
+    checkbox.style.marginTop =
+        "3px";
+
+    const texto =
+        document.createElement(
+            "span"
+        );
+
+    texto.id =
+        "textoSolicitudExtra";
+
+    label.appendChild(
+        checkbox
+    );
+
+    label.appendChild(
+        texto
+    );
+
+    contenedor.appendChild(
+        label
+    );
+
+    const aviso =
+        document.createElement(
+            "p"
+        );
+
+    aviso.id =
+        "avisoSolicitudExtra";
+
+    aviso.style.margin =
+        "8px 0 0 0";
+
+    aviso.style.fontSize =
+        "13px";
+
+    aviso.style.opacity =
+        "0.75";
+
+    aviso.textContent =
+        "La solicitud de personas adicionales queda sujeta a confirmación por parte del alojamiento.";
+
+    contenedor.appendChild(
+        aviso
+    );
+
+    campoPersonas.insertAdjacentElement(
+        "afterend",
+        contenedor
+    );
+
+    checkbox.addEventListener(
+        "change",
+        function () {
+
+            calcularPrecio();
+
+        }
+    );
+
+    return contenedor;
+
+}
+
+
+// ==========================================
+// ACTUALIZAR SOLICITUD DE PERSONAS EXTRA
+// ==========================================
+
+function actualizarSolicitudPersonasExtra() {
+
+    if (
+        !alojamientoActual
+    ) {
+
+        return;
+
+    }
+
+    const campoPersonas =
+        document.getElementById(
+            "personas"
+        );
+
+    if (
+        !campoPersonas
+    ) {
+
+        return;
+
+    }
+
+    const contenedor =
+        crearSolicitudPersonasExtra();
+
+    if (
+        !contenedor
+    ) {
+
+        return;
+
+    }
+
+    const checkbox =
+        document.getElementById(
+            "aceptarPersonasExtra"
+        );
+
+    const titulo =
+        document.getElementById(
+            "tituloSolicitudExtra"
+        );
+
+    const texto =
+        document.getElementById(
+            "textoSolicitudExtra"
+        );
+
+    let personas =
+        Number(
+            campoPersonas.value
+        );
+
+    if (
+        !Number.isFinite(personas) ||
+        personas < 1
+    ) {
+
+        personas = 1;
+
+    }
+
+    const maximo =
+        alojamientoActual.maxHuespedes;
+
+    const personasExtra =
+        Math.max(
+            personas - maximo,
+            0
+        );
+
+    if (
+        personasExtra > 0
+    ) {
+
+        contenedor.style.display =
+            "block";
+
+        titulo.textContent =
+            "Solicitud especial de personas adicionales";
+
+        texto.textContent =
+            "Sé que la capacidad máxima de este alojamiento es de " +
+            maximo +
+            " persona" +
+            (maximo === 1 ? "" : "s") +
+            ", pero deseo ingresar con " +
+            personas +
+            " personas, es decir, " +
+            personasExtra +
+            " persona" +
+            (personasExtra === 1 ? "" : "s") +
+            " adicional" +
+            (personasExtra === 1 ? "" : "es") +
+            ", y estoy dispuesto(a) a acomodarme en el alojamiento.";
+
+    } else {
+
+        contenedor.style.display =
+            "none";
+
+        checkbox.checked =
+            false;
+
+    }
+
 }
 
 
@@ -1723,6 +2075,7 @@ function abrirReserva(
 
         maxHuespedes:
             maximo
+
     };
 
     document.getElementById(
@@ -1756,31 +2109,45 @@ function abrirReserva(
     campoPersonas.min =
         1;
 
-    campoPersonas.max =
-        maximo;
-
-    /*
-     * Si el campo es un input type="number",
-     * el navegador respetará estos límites.
-     */
+    campoPersonas.removeAttribute(
+        "max"
+    );
 
     campoPersonas.setAttribute(
         "min",
         "1"
     );
 
-    campoPersonas.setAttribute(
-        "max",
-        String(maximo)
-    );
+
+    // ======================================
+    // CREAR APARTADO DE PERSONAS EXTRA
+    // ======================================
+
+    crearSolicitudPersonasExtra();
+
+    const checkbox =
+        document.getElementById(
+            "aceptarPersonasExtra"
+        );
+
+    if (
+        checkbox
+    ) {
+
+        checkbox.checked =
+            false;
+
+    }
+
+    actualizarSolicitudPersonasExtra();
 
 
     // ======================================
-    // EVITAR QUE ESCRIBAN MÁS DEL MÁXIMO
+    // CONTROLAR CAMBIO DE PERSONAS
     // ======================================
 
     campoPersonas.oninput =
-        function() {
+        function () {
 
             let cantidad =
                 Number(
@@ -1793,29 +2160,22 @@ function abrirReserva(
             ) {
 
                 cantidad = 1;
-            }
 
-            if (
-                cantidad > maximo
-            ) {
-
-                cantidad = maximo;
-
-                alert(
-                    "Este alojamiento permite un máximo de " +
-                    maximo +
-                    " persona" +
-                    (maximo === 1 ? "" : "s") +
-                    "."
-                );
             }
 
             this.value =
                 cantidad;
 
+            actualizarSolicitudPersonasExtra();
+
             calcularPrecio();
+
         };
 
+
+    // ======================================
+    // RESTABLECER INFORMACIÓN
+    // ======================================
 
     document.getElementById(
         "cantidadNoches"
@@ -1826,6 +2186,7 @@ function abrirReserva(
         "precioTotal"
     ).textContent =
         "Q0";
+
 }
 
 
@@ -1846,7 +2207,9 @@ function cerrarReserva() {
 
         ventana.style.display =
             "none";
+
     }
+
 }
 
 
@@ -1861,6 +2224,7 @@ function calcularPrecio() {
     ) {
 
         return;
+
     }
 
     const ingreso =
@@ -1889,20 +2253,19 @@ function calcularPrecio() {
     ) {
 
         personas = 1;
-        campoPersonas.value = 1;
-    }
-
-    if (
-        personas >
-        alojamientoActual.maxHuespedes
-    ) {
-
-        personas =
-            alojamientoActual.maxHuespedes;
 
         campoPersonas.value =
-            personas;
+            1;
+
     }
+
+
+    // ======================================
+    // ACTUALIZAR OPCIÓN DE EXTRAS
+    // ======================================
+
+    actualizarSolicitudPersonasExtra();
+
 
     if (
         !ingreso ||
@@ -1910,7 +2273,9 @@ function calcularPrecio() {
     ) {
 
         return;
+
     }
+
 
     const fechaIngreso =
         new Date(
@@ -1937,6 +2302,7 @@ function calcularPrecio() {
             24
         );
 
+
     if (
         noches <= 0
     ) {
@@ -1952,7 +2318,9 @@ function calcularPrecio() {
             "Q0";
 
         return;
+
     }
+
 
     const personasAdicionales =
         Math.max(
@@ -1972,6 +2340,7 @@ function calcularPrecio() {
         precioPorNoche *
         noches;
 
+
     document.getElementById(
         "cantidadNoches"
     ).textContent =
@@ -1982,6 +2351,7 @@ function calcularPrecio() {
     ).textContent =
         "Q" +
         total.toFixed(2);
+
 }
 
 
@@ -1996,7 +2366,9 @@ function enviarWhatsApp() {
     ) {
 
         return;
+
     }
+
 
     const ingreso =
         document.getElementById(
@@ -2037,6 +2409,20 @@ function enviarWhatsApp() {
 
 
     // ======================================
+    // OBTENER CHECKBOX DE PERSONAS EXTRA
+    // ======================================
+
+    const checkbox =
+        document.getElementById(
+            "aceptarPersonasExtra"
+        );
+
+    const solicitaPersonasExtra =
+        personas >
+        alojamientoActual.maxHuespedes;
+
+
+    // ======================================
     // VALIDAR DATOS
     // ======================================
 
@@ -2052,6 +2438,7 @@ function enviarWhatsApp() {
         );
 
         return;
+
     }
 
 
@@ -2069,33 +2456,33 @@ function enviarWhatsApp() {
         );
 
         return;
+
     }
 
+
+    // ======================================
+    // VALIDAR SOLICITUD ESPECIAL
+    // ======================================
+
     if (
-        personas >
-        alojamientoActual.maxHuespedes
+        solicitaPersonasExtra
     ) {
 
-        alert(
-            "Este alojamiento permite un máximo de " +
-            alojamientoActual.maxHuespedes +
-            " persona" +
-            (
-                alojamientoActual.maxHuespedes === 1
-                    ? ""
-                    : "s"
-            ) +
-            "."
-        );
+        if (
+            !checkbox ||
+            !checkbox.checked
+        ) {
 
-        document.getElementById(
-            "personas"
-        ).value =
-            alojamientoActual.maxHuespedes;
+            alert(
+                "La cantidad indicada supera la capacidad máxima de " +
+                alojamientoActual.maxHuespedes +
+                " personas. Si desea solicitar ingresar con personas adicionales, marque la opción de solicitud especial."
+            );
 
-        calcularPrecio();
+            return;
 
-        return;
+        }
+
     }
 
 
@@ -2112,6 +2499,39 @@ function enviarWhatsApp() {
         );
 
         return;
+
+    }
+
+
+    // ======================================
+    // CONSTRUIR INFORMACIÓN EXTRA
+    // ======================================
+
+    let informacionExtra =
+        "";
+
+    if (
+        solicitaPersonasExtra
+    ) {
+
+        const cantidadExtra =
+            personas -
+            alojamientoActual.maxHuespedes;
+
+        informacionExtra =
+            "\n\n" +
+            "SOLICITUD ESPECIAL DE PERSONAS ADICIONALES\n" +
+            "Capacidad máxima: " +
+            alojamientoActual.maxHuespedes +
+            " personas\n" +
+            "Personas solicitadas: " +
+            personas +
+            "\n" +
+            "Personas adicionales: " +
+            cantidadExtra +
+            "\n" +
+            "El huésped declara conocer la capacidad máxima del alojamiento y manifiesta estar dispuesto(a) a acomodarse en el alojamiento.\n" +
+            "Esta solicitud especial queda sujeta a confirmación.";
     }
 
 
@@ -2165,10 +2585,13 @@ function enviarWhatsApp() {
         "Total estimado: " +
         total +
 
+        informacionExtra +
+
         "\n\n" +
 
         "Esta es una solicitud de reserva. " +
         "La reserva queda sujeta a confirmacion de disponibilidad.";
+
 
     const url =
         "https://wa.me/" +
@@ -2182,6 +2605,7 @@ function enviarWhatsApp() {
         url,
         "_blank"
     );
+
 }
 
 
@@ -2191,10 +2615,11 @@ function enviarWhatsApp() {
 
 document.addEventListener(
     "DOMContentLoaded",
-    function() {
+    function () {
 
         cargarPortada();
 
         cargarAlojamientos();
+
     }
 );
