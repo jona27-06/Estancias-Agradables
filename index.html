@@ -176,22 +176,14 @@
             Cantidad de personas
         </label>
 
-        <!--
-        El valor inicia en 1.
-        Al tocar el campo, el 1 se selecciona automáticamente
-        para que al escribir otro número no se convierta en 16,
-        15, 12, etc.
-        -->
-
         <input
             type="number"
             id="personas"
             min="1"
+            max="50"
             value="1"
-            inputmode="numeric"
-            onclick="seleccionarPersonas()"
-            onfocus="seleccionarPersonas()"
-            oninput="calcularPrecio()"
+            step="1"
+            onchange="calcularPrecio()"
         >
 
 
@@ -278,27 +270,6 @@
 ></script>
 
 <script src="script.js"></script>
-
-
-<!-- ==========================================
-     CORRECCIÓN DEL CAMPO DE PERSONAS
-     ========================================== -->
-
-<script>
-
-function seleccionarPersonas() {
-
-    const campo = document.getElementById("personas");
-
-    if (campo && campo.value === "1") {
-
-        campo.select();
-
-    }
-
-}
-
-</script>
 
 </body>
 
