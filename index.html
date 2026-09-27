@@ -1,184 +1,305 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Estancias Agradables</title>
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="estilos.css">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Estancias Agradables</title>
+
+<link
+    rel="stylesheet"
+    href="estilos.css"
+>
+
 </head>
 
 <body>
 
-    <!-- ENCABEZADO -->
-    <header class="encabezado">
+<!-- ==========================================
+     ENCABEZADO
+     ========================================== -->
 
-        <div class="logo">
-            <span>Estancias</span> Agradables
-        </div>
+<header class="encabezado">
 
-        <nav>
-            <a href="#inicio">Inicio</a>
-            <a href="#alojamientos">Alojamientos</a>
-            <a href="#contacto">Contacto</a>
-        </nav>
+    <div class="logo">
+        <span>Estancias</span> Agradables
+    </div>
 
-    </header>
+    <nav>
 
+        <a href="#inicio">
+            Inicio
+        </a>
 
-    <!-- PORTADA -->
-    <section id="inicio" class="portada">
+        <a href="#alojamientos">
+            Alojamientos
+        </a>
 
-        <div class="portada-contenido">
+        <a href="#contacto">
+            Contacto
+        </a>
 
-            <h1>Encuentra tu próxima estancia</h1>
+    </nav>
 
-            <p>
-                Alojamientos cómodos para disfrutar de una estancia agradable.
-            </p>
-
-            <a href="#alojamientos" class="boton-principal">
-                Ver alojamientos
-            </a>
-
-        </div>
-
-    </section>
+</header>
 
 
-    <!-- ALOJAMIENTOS -->
-    <section id="alojamientos" class="seccion">
+<!-- ==========================================
+     PORTADA
+     ========================================== -->
 
-        <h2>Nuestros alojamientos</h2>
+<section
+    id="inicio"
+    class="portada"
+>
 
-        <p class="subtitulo">
-            Conoce nuestras opciones disponibles.
+    <div class="portada-fondo portada-fondo-a"></div>
+
+    <div class="portada-fondo portada-fondo-b"></div>
+
+    <div class="portada-overlay"></div>
+
+    <div class="portada-contenido">
+
+        <h1>
+            Encuentra tu próxima estancia
+        </h1>
+
+        <p>
+            Alojamientos cómodos para disfrutar
+            de una estancia agradable.
         </p>
 
-        <div id="listaAlojamientos" class="alojamientos">
-
-            <p>Cargando alojamientos...</p>
-
-        </div>
-
-    </section>
-
-
-    <!-- VENTANA DE RESERVA -->
-
-    <div id="ventanaReserva" class="modal">
-
-        <div class="modal-contenido">
-
-            <button
-                class="cerrar"
-                onclick="cerrarReserva()"
-            >
-                ×
-            </button>
-
-            <h2>Solicitar reserva</h2>
-
-            <p id="nombreAlojamiento"></p>
-
-
-            <label>Fecha de ingreso</label>
-
-            <input
-                type="date"
-                id="fechaIngreso"
-                onchange="calcularPrecio()"
-            >
-
-
-            <label>Fecha de salida</label>
-
-            <input
-                type="date"
-                id="fechaSalida"
-                onchange="calcularPrecio()"
-            >
-
-
-            <label>Cantidad de personas</label>
-
-            <input
-                type="number"
-                id="personas"
-                min="1"
-                value="1"
-                onchange="calcularPrecio()"
-            >
-
-
-            <label>Nombre completo</label>
-
-            <input
-                type="text"
-                id="nombre"
-                placeholder="Escriba su nombre"
-            >
-
-
-            <label>Número de teléfono</label>
-
-            <input
-                type="tel"
-                id="telefono"
-                placeholder="Ej. 5555-5555"
-            >
-
-
-            <div class="resumen">
-
-                <p>
-                    Noches:
-                    <strong id="cantidadNoches">0</strong>
-                </p>
-
-                <p>
-                    Total estimado:
-                    <strong id="precioTotal">Q0</strong>
-                </p>
-
-            </div>
-
-
-            <button
-                class="boton-whatsapp"
-                onclick="enviarWhatsApp()"
-            >
-                📱 Solicitar por WhatsApp
-            </button>
-
-        </div>
+        <a
+            href="#alojamientos"
+            class="boton-principal"
+        >
+            Ver alojamientos
+        </a>
 
     </div>
 
+    <div
+        id="indicadoresPortada"
+        class="indicadores-portada"
+    ></div>
 
-    <!-- PIE -->
+</section>
 
-    <footer id="contacto">
 
-        <h3>Estancias Agradables</h3>
+<!-- ==========================================
+     ALOJAMIENTOS
+     ========================================== -->
+
+<section
+    id="alojamientos"
+    class="seccion"
+>
+
+    <h2>
+        Nuestros alojamientos
+    </h2>
+
+    <p class="subtitulo">
+        Conoce nuestras opciones disponibles.
+    </p>
+
+    <div
+        id="listaAlojamientos"
+        class="alojamientos"
+    >
 
         <p>
-            Un lugar para disfrutar de una estancia agradable.
+            Cargando alojamientos...
         </p>
 
-        <p>
-            © 2026 Estancias Agradables
-        </p>
+    </div>
 
-    </footer>
+</section>
 
 
-    <!-- SUPABASE -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- ==========================================
+     VENTANA DE RESERVA
+     ========================================== -->
 
-    <!-- NUESTRO JAVASCRIPT -->
-    <script src="script.js"></script>
+<div
+    id="ventanaReserva"
+    class="modal"
+>
+
+    <div class="modal-contenido">
+
+        <button
+            class="cerrar"
+            onclick="cerrarReserva()"
+        >
+            ×
+        </button>
+
+        <h2>
+            Solicitar reserva
+        </h2>
+
+        <p id="nombreAlojamiento"></p>
+
+
+        <label>
+            Fecha de ingreso
+        </label>
+
+        <input
+            type="date"
+            id="fechaIngreso"
+            onchange="calcularPrecio()"
+        >
+
+
+        <label>
+            Fecha de salida
+        </label>
+
+        <input
+            type="date"
+            id="fechaSalida"
+            onchange="calcularPrecio()"
+        >
+
+
+        <label>
+            Cantidad de personas
+        </label>
+
+        <!--
+        El valor inicia en 1.
+        Al tocar el campo, el 1 se selecciona automáticamente
+        para que al escribir otro número no se convierta en 16,
+        15, 12, etc.
+        -->
+
+        <input
+            type="number"
+            id="personas"
+            min="1"
+            value="1"
+            inputmode="numeric"
+            onclick="seleccionarPersonas()"
+            onfocus="seleccionarPersonas()"
+            oninput="calcularPrecio()"
+        >
+
+
+        <label>
+            Nombre completo
+        </label>
+
+        <input
+            type="text"
+            id="nombre"
+            placeholder="Escriba su nombre"
+        >
+
+
+        <label>
+            Número de teléfono
+        </label>
+
+        <input
+            type="tel"
+            id="telefono"
+            placeholder="Ej. 5555-5555"
+        >
+
+
+        <div class="resumen">
+
+            <p>
+                Noches:
+                <strong id="cantidadNoches">
+                    0
+                </strong>
+            </p>
+
+            <p>
+                Total estimado:
+                <strong id="precioTotal">
+                    Q0
+                </strong>
+            </p>
+
+        </div>
+
+
+        <button
+            class="boton-whatsapp"
+            onclick="enviarWhatsApp()"
+        >
+            📱 Solicitar por WhatsApp
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     PIE DE PÁGINA
+     ========================================== -->
+
+<footer id="contacto">
+
+    <h3>
+        Estancias Agradables
+    </h3>
+
+    <p>
+        Un lugar para disfrutar de una estancia agradable.
+    </p>
+
+    <p>
+        © 2026 Estancias Agradables
+    </p>
+
+</footer>
+
+
+<!-- ==========================================
+     SUPABASE
+     ========================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script src="script.js"></script>
+
+
+<!-- ==========================================
+     CORRECCIÓN DEL CAMPO DE PERSONAS
+     ========================================== -->
+
+<script>
+
+function seleccionarPersonas() {
+
+    const campo = document.getElementById("personas");
+
+    if (campo && campo.value === "1") {
+
+        campo.select();
+
+    }
+
+}
+
+</script>
 
 </body>
+
 </html>
