@@ -11,7 +11,10 @@ const SUPABASE_URL =
     "https://caodorogvcpupdajtbbp.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_oQdoFY-J8JciNIbxmaRi8Q_oWZ-YxE6";
+    "sb_publishable_oQdoFY-J8JciNIbxmaRi8Q_oWZ-YxWZ-YxE6".replace(
+        "oWZ-YxWZ-YxE6",
+        "oWZ-YxE6"
+    );
 
 const clienteSupabase =
     window.supabase.createClient(
@@ -51,13 +54,19 @@ let calendarioMes = new Date();
 
 function insertarEstilosModalAlojamiento() {
 
-    if (document.getElementById("estilosModalAlojamiento")) {
+    if (
+        document.getElementById(
+            "estilosModalAlojamiento"
+        )
+    ) {
         return;
     }
 
-    const estilos = document.createElement("style");
+    const estilos =
+        document.createElement("style");
 
-    estilos.id = "estilosModalAlojamiento";
+    estilos.id =
+        "estilosModalAlojamiento";
 
     estilos.innerHTML = `
 
@@ -153,7 +162,10 @@ function insertarEstilosModalAlojamiento() {
 
     `;
 
-    document.head.appendChild(estilos);
+    document.head.appendChild(
+        estilos
+    );
+
 }
 
 
@@ -161,7 +173,9 @@ function insertarEstilosModalAlojamiento() {
 // NORMALIZAR AMENIDADES
 // ==========================================================
 
-function normalizarAmenidades(valor) {
+function normalizarAmenidades(
+    valor
+) {
 
     if (!valor) {
         return {};
@@ -174,18 +188,23 @@ function normalizarAmenidades(valor) {
         return valor;
     }
 
-    if (typeof valor === "string") {
+    if (
+        typeof valor === "string"
+    ) {
 
         try {
 
-            const parsed = JSON.parse(valor);
+            const parsed =
+                JSON.parse(valor);
 
             if (
                 parsed &&
                 typeof parsed === "object" &&
                 !Array.isArray(parsed)
             ) {
+
                 return parsed;
+
             }
 
         } catch (error) {
@@ -200,6 +219,7 @@ function normalizarAmenidades(valor) {
     }
 
     return {};
+
 }
 
 
@@ -207,118 +227,173 @@ function normalizarAmenidades(valor) {
 // CONSTRUIR AMENIDADES
 // ==========================================================
 
-function construirAmenidadesHTML(amenidades) {
+function construirAmenidadesHTML(
+    amenidades
+) {
 
-    const datos = normalizarAmenidades(amenidades);
+    const datos =
+        normalizarAmenidades(
+            amenidades
+        );
 
     const categorias = [
 
         {
             nombre: "Baño",
+
             items: [
+
                 {
                     clave: "bide",
                     nombre: "Bidé",
                     icono: "🚿"
                 }
+
             ]
+
         },
 
         {
-            nombre: "Habitación y lavandería",
+            nombre:
+                "Habitación y lavandería",
+
             items: [
+
                 {
                     clave: "plancha",
                     nombre: "Plancha",
                     icono: "👕"
                 },
+
                 {
                     clave: "guardarropa",
-                    nombre: "Espacio para guardar ropa",
+                    nombre:
+                        "Espacio para guardar ropa",
                     icono: "👔"
                 }
+
             ]
+
         },
 
         {
             nombre: "Entretenimiento",
+
             items: [
+
                 {
                     clave: "television",
                     nombre: "Televisión",
                     icono: "📺"
                 }
+
             ]
+
         },
 
         {
-            nombre: "Calefacción y refrigeración",
+            nombre:
+                "Calefacción y refrigeración",
+
             items: [
+
                 {
-                    clave: "aire_acondicionado",
-                    nombre: "Aire acondicionado",
+                    clave:
+                        "aire_acondicionado",
+                    nombre:
+                        "Aire acondicionado",
                     icono: "❄️"
                 }
+
             ]
+
         },
 
         {
-            nombre: "Privacidad y seguridad",
+            nombre:
+                "Privacidad y seguridad",
+
             items: [
+
                 {
-                    clave: "cerradura_habitacion",
-                    nombre: "Cerradura en la puerta de la habitación",
+                    clave:
+                        "cerradura_habitacion",
+                    nombre:
+                        "Cerradura en la puerta de la habitación",
                     icono: "🔒"
                 }
+
             ]
+
         },
 
         {
-            nombre: "Internet y oficina",
+            nombre:
+                "Internet y oficina",
+
             items: [
+
                 {
                     clave: "wifi",
                     nombre: "Wifi",
                     icono: "📶"
                 },
+
                 {
                     clave: "area_trabajar",
-                    nombre: "Área para trabajar",
+                    nombre:
+                        "Área para trabajar",
                     icono: "💻"
                 }
+
             ]
+
         },
 
         {
-            nombre: "Cocina y comedor",
+            nombre:
+                "Cocina y comedor",
+
             items: [
+
                 {
                     clave: "cocina",
                     nombre: "Cocina",
                     icono: "🍳"
                 },
+
                 {
                     clave: "cafetera",
                     nombre: "Cafetera",
                     icono: "☕"
                 },
+
                 {
                     clave: "cafe",
                     nombre: "Café",
                     icono: "☕"
                 }
+
             ]
+
         },
 
         {
-            nombre: "Estacionamiento e instalaciones",
+            nombre:
+                "Estacionamiento e instalaciones",
+
             items: [
+
                 {
-                    clave: "estacionamiento",
-                    nombre: "Estacionamiento gratuito en las instalaciones",
+                    clave:
+                        "estacionamiento",
+                    nombre:
+                        "Estacionamiento gratuito en las instalaciones",
                     icono: "🚗"
                 }
+
             ]
+
         }
 
     ];
@@ -327,62 +402,71 @@ function construirAmenidadesHTML(amenidades) {
     let html = "";
 
 
-    categorias.forEach(categoria => {
+    categorias.forEach(
+        categoria => {
 
-        const seleccionadas =
-            categoria.items.filter(
-                item => datos[item.clave] === true
-            );
-
-
-        if (seleccionadas.length === 0) {
-            return;
-        }
+            const seleccionadas =
+                categoria.items.filter(
+                    item =>
+                        datos[item.clave] === true
+                );
 
 
-        html += `
+            if (
+                seleccionadas.length === 0
+            ) {
+                return;
+            }
 
-            <div class="amenidades-categoria">
-
-                <h4>
-                    ${categoria.nombre}
-                </h4>
-
-                <div class="amenidades-lista">
-
-        `;
-
-
-        seleccionadas.forEach(item => {
 
             html += `
 
-                <div class="amenidad-item">
+                <div class="amenidades-categoria">
 
-                    <span class="amenidad-icono">
-                        ${item.icono}
-                    </span>
+                    <h4>
+                        ${categoria.nombre}
+                    </h4>
 
-                    <span>
-                        ${item.nombre}
-                    </span>
+                    <div class="amenidades-lista">
+
+            `;
+
+
+            seleccionadas.forEach(
+                item => {
+
+                    html += `
+
+                        <div class="amenidad-item">
+
+                            <span
+                                class="amenidad-icono"
+                            >
+                                ${item.icono}
+                            </span>
+
+                            <span>
+                                ${item.nombre}
+                            </span>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            html += `
+
+                    </div>
 
                 </div>
 
             `;
 
-        });
-
-
-        html += `
-
-                </div>
-
-            </div>
-
-        `;
-
-    });
+        }
+    );
 
 
     if (!html) {
@@ -414,11 +498,15 @@ function construirAmenidadesHTML(amenidades) {
 function crearSelectorHuespedes() {
 
     const contenedor =
-        document.getElementById("selectorHuespedes");
+        document.getElementById(
+            "selectorHuespedes"
+        );
+
 
     if (!contenedor) {
         return;
     }
+
 
     contenedor.innerHTML = `
 
@@ -462,15 +550,18 @@ function crearSelectorHuespedes() {
             "cantidadHuespedes"
         );
 
+
     const btnMenos =
         document.getElementById(
             "btnHuespedMenos"
         );
 
+
     const btnMas =
         document.getElementById(
             "btnHuespedMas"
         );
+
 
     const mensaje =
         document.getElementById(
@@ -483,11 +574,9 @@ function crearSelectorHuespedes() {
         elementoCantidad.textContent =
             cantidad;
 
-        if (cantidad <= 1) {
-            btnMenos.disabled = true;
-        } else {
-            btnMenos.disabled = false;
-        }
+
+        btnMenos.disabled =
+            cantidad <= 1;
 
 
         const maximo =
@@ -540,6 +629,9 @@ function crearSelectorHuespedes() {
 
         }
 
+
+        actualizarPrecioReserva();
+
     }
 
 
@@ -547,7 +639,9 @@ function crearSelectorHuespedes() {
         "click",
         function () {
 
-            if (cantidad > 1) {
+            if (
+                cantidad > 1
+            ) {
 
                 cantidad--;
 
@@ -563,7 +657,9 @@ function crearSelectorHuespedes() {
         "click",
         function () {
 
-            if (cantidad < 50) {
+            if (
+                cantidad < 50
+            ) {
 
                 cantidad++;
 
@@ -591,13 +687,16 @@ function obtenerCantidadHuespedes() {
             "cantidadHuespedes"
         );
 
+
     if (!elemento) {
         return 1;
     }
 
+
     return Number(
         elemento.textContent
     ) || 1;
+
 }
 
 
@@ -612,15 +711,19 @@ function crearModalAlojamiento() {
             "modalAlojamiento"
         )
     ) {
+
         return;
+
     }
 
 
     const modal =
         document.createElement("div");
 
+
     modal.id =
         "modalAlojamiento";
+
 
     modal.className =
         "modal-alojamiento";
@@ -647,7 +750,9 @@ function crearModalAlojamiento() {
 
             <div class="modal-alojamiento-info">
 
-                <h2 id="modalAlojamientoNombre"></h2>
+                <h2
+                    id="modalAlojamientoNombre"
+                ></h2>
 
 
                 <div
@@ -688,7 +793,9 @@ function crearModalAlojamiento() {
     `;
 
 
-    document.body.appendChild(modal);
+    document.body.appendChild(
+        modal
+    );
 
 
     const cerrar =
@@ -729,7 +836,9 @@ function crearModalAlojamiento() {
         "click",
         function () {
 
-            if (alojamientoActual) {
+            if (
+                alojamientoActual
+            ) {
 
                 abrirReserva(
                     alojamientoActual
@@ -813,7 +922,9 @@ function abrirModalAlojamiento(
         alojamiento.descripcion || "";
 
 
-    if (alojamiento.ubicacion) {
+    if (
+        alojamiento.ubicacion
+    ) {
 
         ubicacion.innerHTML = `
 
@@ -866,18 +977,24 @@ function abrirModalAlojamiento(
                 Características principales
             </h3>
 
-            <div class="modal-caracteristicas-lista">
+            <div
+                class="modal-caracteristicas-lista"
+            >
 
     `;
 
 
-    if (maxHuespedes > 0) {
+    if (
+        maxHuespedes > 0
+    ) {
 
         caracteristicasHTML += `
 
             <div class="modal-caracteristica">
 
-                <span class="modal-caracteristica-icono">
+                <span
+                    class="modal-caracteristica-icono"
+                >
                     👥
                 </span>
 
@@ -894,21 +1011,27 @@ function abrirModalAlojamiento(
     }
 
 
-    if (habitaciones > 0) {
+    if (
+        habitaciones > 0
+    ) {
 
         caracteristicasHTML += `
 
             <div class="modal-caracteristica">
 
-                <span class="modal-caracteristica-icono">
+                <span
+                    class="modal-caracteristica-icono"
+                >
                     🛏️
                 </span>
 
                 <span>
                     ${habitaciones}
-                    ${habitaciones === 1
-                        ? "habitación"
-                        : "habitaciones"}
+                    ${
+                        habitaciones === 1
+                            ? "habitación"
+                            : "habitaciones"
+                    }
                 </span>
 
             </div>
@@ -918,21 +1041,27 @@ function abrirModalAlojamiento(
     }
 
 
-    if (camas > 0) {
+    if (
+        camas > 0
+    ) {
 
         caracteristicasHTML += `
 
             <div class="modal-caracteristica">
 
-                <span class="modal-caracteristica-icono">
+                <span
+                    class="modal-caracteristica-icono"
+                >
                     🛏️
                 </span>
 
                 <span>
                     ${camas}
-                    ${camas === 1
-                        ? "cama"
-                        : "camas"}
+                    ${
+                        camas === 1
+                            ? "cama"
+                            : "camas"
+                    }
                 </span>
 
             </div>
@@ -942,21 +1071,27 @@ function abrirModalAlojamiento(
     }
 
 
-    if (sofasCama > 0) {
+    if (
+        sofasCama > 0
+    ) {
 
         caracteristicasHTML += `
 
             <div class="modal-caracteristica">
 
-                <span class="modal-caracteristica-icono">
+                <span
+                    class="modal-caracteristica-icono"
+                >
                     🛋️
                 </span>
 
                 <span>
                     ${sofasCama}
-                    ${sofasCama === 1
-                        ? "sofá cama"
-                        : "sofás cama"}
+                    ${
+                        sofasCama === 1
+                            ? "sofá cama"
+                            : "sofás cama"
+                    }
                 </span>
 
             </div>
@@ -966,21 +1101,27 @@ function abrirModalAlojamiento(
     }
 
 
-    if (banos > 0) {
+    if (
+        banos > 0
+    ) {
 
         caracteristicasHTML += `
 
             <div class="modal-caracteristica">
 
-                <span class="modal-caracteristica-icono">
+                <span
+                    class="modal-caracteristica-icono"
+                >
                     🚿
                 </span>
 
                 <span>
                     ${banos}
-                    ${banos === 1
-                        ? "baño"
-                        : "baños"}
+                    ${
+                        banos === 1
+                            ? "baño"
+                            : "baños"
+                    }
                 </span>
 
             </div>
@@ -999,14 +1140,19 @@ function abrirModalAlojamiento(
 
     if (
         alojamiento.tamano_camas &&
-        alojamiento.tamano_camas.trim() !== ""
+        String(
+            alojamiento.tamano_camas
+        ).trim() !== ""
     ) {
 
         caracteristicasHTML += `
 
-            <div class="modal-tamano-camas">
+            <div
+                class="modal-tamano-camas"
+            >
 
                 🛏️
+
                 <strong>
                     Tamaño de las camas:
                 </strong>
@@ -1038,7 +1184,10 @@ function abrirModalAlojamiento(
         amenidadesHTML;
 
 
-    if (alojamiento.precio_base) {
+    if (
+        alojamiento.precio_base !== null &&
+        alojamiento.precio_base !== undefined
+    ) {
 
         precio.innerHTML = `
 
@@ -1121,7 +1270,9 @@ function cerrarModalAlojamiento() {
 // MOSTRAR FOTOS DEL MODAL
 // ==========================================================
 
-function mostrarFotosModal(fotos) {
+function mostrarFotosModal(
+    fotos
+) {
 
     const contenedor =
         document.getElementById(
@@ -1178,9 +1329,7 @@ function mostrarFotosModal(fotos) {
         "click",
         function () {
 
-            abrirVisorFotos(
-                0
-            );
+            abrirVisorFotos(0);
 
         }
     );
@@ -1191,10 +1340,14 @@ function mostrarFotosModal(fotos) {
     );
 
 
-    if (fotos.length > 1) {
+    if (
+        fotos.length > 1
+    ) {
 
         const contador =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         contador.className =
@@ -1212,7 +1365,9 @@ function mostrarFotosModal(fotos) {
     }
 
 
-    if (fotos.length > 1) {
+    if (
+        fotos.length > 1
+    ) {
 
         const flechaAnterior =
             document.createElement(
@@ -1237,6 +1392,7 @@ function mostrarFotosModal(fotos) {
             function (event) {
 
                 event.stopPropagation();
+
 
                 abrirVisorFotos(
                     fotos.length - 1
@@ -1275,9 +1431,8 @@ function mostrarFotosModal(fotos) {
 
                 event.stopPropagation();
 
-                abrirVisorFotos(
-                    1
-                );
+
+                abrirVisorFotos(1);
 
             }
         );
@@ -1303,7 +1458,9 @@ function crearVisorFotos() {
             "visorFotos"
         )
     ) {
+
         return;
+
     }
 
 
@@ -1382,9 +1539,7 @@ function crearVisorFotos() {
         "click",
         function () {
 
-            cambiarFotoVisor(
-                -1
-            );
+            cambiarFotoVisor(-1);
 
         }
     );
@@ -1396,9 +1551,7 @@ function crearVisorFotos() {
         "click",
         function () {
 
-            cambiarFotoVisor(
-                1
-            );
+            cambiarFotoVisor(1);
 
         }
     );
@@ -1426,7 +1579,9 @@ function crearVisorFotos() {
 // ABRIR VISOR
 // ==========================================================
 
-function abrirVisorFotos(indice) {
+function abrirVisorFotos(
+    indice
+) {
 
     crearVisorFotos();
 
@@ -1435,7 +1590,9 @@ function abrirVisorFotos(indice) {
         !fotosAlojamientoActual ||
         fotosAlojamientoActual.length === 0
     ) {
+
         return;
+
     }
 
 
@@ -1458,8 +1615,7 @@ function abrirVisorFotos(indice) {
         fotosAlojamientoActual.length
     ) {
 
-        indiceFotoActual =
-            0;
+        indiceFotoActual = 0;
 
     }
 
@@ -1511,7 +1667,11 @@ function actualizarVisorFoto() {
     if (contador) {
 
         contador.textContent =
-            `${indiceFotoActual + 1} / ${fotosAlojamientoActual.length}`;
+            `${
+                indiceFotoActual + 1
+            } / ${
+                fotosAlojamientoActual.length
+            }`;
 
     }
 
@@ -1530,7 +1690,9 @@ function cambiarFotoVisor(
         !fotosAlojamientoActual ||
         fotosAlojamientoActual.length === 0
     ) {
+
         return;
+
     }
 
 
@@ -1553,8 +1715,7 @@ function cambiarFotoVisor(
         fotosAlojamientoActual.length
     ) {
 
-        indiceFotoActual =
-            0;
+        indiceFotoActual = 0;
 
     }
 
@@ -1614,10 +1775,12 @@ async function obtenerFotosAlojamiento(
                     alojamientoId,
                     {
                         limit: 100,
+
                         sortBy: {
                             column: "name",
                             order: "asc"
                         }
+
                     }
                 );
 
@@ -1647,13 +1810,21 @@ async function obtenerFotosAlojamiento(
                         archivo.name
                             .toLowerCase();
 
+
                     return (
+
                         nombre.endsWith(".jpg") ||
+
                         nombre.endsWith(".jpeg") ||
+
                         nombre.endsWith(".png") ||
+
                         nombre.endsWith(".webp") ||
+
                         nombre.endsWith(".gif") ||
+
                         nombre.endsWith(".avif")
+
                     );
 
                 }
@@ -1721,32 +1892,19 @@ async function cargarAlojamientos() {
     `;
 
 
+    // ======================================================
+    // CONSULTA
+    // Se utiliza "*" para evitar problemas del schema cache
+    // con las columnas nuevas.
+    // ======================================================
+
     const {
         data,
         error
     } =
         await clienteSupabase
             .from("alojamientos")
-            .select(
-                `
-                id,
-                nombre,
-                descripcion,
-                precio_base,
-                precio_persona,
-                personas_incluidas,
-                max_huespedes,
-                habitaciones,
-                banos,
-                camas,
-                sofas_cama,
-                tamano_camas,
-                amenidades,
-                ubicacion,
-                publicado,
-                created_at
-                `
-            )
+            .select("*")
             .eq(
                 "publicado",
                 true
@@ -1813,7 +1971,9 @@ async function cargarAlojamientos() {
 
 
         const tarjeta =
-            document.createElement("article");
+            document.createElement(
+                "article"
+            );
 
 
         tarjeta.className =
@@ -1832,18 +1992,28 @@ async function cargarAlojamientos() {
 
                 ${
                     fotoPrincipal
-                    ?
+                        ?
+
                     `
+
                         <img
                             src="${fotoPrincipal}"
-                            alt="${alojamiento.nombre || "Alojamiento"}"
+                            alt="${
+                                alojamiento.nombre ||
+                                "Alojamiento"
+                            }"
                         >
+
                     `
-                    :
+
+                        :
+
                     `
+
                         <div class="sin-foto-tarjeta">
                             Sin fotografía
                         </div>
+
                     `
                 }
 
@@ -1853,20 +2023,32 @@ async function cargarAlojamientos() {
             <div class="tarjeta-contenido">
 
                 <h3>
-                    ${alojamiento.nombre || ""}
+                    ${
+                        alojamiento.nombre || ""
+                    }
                 </h3>
 
 
                 ${
                     alojamiento.ubicacion
-                    ?
+
+                        ?
+
                     `
+
                         <p class="tarjeta-ubicacion">
+
                             📍
-                            ${alojamiento.ubicacion}
+                            ${
+                                alojamiento.ubicacion
+                            }
+
                         </p>
+
                     `
-                    :
+
+                        :
+
                     ""
                 }
 
@@ -1875,9 +2057,9 @@ async function cargarAlojamientos() {
 
                     ${
                         alojamiento.descripcion
-                        ?
+                            ?
                         alojamiento.descripcion
-                        :
+                            :
                         ""
                     }
 
@@ -1887,9 +2069,14 @@ async function cargarAlojamientos() {
                 <div class="tarjeta-pie">
 
                     <strong>
-                        Q${Number(
-                            alojamiento.precio_base || 0
-                        ).toFixed(2)}
+
+                        Q${
+                            Number(
+                                alojamiento.precio_base ||
+                                0
+                            ).toFixed(2)
+                        }
+
                     </strong>
 
                     <span>
@@ -2106,19 +2293,23 @@ function calcularNoches(
         !fechaEntrada ||
         !fechaSalida
     ) {
+
         return 0;
+
     }
 
 
     const entrada =
         new Date(
-            fechaEntrada + "T00:00:00"
+            fechaEntrada +
+            "T00:00:00"
         );
 
 
     const salida =
         new Date(
-            fechaSalida + "T00:00:00"
+            fechaSalida +
+            "T00:00:00"
         );
 
 
@@ -2313,21 +2504,25 @@ async function verificarDisponibilidad(
             data,
             error
         } =
-            await clienteSupabase.functions.invoke(
-                "obtener-disponibilidad",
-                {
-                    body: {
-                        alojamiento_id:
-                            alojamientoId,
+            await clienteSupabase
+                .functions
+                .invoke(
+                    "obtener-disponibilidad",
+                    {
+                        body: {
 
-                        fecha_entrada:
-                            fechaEntrada,
+                            alojamiento_id:
+                                alojamientoId,
 
-                        fecha_salida:
-                            fechaSalida
+                            fecha_entrada:
+                                fechaEntrada,
+
+                            fecha_salida:
+                                fechaSalida
+
+                        }
                     }
-                }
-            );
+                );
 
 
         if (error) {
@@ -2382,7 +2577,9 @@ function enviarReservaWhatsApp() {
     if (
         !validarHuespedes()
     ) {
+
         return;
+
     }
 
 
@@ -2449,7 +2646,9 @@ function enviarReservaWhatsApp() {
         );
 
 
-    if (noches <= 0) {
+    if (
+        noches <= 0
+    ) {
 
         alert(
             "La fecha de salida debe ser posterior a la fecha de entrada."
@@ -2468,25 +2667,42 @@ function enviarReservaWhatsApp() {
 
         `Hola, quiero solicitar una reserva.%0A%0A` +
 
-        `🏠 Alojamiento: ${alojamientoActual.nombre}%0A` +
-
-        `📍 Ubicación: ${
-            alojamientoActual.ubicacion || "No indicada"
+        `🏠 Alojamiento: ${
+            alojamientoActual.nombre
         }%0A` +
 
-        `👤 Nombre: ${nombre}%0A` +
+        `📍 Ubicación: ${
+            alojamientoActual.ubicacion ||
+            "No indicada"
+        }%0A` +
 
-        `📞 Teléfono: ${telefono}%0A` +
+        `👤 Nombre: ${
+            nombre
+        }%0A` +
 
-        `📅 Entrada: ${fechas.entrada}%0A` +
+        `📞 Teléfono: ${
+            telefono
+        }%0A` +
 
-        `📅 Salida: ${fechas.salida}%0A` +
+        `📅 Entrada: ${
+            fechas.entrada
+        }%0A` +
 
-        `🌙 Noches: ${noches}%0A` +
+        `📅 Salida: ${
+            fechas.salida
+        }%0A` +
 
-        `👥 Huéspedes: ${personas}%0A` +
+        `🌙 Noches: ${
+            noches
+        }%0A` +
 
-        `💰 Total estimado: Q${precioTotal.toFixed(2)}%0A%0A` +
+        `👥 Huéspedes: ${
+            personas
+        }%0A` +
+
+        `💰 Total estimado: Q${
+            precioTotal.toFixed(2)
+        }%0A%0A` +
 
         `Quedo pendiente de confirmación.`;
 
@@ -2580,13 +2796,21 @@ async function cargarPortada() {
                             archivo.name
                                 .toLowerCase();
 
+
                         return (
+
                             nombre.endsWith(".jpg") ||
+
                             nombre.endsWith(".jpeg") ||
+
                             nombre.endsWith(".png") ||
+
                             nombre.endsWith(".webp") ||
+
                             nombre.endsWith(".gif") ||
+
                             nombre.endsWith(".avif")
+
                         );
 
                     }
@@ -2637,7 +2861,20 @@ async function cargarPortada() {
         if (
             fotosPortada.length === 1
         ) {
+
             return;
+
+        }
+
+
+        if (
+            intervaloPortada
+        ) {
+
+            clearInterval(
+                intervaloPortada
+            );
+
         }
 
 
@@ -2682,13 +2919,16 @@ function cambiarFotoPortada() {
         !capa2 ||
         fotosPortada.length <= 1
     ) {
+
         return;
+
     }
 
 
     indicePortada =
         (
-            indicePortada + 1
+            indicePortada +
+            1
         ) %
         fotosPortada.length;
 
@@ -2752,7 +2992,9 @@ document.addEventListener(
             );
 
 
-        if (cerrarReserva) {
+        if (
+            cerrarReserva
+        ) {
 
             cerrarReserva.addEventListener(
                 "click",
@@ -2768,7 +3010,9 @@ document.addEventListener(
             );
 
 
-        if (btnEnviar) {
+        if (
+            btnEnviar
+        ) {
 
             btnEnviar.addEventListener(
                 "click",
@@ -2777,7 +3021,22 @@ document.addEventListener(
                     if (
                         !validarHuespedes()
                     ) {
+
                         return;
+
+                    }
+
+
+                    if (
+                        !alojamientoActual
+                    ) {
+
+                        alert(
+                            "No se ha seleccionado ningún alojamiento."
+                        );
+
+                        return;
+
                     }
 
 
@@ -2807,7 +3066,9 @@ document.addEventListener(
                         );
 
 
-                    if (!disponible) {
+                    if (
+                        !disponible
+                    ) {
 
                         alert(
                             "Lo sentimos, el alojamiento no está disponible para las fechas seleccionadas."
@@ -2838,7 +3099,9 @@ document.addEventListener(
             );
 
 
-        if (fechaEntrada) {
+        if (
+            fechaEntrada
+        ) {
 
             fechaEntrada.addEventListener(
                 "change",
@@ -2848,7 +3111,9 @@ document.addEventListener(
         }
 
 
-        if (fechaSalida) {
+        if (
+            fechaSalida
+        ) {
 
             fechaSalida.addEventListener(
                 "change",
