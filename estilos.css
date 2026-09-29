@@ -17,6 +17,7 @@ body.sin-scroll {
     overflow: hidden;
 }
 
+
 /* ==========================================
    ENCABEZADO
    ========================================== */
@@ -64,6 +65,7 @@ body.sin-scroll {
 .encabezado nav a:hover {
     color: #f28c28;
 }
+
 
 /* ==========================================
    PORTADA
@@ -142,6 +144,7 @@ body.sin-scroll {
         0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
+
 /* ==========================================
    BOTÓN PRINCIPAL
    ========================================== */
@@ -170,6 +173,7 @@ body.sin-scroll {
 .boton-principal:active {
     transform: scale(0.97);
 }
+
 
 /* ==========================================
    INDICADORES PORTADA
@@ -201,6 +205,7 @@ body.sin-scroll {
     transform: scale(1.3);
 }
 
+
 /* ==========================================
    SECCIÓN ALOJAMIENTOS
    ========================================== */
@@ -222,6 +227,7 @@ body.sin-scroll {
     color: #666;
     font-size: 16px;
 }
+
 
 /* ==========================================
    TARJETAS
@@ -262,6 +268,7 @@ body.sin-scroll {
         0 0 0 3px #f28c28;
 }
 
+
 /* ==========================================
    FOTO DEL ANUNCIO
    ========================================== */
@@ -293,6 +300,7 @@ body.sin-scroll {
     color: #777;
 }
 
+
 /* ==========================================
    NOMBRE DEL ALOJAMIENTO
    ========================================== */
@@ -304,6 +312,7 @@ body.sin-scroll {
     color: #222;
     background: white;
 }
+
 
 /* ==========================================
    CONTADOR DE FOTOS
@@ -321,6 +330,7 @@ body.sin-scroll {
     z-index: 4;
 }
 
+
 /* ==========================================
    MODAL DETALLE DEL ALOJAMIENTO
    ========================================== */
@@ -329,21 +339,15 @@ body.sin-scroll {
     position: fixed;
     inset: 0;
     z-index: 4000;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 30px;
-
     background: rgba(0, 0, 0, 0.70);
-
     opacity: 0;
     visibility: hidden;
-
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-
     transition:
         opacity 0.25s ease,
         visibility 0.25s ease;
@@ -354,31 +358,27 @@ body.sin-scroll {
     visibility: visible;
 }
 
+
 /* ==========================================
    CONTENIDO DEL MODAL
    ========================================== */
 
 .modal-alojamiento-contenido {
     position: relative;
-
     width: 100%;
     max-width: 1100px;
-
     max-height: calc(100vh - 60px);
-
     display: grid;
     grid-template-columns: 1.25fr 0.75fr;
-
     overflow: hidden;
-
+    min-height: 0;
     background: white;
     border-radius: 18px;
-
     box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.35);
-
     margin: auto;
 }
+
 
 /* ==========================================
    BOTÓN CERRAR
@@ -388,27 +388,19 @@ body.sin-scroll {
     position: absolute;
     top: 14px;
     right: 14px;
-
     z-index: 20;
-
     width: 42px;
     height: 42px;
-
     border: none;
     border-radius: 50%;
-
     background: rgba(0, 0, 0, 0.55);
     color: white;
-
     font-size: 29px;
     line-height: 1;
-
     cursor: pointer;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     transition:
         background 0.2s ease,
         transform 0.2s ease;
@@ -419,19 +411,16 @@ body.sin-scroll {
     transform: scale(1.05);
 }
 
+
 /* ==========================================
    GALERÍA DEL MODAL
    ========================================== */
 
 .modal-alojamiento-galeria {
     position: relative;
-
     min-height: 620px;
-
     background: #eeeeee;
-
     overflow: hidden;
-
     touch-action: pan-y;
     user-select: none;
 }
@@ -439,20 +428,16 @@ body.sin-scroll {
 .modal-alojamiento-foto {
     width: 100%;
     height: 100%;
-
     min-height: 620px;
-
     display: block;
-
     object-fit: contain;
     object-position: center;
-
     background: #eeeeee;
-
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
 }
+
 
 /* ==========================================
    FLECHAS MODAL
@@ -460,32 +445,22 @@ body.sin-scroll {
 
 .modal-alojamiento-flecha {
     position: absolute;
-
     top: 50%;
     transform: translateY(-50%);
-
     width: 46px;
     height: 46px;
-
     padding: 0;
-
     border: none;
     border-radius: 50%;
-
     background: rgba(0, 0, 0, 0.48);
     color: white;
-
     font-size: 28px;
     line-height: 1;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     cursor: pointer;
-
     z-index: 10;
-
     transition:
         background 0.2s ease,
         transform 0.2s ease;
@@ -509,30 +484,24 @@ body.sin-scroll {
     right: 18px;
 }
 
+
 /* ==========================================
    CONTADOR MODAL
    ========================================== */
 
 .modal-alojamiento-contador {
     position: absolute;
-
     bottom: 18px;
     left: 50%;
-
     transform: translateX(-50%);
-
     padding: 7px 13px;
-
     border-radius: 20px;
-
     background: rgba(0, 0, 0, 0.58);
-
     color: white;
-
     font-size: 14px;
-
     z-index: 10;
 }
+
 
 /* ==========================================
    INFORMACIÓN MODAL
@@ -540,33 +509,29 @@ body.sin-scroll {
 
 .modal-alojamiento-informacion {
     padding: 50px 38px 35px 38px;
-
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-
     display: flex;
     flex-direction: column;
-
     min-height: 0;
+    height: 100%;
 }
 
 .modal-alojamiento-informacion h2 {
     margin: 0 45px 18px 0;
-
     color: #222;
-
     font-size: 30px;
     line-height: 1.2;
 }
 
 .modal-descripcion {
     margin: 0 0 25px 0;
-
     color: #555;
-
     font-size: 16px;
     line-height: 1.6;
 }
+
 
 /* ==========================================
    DATOS DEL ALOJAMIENTO
@@ -575,23 +540,18 @@ body.sin-scroll {
 .modal-datos {
     display: flex;
     flex-direction: column;
-
     gap: 10px;
-
     margin-bottom: 22px;
 }
 
 .modal-datos span {
     padding: 11px 13px;
-
     border-radius: 9px;
-
     background: #f3f3f3;
-
     color: #444;
-
     font-size: 15px;
 }
+
 
 /* ==========================================
    UBICACIÓN
@@ -599,12 +559,11 @@ body.sin-scroll {
 
 .modal-ubicacion {
     margin: 0 0 20px 0;
-
     color: #555;
-
     font-size: 15px;
     line-height: 1.5;
 }
+
 
 /* ==========================================
    PRECIO MODAL
@@ -612,13 +571,10 @@ body.sin-scroll {
 
 .modal-precio {
     margin-top: auto;
-
     padding-top: 25px;
     padding-bottom: 20px;
-
     display: flex;
     align-items: baseline;
-
     gap: 6px;
 }
 
@@ -632,26 +588,21 @@ body.sin-scroll {
     font-size: 14px;
 }
 
+
 /* ==========================================
    BOTÓN RESERVA MODAL
    ========================================== */
 
 .modal-boton-reserva {
     width: 100%;
-
     padding: 14px 18px;
-
     border: none;
     border-radius: 9px;
-
     background: #222;
     color: white;
-
     font-size: 16px;
     font-weight: 600;
-
     cursor: pointer;
-
     transition:
         background 0.2s ease,
         transform 0.1s ease;
@@ -665,48 +616,35 @@ body.sin-scroll {
     transform: scale(0.98);
 }
 
+
 /* ==========================================
    MODAL DE RESERVA
    ========================================== */
 
 .modal {
     display: none;
-
     position: fixed;
-
     top: 0;
     left: 0;
-
     width: 100%;
     height: 100%;
-
     background: rgba(0, 0, 0, 0.65);
-
     z-index: 5000;
-
     padding: 20px;
-
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
 .modal-contenido {
     position: relative;
-
     width: 100%;
     max-width: 500px;
-
-    max-height: 90vh;
-
+    max-height: 92vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-
-    margin: 5vh auto;
-
+    margin: 3vh auto;
     padding: 25px;
-
     background: white;
-
     border-radius: 15px;
 }
 
@@ -717,53 +655,260 @@ body.sin-scroll {
 
 .modal-contenido label {
     display: block;
-
     margin-top: 10px;
     margin-bottom: 5px;
-
     font-size: 14px;
     color: #444;
 }
 
 .modal-contenido input {
     width: 100%;
-
     padding: 11px;
-
     margin-bottom: 15px;
-
     border: 1px solid #ccc;
     border-radius: 7px;
-
     font-size: 15px;
-
     background: white;
 }
 
-.cerrar {
-    position: absolute;
-
-    top: 12px;
-    right: 15px;
-
-    border: none;
-
-    background: transparent;
-
-    color: #555;
-
-    font-size: 30px;
-
+.modal-contenido input[readonly] {
     cursor: pointer;
 }
 
+.nombre-reserva {
+    margin-top: -5px;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+
+/* ==========================================
+   CALENDARIO
+   ========================================== */
+
+.calendario-contenedor {
+    width: 100%;
+    margin: 4px 0 18px 0;
+}
+
+.calendario-cargando {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    background: #f7f7f7;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.calendario {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.calendario-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.calendario-titulo {
+    margin: 0;
+    font-size: 17px;
+    color: #222;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.calendario-navegacion {
+    display: flex;
+    gap: 5px;
+}
+
+.calendario-navegacion button {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: #f2f2f2;
+    color: #333;
+    cursor: pointer;
+    font-size: 19px;
+    line-height: 1;
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+.calendario-navegacion button:hover {
+    background: #e7e7e7;
+}
+
+.calendario-navegacion button:active {
+    transform: scale(0.92);
+}
+
+.calendario-dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 5px;
+}
+
+.calendario-dia-semana {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #777;
+    padding: 5px 0;
+}
+
+.calendario-dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendario-dia {
+    position: relative;
+    min-height: 42px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    padding: 0;
+}
+
+.calendario-dia:hover:not(:disabled) {
+    background: #fff1e3;
+}
+
+.calendario-dia.vacio {
+    cursor: default;
+}
+
+.calendario-dia.pasado {
+    color: #c5c5c5;
+    cursor: not-allowed;
+}
+
+.calendario-dia.bloqueado {
+    color: #aaa;
+    cursor: not-allowed;
+    background: transparent;
+}
+
+.calendario-dia.bloqueado::before {
+    content: "";
+    position: absolute;
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    background: #d2d2d2;
+    z-index: -1;
+}
+
+.calendario-dia.ingreso,
+.calendario-dia.salida {
+    color: white;
+    font-weight: 700;
+}
+
+.calendario-dia.ingreso::before,
+.calendario-dia.salida::before {
+    content: "";
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f28c28;
+    z-index: -1;
+}
+
+.calendario-dia.en-rango {
+    background: #fff0df;
+    border-radius: 0;
+}
+
+.calendario-dia.en-rango:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+.calendario-dia.en-rango:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+.calendario-dia.hoy {
+    font-weight: 700;
+}
+
+.calendario-dia.hoy:not(.ingreso):not(.salida):not(.bloqueado) {
+    box-shadow: inset 0 0 0 1px #f28c28;
+}
+
+.calendario-ayuda {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fafafa;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.calendario-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: #666;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.leyenda-circulo {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.leyenda-disponible {
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.leyenda-bloqueado {
+    background: #d2d2d2;
+}
+
+.leyenda-seleccionado {
+    background: #f28c28;
+}
+
+
+/* ==========================================
+   RESUMEN
+   ========================================== */
+
 .resumen {
     margin-top: 10px;
-
     padding: 15px;
-
     background: #f5f5f5;
-
     border-radius: 10px;
 }
 
@@ -771,23 +916,59 @@ body.sin-scroll {
     margin: 7px 0;
 }
 
+
+/* ==========================================
+   AVISO RESERVA
+   ========================================== */
+
+.aviso-reserva {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 12px 14px;
+    border-left: 4px solid #f28c28;
+    border-radius: 8px;
+    background: #fff7ef;
+    color: #555;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.aviso-reserva strong {
+    color: #333;
+}
+
+.aviso-reserva p {
+    margin: 5px 0 0 0;
+}
+
+
+/* ==========================================
+   WHATSAPP
+   ========================================== */
+
 .boton-whatsapp {
     width: 100%;
-
     padding: 13px;
-
     border: none;
     border-radius: 9px;
-
     background: #25d366;
-
     color: white;
-
     font-size: 16px;
     font-weight: 600;
-
     cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
 }
+
+.boton-whatsapp:hover {
+    background: #1fba59;
+}
+
+.boton-whatsapp:active {
+    transform: scale(0.98);
+}
+
 
 /* ==========================================
    PIE DE PÁGINA
@@ -795,19 +976,16 @@ body.sin-scroll {
 
 footer {
     margin-top: 20px;
-
     padding: 35px 20px;
-
     background: #222;
-
     color: white;
-
     text-align: center;
 }
 
 footer h3 {
     margin-top: 0;
 }
+
 
 /* ==========================================
    TABLET
@@ -843,8 +1021,8 @@ footer h3 {
     .modal-alojamiento-contenido {
         grid-template-columns:
             1fr 1fr;
-
         max-height: calc(100vh - 40px);
+        min-height: 0;
     }
 
     .modal-alojamiento-galeria,
@@ -854,11 +1032,14 @@ footer h3 {
 
     .modal-alojamiento-informacion {
         padding: 40px 25px 25px 25px;
-
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        min-height: 0;
+        height: 100%;
     }
 }
+
 
 /* ==========================================
    TELÉFONO
@@ -868,11 +1049,8 @@ footer h3 {
 
     .encabezado {
         padding: 16px 20px;
-
         flex-direction: column;
-
         gap: 12px;
-
         background: linear-gradient(
             to bottom,
             rgba(0, 0, 0, 0.55),
@@ -946,72 +1124,57 @@ footer h3 {
         font-size: 19px;
     }
 
+
     /* ======================================
        MODAL DETALLE EN CELULAR
        ====================================== */
 
     #modalAlojamiento {
         padding: 0;
-
         align-items: flex-start;
         justify-content: flex-start;
-
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
 
     .modal-alojamiento-contenido {
         width: 100%;
-
         min-height: 100vh;
         height: auto;
-
         max-height: none;
-
         border-radius: 0;
-
         display: flex;
         flex-direction: column;
-
         overflow: visible;
-
         margin: 0;
     }
 
     .modal-alojamiento-cerrar {
         top: 12px;
         right: 12px;
-
         width: 40px;
         height: 40px;
-
         font-size: 28px;
     }
 
     .modal-alojamiento-galeria {
         flex: none;
-
         width: 100%;
-
         height: 310px;
         min-height: 310px;
-
         overflow: hidden;
     }
 
     .modal-alojamiento-foto {
         width: 100%;
-
         height: 310px;
         min-height: 310px;
-
         object-fit: contain;
     }
 
     .modal-alojamiento-flecha {
         width: 40px;
         height: 40px;
-
         font-size: 23px;
     }
 
@@ -1025,45 +1188,37 @@ footer h3 {
 
     .modal-alojamiento-contador {
         bottom: 12px;
-
         font-size: 13px;
     }
 
     .modal-alojamiento-informacion {
         width: 100%;
-
         min-height: auto;
-
         padding: 25px 20px 35px 20px;
-
         overflow: visible;
-
         display: flex;
         flex-direction: column;
+        height: auto;
     }
 
     .modal-alojamiento-informacion h2 {
         font-size: 25px;
-
         margin-right: 35px;
         margin-bottom: 14px;
     }
 
     .modal-descripcion {
         font-size: 15px;
-
         margin-bottom: 20px;
     }
 
     .modal-datos {
         gap: 8px;
-
         margin-bottom: 17px;
     }
 
     .modal-datos span {
         padding: 9px 11px;
-
         font-size: 14px;
     }
 
@@ -1073,7 +1228,6 @@ footer h3 {
 
     .modal-precio {
         margin-top: 10px;
-
         padding-top: 18px;
         padding-bottom: 15px;
     }
@@ -1086,24 +1240,54 @@ footer h3 {
         padding: 13px;
     }
 
+
     /* ======================================
        MODAL DE RESERVA EN CELULAR
        ====================================== */
 
     .modal {
-        padding: 15px;
-
+        padding: 10px;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
 
     .modal-contenido {
-        margin: 3vh auto;
-
+        margin: 2vh auto;
         padding: 20px;
-
         max-height: none;
-
         overflow-y: visible;
+        border-radius: 13px;
+    }
+
+    .calendario {
+        padding: 10px;
+    }
+
+    .calendario-dia {
+        min-height: 39px;
+        font-size: 13px;
+    }
+
+    .calendario-dia.bloqueado::before {
+        width: 28px;
+        height: 28px;
+    }
+
+    .calendario-dia.ingreso::before,
+    .calendario-dia.salida::before {
+        width: 29px;
+        height: 29px;
+    }
+
+    .calendario-dia-semana {
+        font-size: 10px;
+    }
+
+    .calendario-titulo {
+        font-size: 16px;
+    }
+
+    .calendario-leyenda {
+        gap: 8px;
     }
 }
