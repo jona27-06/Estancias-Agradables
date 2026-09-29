@@ -1,3 +1,11 @@
+// ==========================================================
+// ESTANCIAS AGRADABLES - SCRIPT COMPLETO
+// ==========================================================
+
+// ==========================================================
+// SUPABASE
+// ==========================================================
+
 const SUPABASE_URL =
     "https://caodorogvcpupdajtbbp.supabase.co";
 
@@ -10,29 +18,389 @@ const clienteSupabase =
         SUPABASE_KEY
     );
 
+
+// ==========================================================
+// VARIABLES GENERALES
+// ==========================================================
+
 let alojamientoActual = null;
 
-// ==========================================
-// PORTADA
-// ==========================================
+let fotosAlojamiento = [];
+let indiceFotoAlojamiento = 0;
 
 let fotosPortada = [];
 let indicePortada = 0;
 let intervaloPortada = null;
-let fondoPortadaA = null;
-let fondoPortadaB = null;
-let fondoActivo = "A";
-let indicadoresPortada = null;
 
-// ==========================================
-// OBTENER FOTOS DE PORTADA
-// ==========================================
+let solicitudPersonasExtra = null;
+
+
+// ==========================================================
+// VARIABLES DEL CALENDARIO
+// ==========================================================
+
+let fechasBloqueadas = new Set();
+
+let fechaIngresoSeleccionada = null;
+let fechaSalidaSeleccionada = null;
+
+let mesCalendarioActual = new Date();
+
+let modoCalendario = "ingreso";
+
+let disponibilidadVerificada = false;
+let cargandoDisponibilidad = false;
+
+let calendarioReserva = null;
+let calendarioInicializado = false;
+
+
+// ==========================================================
+// ESTILOS DEL CALENDARIO
+// ==========================================================
+
+function insertarEstilosCalendario() {
+
+    if (document.getElementById("estancias-calendario-estilos")) {
+        return;
+    }
+
+    const estilos = document.createElement("style");
+
+    estilos.id = "estancias-calendario-estilos";
+
+    estilos.textContent = `
+
+        #calendarioReserva {
+            width: 100%;
+            margin-top: 15px;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .calendario-cabecera {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .calendario-mes {
+            flex: 1;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .calendario-nav {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendario-nav:hover:not(:disabled) {
+            background: #eeeeee;
+        }
+
+        .calendario-nav:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .calendario-semana {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            margin-bottom: 5px;
+        }
+
+        .calendario-dia-semana {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #777;
+            padding: 5px 0;
+        }
+
+        .calendario-dias {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+
+        .calendario-dia {
+            position: relative;
+            min-height: 40px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .calendario-dia:hover:not(:disabled) {
+            background: #fff1e3;
+        }
+
+        .calendario-dia.vacio {
+            cursor: default;
+        }
+
+        .calendario-dia.pasado {
+            color: #c7c7c7;
+            cursor: not-allowed;
+        }
+
+        .calendario-dia.bloqueado {
+            background: #e1e1e1;
+            color: #999;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .calendario-dia.bloqueado:hover {
+            background: #e1e1e1;
+        }
+
+        .calendario-dia.hoy {
+            font-weight: 700;
+            box-shadow: inset 0 0 0 1.5px #f28c28;
+        }
+
+        .calendario-dia.en-rango {
+            background: #ffe4ca;
+            border-radius: 0;
+        }
+
+        .calendario-dia.ingreso,
+        .calendario-dia.salida {
+            background: #f28c28;
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .calendario-dia.ingreso.en-rango,
+        .calendario-dia.salida.en-rango {
+            background: #f28c28;
+            border-radius: 50%;
+        }
+
+        .calendario-mensaje {
+            margin-top: 13px;
+            padding: 9px 10px;
+            border-radius: 8px;
+            background: #f7f7f7;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .calendario-mensaje.error {
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        .calendario-mensaje.ok {
+            background: #fff4e8;
+            color: #b65f0b;
+        }
+
+        .calendario-leyenda {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .calendario-leyenda-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .leyenda-cuadro {
+            width: 13px;
+            height: 13px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .leyenda-disponible {
+            background: #ffffff;
+            border: 1px solid #ddd;
+        }
+
+        .leyenda-bloqueado {
+            background: #e1e1e1;
+        }
+
+        .leyenda-seleccionado {
+            background: #f28c28;
+            border-radius: 50%;
+        }
+
+        .leyenda-rango {
+            background: #ffe4ca;
+        }
+
+        @media (max-width: 480px) {
+
+            #calendarioReserva {
+                padding: 12px;
+            }
+
+            .calendario-dia {
+                min-height: 37px;
+                font-size: 13px;
+            }
+
+            .calendario-mes {
+                font-size: 16px;
+            }
+
+        }
+    `;
+
+    document.head.appendChild(estilos);
+}
+
+
+// ==========================================================
+// FUNCIONES DE FECHAS
+// ==========================================================
+
+function obtenerHoyISO() {
+
+    const hoy = new Date();
+
+    const año = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoy.getDate()).padStart(2, "0");
+
+    return `${año}-${mes}-${dia}`;
+}
+
+
+function fechaISO(fecha) {
+
+    const año = fecha.getFullYear();
+
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+
+    const dia = String(fecha.getDate()).padStart(2, "0");
+
+    return `${año}-${mes}-${dia}`;
+}
+
+
+function crearFechaLocal(iso) {
+
+    if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+        return null;
+    }
+
+    const partes = iso.split("-");
+
+    return new Date(
+        Number(partes[0]),
+        Number(partes[1]) - 1,
+        Number(partes[2])
+    );
+}
+
+
+function sumarDiasISO(iso, cantidad) {
+
+    const fecha = crearFechaLocal(iso);
+
+    if (!fecha) {
+        return null;
+    }
+
+    fecha.setDate(fecha.getDate() + cantidad);
+
+    return fechaISO(fecha);
+}
+
+
+function formatearFechaVisible(iso) {
+
+    if (!iso) {
+        return "";
+    }
+
+    const fecha = crearFechaLocal(iso);
+
+    if (!fecha) {
+        return iso;
+    }
+
+    return fecha.toLocaleDateString("es-GT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
+}
+
+
+function esFechaPasada(iso) {
+
+    return iso < obtenerHoyISO();
+}
+
+
+function rangoTieneBloqueo(inicio, salida) {
+
+    if (!inicio || !salida) {
+        return false;
+    }
+
+    let fecha = inicio;
+
+    while (fecha < salida) {
+
+        if (fechasBloqueadas.has(fecha)) {
+            return true;
+        }
+
+        fecha = sumarDiasISO(fecha, 1);
+    }
+
+    return false;
+}
+
+
+// ==========================================================
+// PORTADA
+// ==========================================================
 
 async function obtenerFotosPortada() {
 
     try {
 
-        const resultado =
+        const { data, error } =
             await clienteSupabase
                 .storage
                 .from("fotos-alojamientos")
@@ -44,25 +412,20 @@ async function obtenerFotosPortada() {
                     }
                 });
 
-        if (resultado.error) {
-
+        if (error) {
             console.error(
-                "Error al cargar fotografías de portada:",
-                resultado.error
+                "Error obteniendo fotos de portada:",
+                error
             );
 
             return [];
         }
 
-        if (
-            !resultado.data ||
-            resultado.data.length === 0
-        ) {
-
+        if (!data) {
             return [];
         }
 
-        const extensionesImagen = [
+        const extensionesPermitidas = [
             ".jpg",
             ".jpeg",
             ".png",
@@ -71,45 +434,38 @@ async function obtenerFotosPortada() {
             ".avif"
         ];
 
-        return resultado.data
-            .filter(function (archivo) {
+        const archivos = data.filter(archivo => {
 
-                if (!archivo || !archivo.name) {
-                    return false;
-                }
+            if (!archivo || !archivo.name) {
+                return false;
+            }
 
-                const nombre =
-                    archivo.name.toLowerCase();
+            const nombre =
+                archivo.name.toLowerCase();
 
-                return extensionesImagen.some(
-                    function (extension) {
-                        return nombre.endsWith(extension);
-                    }
-                );
+            return extensionesPermitidas.some(
+                extension =>
+                    nombre.endsWith(extension)
+            );
+        });
 
-            })
-            .map(function (archivo) {
+        return archivos.map(archivo => {
 
-                const ruta =
-                    "portada/" + archivo.name;
+            const { data: urlData } =
+                clienteSupabase
+                    .storage
+                    .from("fotos-alojamientos")
+                    .getPublicUrl(
+                        `portada/${archivo.name}`
+                    );
 
-                const resultadoUrl =
-                    clienteSupabase
-                        .storage
-                        .from("fotos-alojamientos")
-                        .getPublicUrl(ruta);
-
-                return resultadoUrl.data
-                    ? resultadoUrl.data.publicUrl
-                    : null;
-
-            })
-            .filter(Boolean);
+            return urlData.publicUrl;
+        });
 
     } catch (error) {
 
         console.error(
-            "Error inesperado al obtener fotos de portada:",
+            "Error cargando portada:",
             error
         );
 
@@ -117,24 +473,16 @@ async function obtenerFotosPortada() {
     }
 }
 
-// ==========================================
-// CARGAR PORTADA
-// ==========================================
 
 async function cargarPortada() {
 
-    fondoPortadaA =
+    const fondoA =
         document.querySelector(".portada-fondo-a");
 
-    fondoPortadaB =
+    const fondoB =
         document.querySelector(".portada-fondo-b");
 
-    indicadoresPortada =
-        document.getElementById(
-            "indicadoresPortada"
-        );
-
-    if (!fondoPortadaA || !fondoPortadaB) {
+    if (!fondoA || !fondoB) {
 
         console.error(
             "No se encontraron los elementos de la portada."
@@ -146,35 +494,24 @@ async function cargarPortada() {
     fotosPortada =
         await obtenerFotosPortada();
 
-    if (fotosPortada.length === 0) {
+    if (!fotosPortada.length) {
 
-        fondoPortadaA.style.backgroundImage =
-            "linear-gradient(#555, #222)";
-
-        fondoPortadaB.style.backgroundImage =
-            "none";
+        fondoA.style.backgroundImage = "none";
+        fondoB.style.backgroundImage = "none";
 
         return;
     }
 
-    crearIndicadoresPortada();
+    indicePortada = 0;
 
-    fondoPortadaA.style.backgroundImage =
+    fondoA.style.backgroundImage =
         `url("${fotosPortada[0]}")`;
 
-    fondoPortadaA.style.opacity = "1";
-    fondoPortadaB.style.opacity = "0";
+    fondoA.style.opacity = "1";
 
-    indicePortada = 0;
-    fondoActivo = "A";
+    fondoB.style.opacity = "0";
 
-    fotosPortada.forEach(function (url) {
-
-        const imagen =
-            new Image();
-
-        imagen.src = url;
-    });
+    crearIndicadoresPortada();
 
     if (fotosPortada.length > 1) {
 
@@ -190,200 +527,152 @@ async function cargarPortada() {
     }
 }
 
-// ==========================================
-// INDICADORES PORTADA
-// ==========================================
 
 function crearIndicadoresPortada() {
 
-    if (!indicadoresPortada) {
+    const contenedor =
+        document.getElementById(
+            "indicadoresPortada"
+        );
+
+    if (!contenedor) {
         return;
     }
 
-    indicadoresPortada.innerHTML = "";
+    contenedor.innerHTML = "";
 
-    const cantidadPuntos =
-        Math.min(
-            fotosPortada.length,
-            3
-        );
+    const cantidadVisible =
+        Math.min(fotosPortada.length, 3);
 
     for (
         let i = 0;
-        i < cantidadPuntos;
+        i < cantidadVisible;
         i++
     ) {
 
-        const punto =
+        const indicador =
             document.createElement("span");
 
-        punto.className =
-            "punto-portada";
+        indicador.className =
+            "indicador-portada";
 
         if (i === 0) {
-            punto.classList.add("activo");
+            indicador.classList.add("activo");
         }
 
-        indicadoresPortada.appendChild(
-            punto
-        );
+        contenedor.appendChild(indicador);
     }
 }
 
-// ==========================================
-// CAMBIAR FOTO PORTADA
-// ==========================================
-
-function cambiarFotoPortada() {
-
-    if (fotosPortada.length <= 1) {
-        return;
-    }
-
-    indicePortada++;
-
-    if (
-        indicePortada >=
-        fotosPortada.length
-    ) {
-
-        indicePortada = 0;
-    }
-
-    const siguienteFoto =
-        fotosPortada[indicePortada];
-
-    if (fondoActivo === "A") {
-
-        fondoPortadaB.style.backgroundImage =
-            `url("${siguienteFoto}")`;
-
-        fondoPortadaB.style.opacity = "1";
-        fondoPortadaA.style.opacity = "0";
-
-        fondoActivo = "B";
-
-    } else {
-
-        fondoPortadaA.style.backgroundImage =
-            `url("${siguienteFoto}")`;
-
-        fondoPortadaA.style.opacity = "1";
-        fondoPortadaB.style.opacity = "0";
-
-        fondoActivo = "A";
-    }
-
-    actualizarIndicadoresPortada();
-}
-
-// ==========================================
-// ACTUALIZAR INDICADORES PORTADA
-// ==========================================
 
 function actualizarIndicadoresPortada() {
 
-    if (!indicadoresPortada) {
-        return;
-    }
-
-    const puntos =
-        indicadoresPortada.querySelectorAll(
-            ".punto-portada"
+    const indicadores =
+        document.querySelectorAll(
+            ".indicador-portada"
         );
 
-    if (puntos.length === 0) {
-        return;
-    }
+    indicadores.forEach(
+        (indicador, index) => {
 
-    let puntoActivo;
-
-    if (fotosPortada.length <= 3) {
-
-        puntoActivo =
-            indicePortada;
-
-    } else {
-
-        puntoActivo =
-            Math.floor(
-                (
-                    indicePortada /
-                    fotosPortada.length
-                ) *
-                puntos.length
-            );
-
-        if (
-            puntoActivo >=
-            puntos.length
-        ) {
-
-            puntoActivo =
-                puntos.length - 1;
-        }
-    }
-
-    puntos.forEach(
-        function (punto, indice) {
-
-            punto.classList.toggle(
+            indicador.classList.toggle(
                 "activo",
-                indice === puntoActivo
+                index ===
+                    Math.min(
+                        indicePortada,
+                        2
+                    )
             );
-
         }
     );
 }
 
-// ==========================================
-// OBTENER FOTOS DEL ALOJAMIENTO
-// ==========================================
 
-async function obtenerFotos(
-    alojamientoId
-) {
+function cambiarFotoPortada() {
 
-    if (!alojamientoId) {
-        return [];
+    if (fotosPortada.length < 2) {
+        return;
     }
+
+    const fondoA =
+        document.querySelector(
+            ".portada-fondo-a"
+        );
+
+    const fondoB =
+        document.querySelector(
+            ".portada-fondo-b"
+        );
+
+    if (!fondoA || !fondoB) {
+        return;
+    }
+
+    const siguiente =
+        (indicePortada + 1) %
+        fotosPortada.length;
+
+    const mostrandoA =
+        fondoA.style.opacity !== "0";
+
+    const fondoEntrante =
+        mostrandoA
+            ? fondoB
+            : fondoA;
+
+    const fondoSaliente =
+        mostrandoA
+            ? fondoA
+            : fondoB;
+
+    fondoEntrante.style.backgroundImage =
+        `url("${fotosPortada[siguiente]}")`;
+
+    fondoEntrante.style.opacity = "1";
+
+    fondoSaliente.style.opacity = "0";
+
+    indicePortada = siguiente;
+
+    actualizarIndicadoresPortada();
+}
+
+
+// ==========================================================
+// FOTOS DE ALOJAMIENTO
+// ==========================================================
+
+async function obtenerFotos(idAlojamiento) {
 
     try {
 
-        const resultado =
+        const { data, error } =
             await clienteSupabase
                 .storage
                 .from("fotos-alojamientos")
-                .list(
-                    String(alojamientoId),
-                    {
-                        limit: 1000,
-                        sortBy: {
-                            column: "name",
-                            order: "asc"
-                        }
+                .list(String(idAlojamiento), {
+                    limit: 100,
+                    sortBy: {
+                        column: "name",
+                        order: "asc"
                     }
-                );
+                });
 
-        if (resultado.error) {
+        if (error) {
 
             console.error(
-                "Error al cargar fotos:",
-                resultado.error
+                "Error obteniendo fotos:",
+                error
             );
 
             return [];
         }
 
-        if (
-            !resultado.data ||
-            resultado.data.length === 0
-        ) {
-
+        if (!data) {
             return [];
         }
 
-        const extensionesImagen = [
+        const extensionesPermitidas = [
             ".jpg",
             ".jpeg",
             ".png",
@@ -392,81 +681,34 @@ async function obtenerFotos(
             ".avif"
         ];
 
-        const archivosImagen =
-            resultado.data.filter(
-                function (archivo) {
+        return data
+            .filter(archivo => {
 
-                    if (
-                        !archivo ||
-                        !archivo.name
-                    ) {
-                        return false;
-                    }
+                const nombre =
+                    archivo.name.toLowerCase();
 
-                    if (
-                        archivo.id === null ||
-                        archivo.id === undefined
-                    ) {
-                        return false;
-                    }
+                return extensionesPermitidas.some(
+                    extension =>
+                        nombre.endsWith(extension)
+                );
+            })
+            .map(archivo => {
 
-                    if (
-                        archivo.metadata &&
-                        archivo.metadata.mimetype
-                    ) {
-
-                        return archivo.metadata
-                            .mimetype
-                            .toLowerCase()
-                            .startsWith(
-                                "image/"
-                            );
-                    }
-
-                    const nombre =
-                        archivo.name.toLowerCase();
-
-                    return extensionesImagen.some(
-                        function (extension) {
-
-                            return nombre.endsWith(
-                                extension
-                            );
-                        }
-                    );
-                }
-            );
-
-        return archivosImagen
-            .map(function (archivo) {
-
-                const ruta =
-                    String(alojamientoId) +
-                    "/" +
-                    archivo.name;
-
-                const resultadoUrl =
+                const { data: urlData } =
                     clienteSupabase
                         .storage
                         .from("fotos-alojamientos")
-                        .getPublicUrl(ruta);
+                        .getPublicUrl(
+                            `${idAlojamiento}/${archivo.name}`
+                        );
 
-                if (
-                    !resultadoUrl.data ||
-                    !resultadoUrl.data.publicUrl
-                ) {
-                    return null;
-                }
-
-                return resultadoUrl.data.publicUrl;
-
-            })
-            .filter(Boolean);
+                return urlData.publicUrl;
+            });
 
     } catch (error) {
 
         console.error(
-            "Error inesperado al obtener fotos:",
+            "Error obteniendo fotografías:",
             error
         );
 
@@ -474,25 +716,209 @@ async function obtenerFotos(
     }
 }
 
-// ==========================================
-// MODAL DETALLE DEL ALOJAMIENTO
-// ==========================================
 
-let modalAlojamiento = null;
-let modalFoto = null;
-let modalContador = null;
-let modalAnterior = null;
-let modalSiguiente = null;
+// ==========================================================
+// CARGAR ALOJAMIENTOS
+// ==========================================================
 
-let fotosModal = [];
-let indiceModal = 0;
+async function cargarAlojamientos() {
 
-let modalTouchInicio = 0;
-let modalTouchFin = 0;
+    const contenedor =
+        document.getElementById(
+            "listaAlojamientos"
+        );
 
-// ==========================================
-// CREAR MODAL
-// ==========================================
+    if (!contenedor) {
+        return;
+    }
+
+    contenedor.innerHTML =
+        "<p>Cargando alojamientos...</p>";
+
+    try {
+
+        const { data, error } =
+            await clienteSupabase
+                .from("alojamientos")
+                .select(`
+                    id,
+                    nombre,
+                    descripcion,
+                    precio_base,
+                    precio_persona,
+                    personas_incluidas,
+                    max_huespedes,
+                    habitaciones,
+                    banos,
+                    ubicacion,
+                    publicado,
+                    created_at
+                `)
+                .eq("publicado", true)
+                .order("created_at", {
+                    ascending: false
+                });
+
+        if (error) {
+
+            console.error(error);
+
+            contenedor.innerHTML =
+                "<p>No se pudieron cargar los alojamientos.</p>";
+
+            return;
+        }
+
+        if (!data || data.length === 0) {
+
+            contenedor.innerHTML =
+                "<p>No hay alojamientos publicados actualmente.</p>";
+
+            return;
+        }
+
+        contenedor.innerHTML = "";
+
+        for (const alojamiento of data) {
+
+            const fotos =
+                await obtenerFotos(
+                    alojamiento.id
+                );
+
+            const tarjeta =
+                document.createElement("article");
+
+            tarjeta.className =
+                "tarjeta-alojamiento";
+
+            const imagenPrincipal =
+                fotos.length
+                    ? fotos[0]
+                    : "";
+
+            tarjeta.innerHTML = `
+
+                <div class="imagen-alojamiento">
+
+                    ${
+                        imagenPrincipal
+                            ? `
+                                <img
+                                    src="${imagenPrincipal}"
+                                    alt="${escapeHTML(
+                                        alojamiento.nombre || ""
+                                    )}"
+                                >
+                            `
+                            : `
+                                <div class="sin-imagen">
+                                    Sin fotografía
+                                </div>
+                            `
+                    }
+
+                    ${
+                        fotos.length
+                            ? `
+                                <span class="contador-fotos">
+                                    📷 ${fotos.length} fotos
+                                </span>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+                <div class="contenido-tarjeta">
+
+                    <h3>
+                        ${escapeHTML(
+                            alojamiento.nombre || ""
+                        )}
+                    </h3>
+
+                    ${
+                        alojamiento.ubicacion
+                            ? `
+                                <p class="ubicacion">
+                                    📍 ${escapeHTML(
+                                        alojamiento.ubicacion
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+                    <p>
+                        ${escapeHTML(
+                            alojamiento.descripcion || ""
+                        )}
+                    </p>
+
+                    <button
+                        class="boton-principal"
+                        type="button"
+                    >
+                        Ver alojamiento
+                    </button>
+
+                </div>
+            `;
+
+            const boton =
+                tarjeta.querySelector(
+                    ".boton-principal"
+                );
+
+            boton.addEventListener(
+                "click",
+                () => {
+                    abrirModalAlojamiento(
+                        alojamiento,
+                        fotos
+                    );
+                }
+            );
+
+            contenedor.appendChild(tarjeta);
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando alojamientos:",
+            error
+        );
+
+        contenedor.innerHTML =
+            "<p>Ocurrió un error al cargar los alojamientos.</p>";
+    }
+}
+
+
+// ==========================================================
+// ESCAPAR HTML
+// ==========================================================
+
+function escapeHTML(valor) {
+
+    if (valor === null || valor === undefined) {
+        return "";
+    }
+
+    return String(valor)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+// ==========================================================
+// MODAL DEL ALOJAMIENTO
+// ==========================================================
 
 function crearModalAlojamiento() {
 
@@ -501,346 +927,157 @@ function crearModalAlojamiento() {
             "modalAlojamiento"
         )
     ) {
-
         return;
     }
 
-    modalAlojamiento =
+    const modal =
         document.createElement("div");
 
-    modalAlojamiento.id =
+    modal.id =
         "modalAlojamiento";
 
-    // ======================================
-    // BOTÓN CERRAR
-    // ======================================
+    modal.className =
+        "modal modal-alojamiento";
 
-    const cerrar =
-        document.createElement("button");
+    modal.innerHTML = `
 
-    cerrar.className =
-        "modal-alojamiento-cerrar";
+        <div class="modal-contenido modal-detalle">
 
-    cerrar.type =
-        "button";
+            <button
+                class="cerrar"
+                type="button"
+                aria-label="Cerrar"
+            >
+                ×
+            </button>
 
-    cerrar.innerHTML =
-        "&times;";
+            <div class="galeria-alojamiento">
 
-    cerrar.addEventListener(
+                <button
+                    class="galeria-flecha galeria-anterior"
+                    type="button"
+                >
+                    ‹
+                </button>
+
+                <img
+                    id="imagenGaleriaAlojamiento"
+                    src=""
+                    alt=""
+                >
+
+                <button
+                    class="galeria-flecha galeria-siguiente"
+                    type="button"
+                >
+                    ›
+                </button>
+
+                <div
+                    id="contadorGaleriaAlojamiento"
+                    class="contador-galeria"
+                >
+                </div>
+
+            </div>
+
+            <div class="detalle-info">
+
+                <h2 id="detalleNombre"></h2>
+
+                <p
+                    id="detalleUbicacion"
+                    class="detalle-ubicacion"
+                ></p>
+
+                <p
+                    id="detalleDescripcion"
+                    class="detalle-descripcion"
+                ></p>
+
+                <div
+                    id="detalleCaracteristicas"
+                    class="detalle-caracteristicas"
+                >
+                </div>
+
+                <button
+                    id="botonAbrirReserva"
+                    class="boton-principal"
+                    type="button"
+                >
+                    Solicitar reserva
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal
+        .querySelector(".cerrar")
+        .addEventListener(
+            "click",
+            cerrarModalAlojamiento
+        );
+
+    modal
+        .querySelector(".galeria-anterior")
+        .addEventListener(
+            "click",
+            fotoAnterior
+        );
+
+    modal
+        .querySelector(".galeria-siguiente")
+        .addEventListener(
+            "click",
+            fotoSiguiente
+        );
+
+    modal.addEventListener(
         "click",
-        cerrarModalAlojamiento
-    );
+        event => {
 
-    modalAlojamiento.appendChild(
-        cerrar
-    );
-
-    // ======================================
-    // CONTENIDO
-    // ======================================
-
-    const contenido =
-        document.createElement("div");
-
-    contenido.className =
-        "modal-alojamiento-contenido";
-
-    // ======================================
-    // GALERÍA
-    // ======================================
-
-    const galeria =
-        document.createElement("div");
-
-    galeria.className =
-        "modal-alojamiento-galeria";
-
-    modalFoto =
-        document.createElement("img");
-
-    modalFoto.className =
-        "modal-alojamiento-foto";
-
-    modalFoto.alt =
-        "Fotografía del alojamiento";
-
-    galeria.appendChild(
-        modalFoto
-    );
-
-    // FLECHA ANTERIOR
-
-    modalAnterior =
-        document.createElement("button");
-
-    modalAnterior.className =
-        "modal-alojamiento-flecha modal-alojamiento-anterior";
-
-    modalAnterior.type =
-        "button";
-
-    modalAnterior.innerHTML =
-        "&#10094;";
-
-    modalAnterior.addEventListener(
-        "click",
-        function (evento) {
-
-            evento.stopPropagation();
-
-            cambiarFotoModal(
-                indiceModal - 1
-            );
-        }
-    );
-
-    galeria.appendChild(
-        modalAnterior
-    );
-
-    // FLECHA SIGUIENTE
-
-    modalSiguiente =
-        document.createElement("button");
-
-    modalSiguiente.className =
-        "modal-alojamiento-flecha modal-alojamiento-siguiente";
-
-    modalSiguiente.type =
-        "button";
-
-    modalSiguiente.innerHTML =
-        "&#10095;";
-
-    modalSiguiente.addEventListener(
-        "click",
-        function (evento) {
-
-            evento.stopPropagation();
-
-            cambiarFotoModal(
-                indiceModal + 1
-            );
-        }
-    );
-
-    galeria.appendChild(
-        modalSiguiente
-    );
-
-    // CONTADOR
-
-    modalContador =
-        document.createElement("div");
-
-    modalContador.className =
-        "modal-alojamiento-contador";
-
-    galeria.appendChild(
-        modalContador
-    );
-
-    // SWIPE
-
-    galeria.addEventListener(
-        "touchstart",
-        function (evento) {
-
-            modalTouchInicio =
-                evento.touches[0].clientX;
-
-        },
-        {
-            passive: true
-        }
-    );
-
-    galeria.addEventListener(
-        "touchend",
-        function (evento) {
-
-            modalTouchFin =
-                evento.changedTouches[0].clientX;
-
-            const diferencia =
-                modalTouchInicio -
-                modalTouchFin;
-
-            if (
-                Math.abs(diferencia) < 50
-            ) {
-                return;
-            }
-
-            if (diferencia > 50) {
-
-                cambiarFotoModal(
-                    indiceModal + 1
-                );
-
-            } else {
-
-                cambiarFotoModal(
-                    indiceModal - 1
-                );
-            }
-
-        },
-        {
-            passive: true
-        }
-    );
-
-    contenido.appendChild(
-        galeria
-    );
-
-    // ======================================
-    // INFORMACIÓN
-    // ======================================
-
-    const informacion =
-        document.createElement("div");
-
-    informacion.className =
-        "modal-alojamiento-informacion";
-
-    const nombre =
-        document.createElement("h2");
-
-    nombre.id =
-        "modalNombre";
-
-    informacion.appendChild(
-        nombre
-    );
-
-    const descripcion =
-        document.createElement("p");
-
-    descripcion.id =
-        "modalDescripcion";
-
-    descripcion.className =
-        "modal-descripcion";
-
-    informacion.appendChild(
-        descripcion
-    );
-
-    const datos =
-        document.createElement("div");
-
-    datos.id =
-        "modalDatos";
-
-    datos.className =
-        "modal-datos";
-
-    informacion.appendChild(
-        datos
-    );
-
-    const ubicacion =
-        document.createElement("p");
-
-    ubicacion.id =
-        "modalUbicacion";
-
-    ubicacion.className =
-        "modal-ubicacion";
-
-    informacion.appendChild(
-        ubicacion
-    );
-
-    const precio =
-        document.createElement("div");
-
-    precio.id =
-        "modalPrecio";
-
-    precio.className =
-        "modal-precio";
-
-    informacion.appendChild(
-        precio
-    );
-
-    const boton =
-        document.createElement("button");
-
-    boton.id =
-        "modalBotonReserva";
-
-    boton.className =
-        "modal-boton-reserva";
-
-    boton.type =
-        "button";
-
-    boton.textContent =
-        "Solicitar reserva";
-
-    boton.addEventListener(
-        "click",
-        function () {
-
-            cerrarModalAlojamiento();
-
-            if (!alojamientoActual) {
-                return;
-            }
-
-            abrirReserva(
-                alojamientoActual.nombre,
-                alojamientoActual.precioBase,
-                alojamientoActual.precioPersona,
-                alojamientoActual.personasIncluidas,
-                alojamientoActual.maxHuespedes
-            );
-        }
-    );
-
-    informacion.appendChild(
-        boton
-    );
-
-    contenido.appendChild(
-        informacion
-    );
-
-    modalAlojamiento.appendChild(
-        contenido
-    );
-
-    // ======================================
-    // CERRAR AL TOCAR FONDO
-    // ======================================
-
-    modalAlojamiento.addEventListener(
-        "click",
-        function (evento) {
-
-            if (
-                evento.target ===
-                modalAlojamiento
-            ) {
-
+            if (event.target === modal) {
                 cerrarModalAlojamiento();
             }
         }
     );
 
-    document.body.appendChild(
-        modalAlojamiento
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            const modalActual =
+                document.getElementById(
+                    "modalAlojamiento"
+                );
+
+            if (
+                !modalActual ||
+                !modalActual.classList.contains("activo")
+            ) {
+                return;
+            }
+
+            if (event.key === "Escape") {
+                cerrarModalAlojamiento();
+            }
+
+            if (event.key === "ArrowLeft") {
+                fotoAnterior();
+            }
+
+            if (event.key === "ArrowRight") {
+                fotoSiguiente();
+            }
+        }
     );
 }
 
-// ==========================================
-// ABRIR MODAL
-// ==========================================
 
 function abrirModalAlojamiento(
     alojamiento,
@@ -850,972 +1087,746 @@ function abrirModalAlojamiento(
     crearModalAlojamiento();
 
     alojamientoActual = {
-        nombre:
-            alojamiento.nombre || "",
-
-        descripcion:
-            alojamiento.descripcion || "",
-
-        habitaciones:
-            Number(
-                alojamiento.habitaciones || 0
-            ),
-
-        banos:
-            Number(
-                alojamiento.banos || 0
-            ),
-
-        ubicacion:
-            alojamiento.ubicacion || "",
-
-        precioBase:
-            Number(
-                alojamiento.precio_base || 0
-            ),
-
-        precioPersona:
-            Number(
-                alojamiento.precio_persona || 0
-            ),
-
-        personasIncluidas:
-            Number(
-                alojamiento.personas_incluidas || 0
-            ),
-
-        maxHuespedes:
-            Math.max(
-                1,
-                Number(
-                    alojamiento.max_huespedes || 1
-                )
-            )
+        ...alojamiento,
+        airbnbCalendarUrl: null
     };
 
-    fotosModal =
+    fotosAlojamiento =
         fotos || [];
 
-    indiceModal = 0;
+    indiceFotoAlojamiento = 0;
 
-    const nombre =
+    const modal =
         document.getElementById(
-            "modalNombre"
+            "modalAlojamiento"
         );
 
-    const descripcion =
-        document.getElementById(
-            "modalDescripcion"
-        );
+    document.getElementById(
+        "detalleNombre"
+    ).textContent =
+        alojamiento.nombre || "";
 
-    const datos =
-        document.getElementById(
-            "modalDatos"
-        );
+    document.getElementById(
+        "detalleUbicacion"
+    ).textContent =
+        alojamiento.ubicacion
+            ? `📍 ${alojamiento.ubicacion}`
+            : "";
 
-    const ubicacion =
-        document.getElementById(
-            "modalUbicacion"
-        );
+    document.getElementById(
+        "detalleDescripcion"
+    ).textContent =
+        alojamiento.descripcion || "";
 
-    const precio =
-        document.getElementById(
-            "modalPrecio"
-        );
+    document.getElementById(
+        "detalleCaracteristicas"
+    ).innerHTML = `
 
-    if (nombre) {
-
-        nombre.textContent =
-            alojamientoActual.nombre;
-    }
-
-    if (descripcion) {
-
-        descripcion.textContent =
-            alojamientoActual.descripcion;
-    }
-
-    if (datos) {
-
-        datos.innerHTML = `
-            <span>
-                🛏️ ${alojamientoActual.habitaciones}
-                habitación${alojamientoActual.habitaciones === 1 ? "" : "es"}
-            </span>
-
-            <span>
-                🚿 ${alojamientoActual.banos}
-                baño${alojamientoActual.banos === 1 ? "" : "s"}
-            </span>
-
-            <span>
-                👥 Hasta ${alojamientoActual.maxHuespedes}
-                persona${alojamientoActual.maxHuespedes === 1 ? "" : "s"}
-            </span>
-        `;
-    }
-
-    if (ubicacion) {
-
-        if (alojamientoActual.ubicacion) {
-
-            ubicacion.textContent =
-                "📍 " +
-                alojamientoActual.ubicacion;
-
-            ubicacion.style.display =
-                "block";
-
-        } else {
-
-            ubicacion.style.display =
-                "none";
-        }
-    }
-
-    if (precio) {
-
-        precio.innerHTML = `
+        <div>
+            🛏️
             <strong>
-                Q${alojamientoActual.precioBase.toFixed(2)}
+                ${alojamiento.habitaciones ?? 0}
             </strong>
+            habitaciones
+        </div>
 
-            <span>
-                por noche
-            </span>
-        `;
-    }
+        <div>
+            🚿
+            <strong>
+                ${alojamiento.banos ?? 0}
+            </strong>
+            baños
+        </div>
 
-    actualizarFotoModal();
+        <div>
+            👥
+            Hasta
+            <strong>
+                ${alojamiento.max_huespedes ?? 0}
+            </strong>
+            huéspedes
+        </div>
 
-    modalAlojamiento.classList.add(
-        "modal-alojamiento-visible"
-    );
+    `;
+
+    actualizarGaleria();
+
+    document.getElementById(
+        "botonAbrirReserva"
+    ).onclick =
+        abrirReserva;
+
+    modal.classList.add("activo");
 
     document.body.classList.add(
         "sin-scroll"
     );
 }
 
-// ==========================================
-// CERRAR MODAL
-// ==========================================
 
 function cerrarModalAlojamiento() {
 
-    if (!modalAlojamiento) {
+    const modal =
+        document.getElementById(
+            "modalAlojamiento"
+        );
+
+    if (!modal) {
         return;
     }
 
-    modalAlojamiento.classList.remove(
-        "modal-alojamiento-visible"
-    );
+    modal.classList.remove("activo");
 
     document.body.classList.remove(
         "sin-scroll"
     );
 }
 
-// ==========================================
-// CAMBIAR FOTO MODAL
-// ==========================================
 
-function cambiarFotoModal(
-    nuevoIndice
+function actualizarGaleria() {
+
+    const imagen =
+        document.getElementById(
+            "imagenGaleriaAlojamiento"
+        );
+
+    const contador =
+        document.getElementById(
+            "contadorGaleriaAlojamiento"
+        );
+
+    const anterior =
+        document.querySelector(
+            ".galeria-anterior"
+        );
+
+    const siguiente =
+        document.querySelector(
+            ".galeria-siguiente"
+        );
+
+    if (!imagen) {
+        return;
+    }
+
+    if (!fotosAlojamiento.length) {
+
+        imagen.style.display = "none";
+
+        contador.textContent =
+            "Sin fotografías";
+
+        anterior.style.display = "none";
+        siguiente.style.display = "none";
+
+        return;
+    }
+
+    imagen.style.display = "block";
+
+    imagen.src =
+        fotosAlojamiento[
+            indiceFotoAlojamiento
+        ];
+
+    imagen.alt =
+        alojamientoActual?.nombre || "";
+
+    contador.textContent =
+        `${indiceFotoAlojamiento + 1} / ${fotosAlojamiento.length}`;
+
+    anterior.style.display =
+        fotosAlojamiento.length > 1
+            ? "flex"
+            : "none";
+
+    siguiente.style.display =
+        fotosAlojamiento.length > 1
+            ? "flex"
+            : "none";
+}
+
+
+function fotoAnterior() {
+
+    if (!fotosAlojamiento.length) {
+        return;
+    }
+
+    indiceFotoAlojamiento--;
+
+    if (indiceFotoAlojamiento < 0) {
+
+        indiceFotoAlojamiento =
+            fotosAlojamiento.length - 1;
+    }
+
+    actualizarGaleria();
+}
+
+
+function fotoSiguiente() {
+
+    if (!fotosAlojamiento.length) {
+        return;
+    }
+
+    indiceFotoAlojamiento++;
+
+    if (
+        indiceFotoAlojamiento >=
+        fotosAlojamiento.length
+    ) {
+
+        indiceFotoAlojamiento = 0;
+    }
+
+    actualizarGaleria();
+}
+
+
+// ==========================================================
+// CALENDARIO
+// ==========================================================
+
+function configurarCalendarioReserva() {
+
+    if (calendarioInicializado) {
+        return;
+    }
+
+    insertarEstilosCalendario();
+
+    const fechaIngreso =
+        document.getElementById(
+            "fechaIngreso"
+        );
+
+    const fechaSalida =
+        document.getElementById(
+            "fechaSalida"
+        );
+
+    if (!fechaIngreso || !fechaSalida) {
+
+        console.error(
+            "No se encontraron fechaIngreso o fechaSalida."
+        );
+
+        return;
+    }
+
+    // Cambiamos los inputs date por texto.
+    // El calendario personalizado se encarga
+    // de colocar las fechas.
+    fechaIngreso.type = "text";
+    fechaSalida.type = "text";
+
+    fechaIngreso.readOnly = true;
+    fechaSalida.readOnly = true;
+
+    fechaIngreso.placeholder =
+        "Seleccione la fecha";
+
+    fechaSalida.placeholder =
+        "Seleccione la fecha";
+
+    fechaIngreso.style.cursor =
+        "pointer";
+
+    fechaSalida.style.cursor =
+        "pointer";
+
+    calendarioReserva =
+        document.createElement("div");
+
+    calendarioReserva.id =
+        "calendarioReserva";
+
+    calendarioReserva.style.display =
+        "none";
+
+    calendarioReserva.innerHTML = `
+
+        <div class="calendario-cabecera">
+
+            <button
+                id="calendarioMesAnterior"
+                class="calendario-nav"
+                type="button"
+                aria-label="Mes anterior"
+            >
+                ‹
+            </button>
+
+            <div
+                id="calendarioMes"
+                class="calendario-mes"
+            >
+            </div>
+
+            <button
+                id="calendarioMesSiguiente"
+                class="calendario-nav"
+                type="button"
+                aria-label="Mes siguiente"
+            >
+                ›
+            </button>
+
+        </div>
+
+        <div class="calendario-semana">
+
+            <div class="calendario-dia-semana">L</div>
+            <div class="calendario-dia-semana">M</div>
+            <div class="calendario-dia-semana">M</div>
+            <div class="calendario-dia-semana">J</div>
+            <div class="calendario-dia-semana">V</div>
+            <div class="calendario-dia-semana">S</div>
+            <div class="calendario-dia-semana">D</div>
+
+        </div>
+
+        <div
+            id="calendarioDias"
+            class="calendario-dias"
+        >
+        </div>
+
+        <div
+            id="calendarioMensaje"
+            class="calendario-mensaje"
+        >
+            Seleccione una fecha de ingreso.
+        </div>
+
+        <div class="calendario-leyenda">
+
+            <div class="calendario-leyenda-item">
+                <span class="leyenda-cuadro leyenda-disponible"></span>
+                Disponible
+            </div>
+
+            <div class="calendario-leyenda-item">
+                <span class="leyenda-cuadro leyenda-bloqueado"></span>
+                No disponible
+            </div>
+
+            <div class="calendario-leyenda-item">
+                <span class="leyenda-cuadro leyenda-seleccionado"></span>
+                Seleccionado
+            </div>
+
+            <div class="calendario-leyenda-item">
+                <span class="leyenda-cuadro leyenda-rango"></span>
+                Estadía
+            </div>
+
+        </div>
+    `;
+
+    fechaSalida.insertAdjacentElement(
+        "afterend",
+        calendarioReserva
+    );
+
+    fechaIngreso.onclick = function () {
+
+        modoCalendario = "ingreso";
+
+        mostrarCalendario();
+
+        renderizarCalendario();
+    };
+
+    fechaSalida.onclick = function () {
+
+        modoCalendario = "salida";
+
+        mostrarCalendario();
+
+        renderizarCalendario();
+    };
+
+    document
+        .getElementById(
+            "calendarioMesAnterior"
+        )
+        .onclick =
+        function () {
+
+            cambiarMesCalendario(-1);
+        };
+
+    document
+        .getElementById(
+            "calendarioMesSiguiente"
+        )
+        .onclick =
+        function () {
+
+            cambiarMesCalendario(1);
+        };
+
+    calendarioInicializado = true;
+}
+
+
+function mostrarCalendario() {
+
+    if (!calendarioReserva) {
+        return;
+    }
+
+    calendarioReserva.style.display =
+        "block";
+
+    calendarioReserva.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+
+function ocultarCalendario() {
+
+    if (!calendarioReserva) {
+        return;
+    }
+
+    calendarioReserva.style.display =
+        "none";
+}
+
+
+function cambiarMesCalendario(
+    cantidad
 ) {
 
-    if (
-        !fotosModal ||
-        fotosModal.length === 0
-    ) {
+    const nuevoMes =
+        new Date(
+            mesCalendarioActual.getFullYear(),
+            mesCalendarioActual.getMonth() + cantidad,
+            1
+        );
+
+    const mesActual =
+        new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+        );
+
+    if (nuevoMes < mesActual) {
         return;
     }
 
-    if (nuevoIndice < 0) {
+    mesCalendarioActual =
+        nuevoMes;
 
-        nuevoIndice =
-            fotosModal.length - 1;
-    }
-
-    if (
-        nuevoIndice >=
-        fotosModal.length
-    ) {
-
-        nuevoIndice = 0;
-    }
-
-    indiceModal =
-        nuevoIndice;
-
-    actualizarFotoModal();
+    renderizarCalendario();
 }
 
-// ==========================================
-// ACTUALIZAR FOTO MODAL
-// ==========================================
 
-function actualizarFotoModal() {
+function renderizarCalendario() {
 
-    if (
-        !modalFoto ||
-        !modalContador
-    ) {
+    if (!calendarioReserva) {
         return;
     }
 
-    if (
-        !fotosModal ||
-        fotosModal.length === 0
-    ) {
-
-        modalFoto.style.display =
-            "none";
-
-        modalContador.style.display =
-            "none";
-
-        modalAnterior.style.display =
-            "none";
-
-        modalSiguiente.style.display =
-            "none";
-
-        return;
-    }
-
-    modalFoto.style.display =
-        "block";
-
-    modalFoto.src =
-        fotosModal[indiceModal];
-
-    modalContador.style.display =
-        "block";
-
-    modalContador.textContent =
-        (indiceModal + 1) +
-        " / " +
-        fotosModal.length;
-
-    if (fotosModal.length <= 1) {
-
-        modalAnterior.style.display =
-            "none";
-
-        modalSiguiente.style.display =
-            "none";
-
-    } else {
-
-        modalAnterior.style.display =
-            "";
-
-        modalSiguiente.style.display =
-            "";
-    }
-}
-
-// ==========================================
-// TECLADO MODAL
-// ==========================================
-
-document.addEventListener(
-    "keydown",
-    function (evento) {
-
-        if (
-            !modalAlojamiento ||
-            !modalAlojamiento.classList.contains(
-                "modal-alojamiento-visible"
-            )
-        ) {
-            return;
-        }
-
-        if (
-            evento.key === "Escape"
-        ) {
-
-            cerrarModalAlojamiento();
-
-        } else if (
-            evento.key === "ArrowLeft"
-        ) {
-
-            cambiarFotoModal(
-                indiceModal - 1
-            );
-
-        } else if (
-            evento.key === "ArrowRight"
-        ) {
-
-            cambiarFotoModal(
-                indiceModal + 1
-            );
-        }
-    }
-);
-
-// ==========================================
-// CARGAR ALOJAMIENTOS
-// ==========================================
-
-async function cargarAlojamientos() {
+    const titulo =
+        document.getElementById(
+            "calendarioMes"
+        );
 
     const contenedor =
-        document.querySelector(
-            ".alojamientos"
+        document.getElementById(
+            "calendarioDias"
         );
 
-    if (!contenedor) {
-
-        console.error(
-            "No se encontró la sección de alojamientos."
+    const mensaje =
+        document.getElementById(
+            "calendarioMensaje"
         );
 
-        return;
-    }
-
-    const resultado =
-        await clienteSupabase
-            .from("alojamientos")
-            .select("*")
-            .eq(
-                "publicado",
-                true
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
-    if (resultado.error) {
-
-        console.error(
-            "Error de Supabase:",
-            resultado.error
+    const botonAnterior =
+        document.getElementById(
+            "calendarioMesAnterior"
         );
 
-        contenedor.innerHTML =
-            "<p>No se pudieron cargar los alojamientos.</p>";
-
-        return;
-    }
-
-    const alojamientos =
-        resultado.data;
+    const botonSiguiente =
+        document.getElementById(
+            "calendarioMesSiguiente"
+        );
 
     if (
-        !alojamientos ||
-        alojamientos.length === 0
+        !titulo ||
+        !contenedor ||
+        !mensaje
     ) {
-
-        contenedor.innerHTML =
-            "<p>No hay alojamientos disponibles.</p>";
-
         return;
     }
+
+    const año =
+        mesCalendarioActual.getFullYear();
+
+    const mes =
+        mesCalendarioActual.getMonth();
+
+    titulo.textContent =
+        mesCalendarioActual.toLocaleDateString(
+            "es-GT",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    const primerDia =
+        new Date(
+            año,
+            mes,
+            1
+        );
+
+    const ultimoDia =
+        new Date(
+            año,
+            mes + 1,
+            0
+        );
+
+    let posicionPrimerDia =
+        primerDia.getDay();
+
+    // Convertir domingo=0 a
+    // lunes=0
+    posicionPrimerDia =
+        posicionPrimerDia === 0
+            ? 6
+            : posicionPrimerDia - 1;
+
+    const cantidadDias =
+        ultimoDia.getDate();
 
     contenedor.innerHTML = "";
 
     for (
-        const alojamiento of alojamientos
+        let i = 0;
+        i < posicionPrimerDia;
+        i++
     ) {
 
-        const fotos =
-            await obtenerFotos(
-                alojamiento.id
-            );
-
-        const tarjeta =
-            document.createElement("article");
-
-        tarjeta.className =
-            "alojamiento";
-
-        tarjeta.tabIndex = 0;
-
-        // ======================================
-        // GALERÍA PRINCIPAL
-        // ======================================
-
-        const galeria =
+        const vacio =
             document.createElement("div");
 
-        galeria.className =
-            "galeria-alojamiento";
+        vacio.className =
+            "calendario-dia vacio";
 
-        if (fotos.length > 0) {
+        contenedor.appendChild(vacio);
+    }
 
-            const imagen =
-                document.createElement("img");
+    for (
+        let dia = 1;
+        dia <= cantidadDias;
+        dia++
+    ) {
 
-            imagen.src =
-                fotos[0];
-
-            imagen.alt =
-                alojamiento.nombre ||
-                "Fotografía del alojamiento";
-
-            imagen.className =
-                "foto-principal";
-
-            imagen.loading =
-                "lazy";
-
-            galeria.appendChild(
-                imagen
+        const fecha =
+            new Date(
+                año,
+                mes,
+                dia
             );
 
-            // CONTADOR
+        const iso =
+            fechaISO(fecha);
 
-            const contador =
-                document.createElement("div");
+        const boton =
+            document.createElement("button");
 
-            contador.className =
-                "contador-fotos";
+        boton.type = "button";
 
-            contador.textContent =
-                "📷 " +
-                fotos.length +
-                " fotos";
+        boton.className =
+            "calendario-dia";
 
-            galeria.appendChild(
-                contador
+        boton.textContent =
+            dia;
+
+        if (
+            iso ===
+            obtenerHoyISO()
+        ) {
+
+            boton.classList.add(
+                "hoy"
             );
-
-        } else {
-
-            galeria.classList.add(
-                "sin-fotos"
-            );
-
-            galeria.innerHTML =
-                "<p>Sin fotografías disponibles</p>";
         }
 
-        tarjeta.appendChild(
-            galeria
-        );
+        const pasado =
+            esFechaPasada(iso);
 
-        // ======================================
-        // NOMBRE
-        // ======================================
+        const bloqueado =
+            fechasBloqueadas.has(iso);
 
-        const nombre =
-            document.createElement("div");
+        if (pasado) {
 
-        nombre.className =
-            "nombre-alojamiento";
+            boton.classList.add(
+                "pasado"
+            );
 
-        nombre.textContent =
-            alojamiento.nombre ||
-            "Alojamiento";
+            boton.disabled = true;
+        }
 
-        tarjeta.appendChild(
-            nombre
-        );
+        if (bloqueado) {
 
-        // ======================================
-        // CLICK EN TODO EL ANUNCIO
-        // ======================================
+            boton.classList.add(
+                "bloqueado"
+            );
 
-        tarjeta.addEventListener(
-            "click",
-            function () {
+            boton.disabled = true;
+        }
 
-                abrirModalAlojamiento(
-                    alojamiento,
-                    fotos
-                );
-            }
-        );
+        if (
+            fechaIngresoSeleccionada &&
+            fechaSalidaSeleccionada &&
+            iso > fechaIngresoSeleccionada &&
+            iso < fechaSalidaSeleccionada
+        ) {
 
-        tarjeta.addEventListener(
-            "keydown",
-            function (evento) {
+            boton.classList.add(
+                "en-rango"
+            );
+        }
 
-                if (
-                    evento.key === "Enter" ||
-                    evento.key === " "
-                ) {
+        if (
+            iso ===
+            fechaIngresoSeleccionada
+        ) {
 
-                    evento.preventDefault();
+            boton.classList.add(
+                "ingreso"
+            );
+        }
 
-                    abrirModalAlojamiento(
-                        alojamiento,
-                        fotos
+        if (
+            iso ===
+            fechaSalidaSeleccionada
+        ) {
+
+            boton.classList.add(
+                "salida"
+            );
+        }
+
+        if (
+            !pasado &&
+            !bloqueado &&
+            disponibilidadVerificada
+        ) {
+
+            boton.addEventListener(
+                "click",
+                function () {
+
+                    seleccionarFechaCalendario(
+                        iso
                     );
                 }
-            }
-        );
+            );
+        }
 
         contenedor.appendChild(
-            tarjeta
+            boton
         );
     }
 
-    console.log(
-        "Alojamientos cargados:",
-        alojamientos
-    );
-}
-
-// ==========================================
-// CREAR SOLICITUD PERSONAS EXTRA
-// ==========================================
-
-function crearSolicitudPersonasExtra() {
-
-    const campoPersonas =
-        document.getElementById(
-            "personas"
+    const mesActual =
+        new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
         );
 
-    if (!campoPersonas) {
-        return null;
-    }
+    botonAnterior.disabled =
+        mesCalendarioActual <=
+        mesActual;
 
-    let contenedor =
-        document.getElementById(
-            "solicitudPersonasExtra"
-        );
+    botonSiguiente.disabled =
+        false;
 
-    if (contenedor) {
-        return contenedor;
-    }
+    if (cargandoDisponibilidad) {
 
-    contenedor =
-        document.createElement("div");
+        mensaje.textContent =
+            "Consultando disponibilidad...";
 
-    contenedor.id =
-        "solicitudPersonasExtra";
+        mensaje.className =
+            "calendario-mensaje";
 
-    contenedor.style.display =
-        "none";
+    } else if (!disponibilidadVerificada) {
 
-    contenedor.style.marginTop =
-        "12px";
+        mensaje.textContent =
+            "No se pudo consultar la disponibilidad.";
 
-    contenedor.style.padding =
-        "12px";
+        mensaje.className =
+            "calendario-mensaje error";
 
-    contenedor.style.border =
-        "1px solid #ddd";
-
-    contenedor.style.borderRadius =
-        "8px";
-
-    contenedor.style.backgroundColor =
-        "#f8f8f8";
-
-    const titulo =
-        document.createElement("div");
-
-    titulo.id =
-        "tituloSolicitudExtra";
-
-    titulo.style.fontWeight =
-        "600";
-
-    titulo.style.marginBottom =
-        "8px";
-
-    contenedor.appendChild(
-        titulo
-    );
-
-    const label =
-        document.createElement("label");
-
-    label.style.display =
-        "flex";
-
-    label.style.alignItems =
-        "flex-start";
-
-    label.style.gap =
-        "8px";
-
-    label.style.cursor =
-        "pointer";
-
-    const checkbox =
-        document.createElement("input");
-
-    checkbox.type =
-        "checkbox";
-
-    checkbox.id =
-        "aceptarPersonasExtra";
-
-    checkbox.style.marginTop =
-        "3px";
-
-    const texto =
-        document.createElement("span");
-
-    texto.id =
-        "textoSolicitudExtra";
-
-    label.appendChild(
-        checkbox
-    );
-
-    label.appendChild(
-        texto
-    );
-
-    contenedor.appendChild(
-        label
-    );
-
-    const aviso =
-        document.createElement("p");
-
-    aviso.id =
-        "avisoSolicitudExtra";
-
-    aviso.style.margin =
-        "8px 0 0 0";
-
-    aviso.style.fontSize =
-        "13px";
-
-    aviso.style.opacity =
-        "0.75";
-
-    aviso.textContent =
-        "La solicitud de personas adicionales queda sujeta a confirmación por parte del alojamiento.";
-
-    contenedor.appendChild(
-        aviso
-    );
-
-    campoPersonas.insertAdjacentElement(
-        "afterend",
-        contenedor
-    );
-
-    checkbox.addEventListener(
-        "change",
-        function () {
-
-            calcularPrecio();
-        }
-    );
-
-    return contenedor;
-}
-
-// ==========================================
-// ACTUALIZAR PERSONAS EXTRA
-// ==========================================
-
-function actualizarSolicitudPersonasExtra() {
-
-    if (!alojamientoActual) {
-        return;
-    }
-
-    const campoPersonas =
-        document.getElementById(
-            "personas"
-        );
-
-    if (!campoPersonas) {
-        return;
-    }
-
-    const contenedor =
-        crearSolicitudPersonasExtra();
-
-    if (!contenedor) {
-        return;
-    }
-
-    const checkbox =
-        document.getElementById(
-            "aceptarPersonasExtra"
-        );
-
-    const titulo =
-        document.getElementById(
-            "tituloSolicitudExtra"
-        );
-
-    const texto =
-        document.getElementById(
-            "textoSolicitudExtra"
-        );
-
-    let personas =
-        Number(
-            campoPersonas.value
-        );
-
-    if (
-        !Number.isFinite(personas)
+    } else if (
+        fechaIngresoSeleccionada &&
+        fechaSalidaSeleccionada
     ) {
 
-        personas = 1;
-    }
+        mensaje.textContent =
+            `Ingreso: ${formatearFechaVisible(
+                fechaIngresoSeleccionada
+            )} · Salida: ${formatearFechaVisible(
+                fechaSalidaSeleccionada
+            )}`;
 
-    personas =
-        Math.floor(personas);
+        mensaje.className =
+            "calendario-mensaje ok";
 
-    if (personas < 1) {
-        personas = 1;
-    }
+    } else if (
+        fechaIngresoSeleccionada
+    ) {
 
-    if (personas > 50) {
-        personas = 50;
-    }
+        mensaje.textContent =
+            "Ahora seleccione la fecha de salida.";
 
-    campoPersonas.value =
-        personas;
-
-    const maximo =
-        alojamientoActual.maxHuespedes;
-
-    const personasExtra =
-        Math.max(
-            personas - maximo,
-            0
-        );
-
-    if (personasExtra > 0) {
-
-        contenedor.style.display =
-            "block";
-
-        titulo.textContent =
-            "Solicitud especial de personas adicionales";
-
-        texto.textContent =
-            "Sé que la capacidad máxima de este alojamiento es de " +
-            maximo +
-            " persona" +
-            (maximo === 1 ? "" : "s") +
-            ", pero deseo ingresar con " +
-            personas +
-            " personas, es decir, " +
-            personasExtra +
-            " persona" +
-            (personasExtra === 1 ? "" : "s") +
-            " adicional" +
-            (personasExtra === 1 ? "" : "es") +
-            ", y estoy dispuesto(a) a acomodarme en el alojamiento.";
+        mensaje.className =
+            "calendario-mensaje ok";
 
     } else {
 
-        contenedor.style.display =
-            "none";
+        mensaje.textContent =
+            "Seleccione una fecha de ingreso.";
 
-        if (checkbox) {
-
-            checkbox.checked =
-                false;
-        }
+        mensaje.className =
+            "calendario-mensaje";
     }
 }
 
-// ==========================================
-// CONFIGURAR CAMPO DE PERSONAS
-// ==========================================
 
-function configurarCampoPersonas(
-    campoPersonas
+// ==========================================================
+// SELECCIONAR FECHA
+// ==========================================================
+
+function seleccionarFechaCalendario(
+    iso
 ) {
 
-    campoPersonas.min =
-        "1";
+    if (!disponibilidadVerificada) {
+        return;
+    }
 
-    campoPersonas.max =
-        "50";
+    if (esFechaPasada(iso)) {
+        return;
+    }
 
-    campoPersonas.step =
-        "1";
-
-    campoPersonas.value =
-        "1";
-
-    campoPersonas.dataset.valorInicial =
-        "1";
-
-    campoPersonas.addEventListener(
-        "beforeinput",
-        function (evento) {
-
-            if (
-                this.value === "1" &&
-                this.dataset.valorInicial === "1" &&
-                evento.inputType === "insertText" &&
-                /^\d$/.test(
-                    evento.data || ""
-                )
-            ) {
-
-                this.value = "";
-            }
-        }
-    );
-
-    campoPersonas.addEventListener(
-        "keydown",
-        function (evento) {
-
-            if (
-                this.value === "1" &&
-                this.dataset.valorInicial === "1" &&
-                /^[0-9]$/.test(
-                    evento.key
-                )
-            ) {
-
-                this.value = "";
-            }
-        }
-    );
-
-    campoPersonas.addEventListener(
-        "input",
-        function () {
-
-            if (this.value === "") {
-
-                this.dataset.valorInicial =
-                    "";
-
-                return;
-            }
-
-            let cantidad =
-                Number(
-                    this.value
-                );
-
-            if (
-                !Number.isFinite(
-                    cantidad
-                )
-            ) {
-                return;
-            }
-
-            cantidad =
-                Math.floor(cantidad);
-
-            if (cantidad < 1) {
-                cantidad = 1;
-            }
-
-            if (cantidad > 50) {
-                cantidad = 50;
-            }
-
-            this.value =
-                cantidad;
-
-            this.dataset.valorInicial =
-                "";
-
-            actualizarSolicitudPersonasExtra();
-
-            calcularPrecio();
-        }
-    );
-
-    campoPersonas.addEventListener(
-        "change",
-        function () {
-
-            let cantidad =
-                Number(
-                    this.value
-                );
-
-            if (
-                !Number.isFinite(
-                    cantidad
-                )
-            ) {
-
-                cantidad = 1;
-            }
-
-            cantidad =
-                Math.floor(cantidad);
-
-            if (cantidad < 1) {
-                cantidad = 1;
-            }
-
-            if (cantidad > 50) {
-                cantidad = 50;
-            }
-
-            this.value =
-                cantidad;
-
-            this.dataset.valorInicial =
-                "";
-
-            actualizarSolicitudPersonasExtra();
-
-            calcularPrecio();
-        }
-    );
-}
-
-// ==========================================
-// ABRIR RESERVA
-// ==========================================
-
-function abrirReserva(
-    nombre,
-    precioBase,
-    precioPersona,
-    personasIncluidas,
-    maxHuespedes
-) {
-
-    const maximo =
-        Math.max(
-            1,
-            Number(maxHuespedes) || 1
-        );
-
-    alojamientoActual = {
-
-        nombre: nombre,
-
-        precioBase:
-            Number(precioBase) || 0,
-
-        precioPersona:
-            Number(precioPersona) || 0,
-
-        personasIncluidas:
-            Number(personasIncluidas) || 0,
-
-        maxHuespedes:
-            maximo
-    };
-
-    const nombreAlojamiento =
-        document.getElementById(
-            "nombreAlojamiento"
-        );
-
-    const ventana =
-        document.getElementById(
-            "ventanaReserva"
-        );
+    if (fechasBloqueadas.has(iso)) {
+        return;
+    }
 
     const fechaIngreso =
         document.getElementById(
@@ -1827,370 +1838,780 @@ function abrirReserva(
             "fechaSalida"
         );
 
-    const campoPersonas =
-        document.getElementById(
-            "personas"
-        );
+    if (modoCalendario === "ingreso") {
 
-    const nombreCampo =
-        document.getElementById(
-            "nombre"
-        );
+        fechaIngresoSeleccionada =
+            iso;
 
-    const telefonoCampo =
-        document.getElementById(
-            "telefono"
-        );
-
-    const cantidadNoches =
-        document.getElementById(
-            "cantidadNoches"
-        );
-
-    const precioTotal =
-        document.getElementById(
-            "precioTotal"
-        );
-
-    if (nombreAlojamiento) {
-
-        nombreAlojamiento.textContent =
-            nombre;
-    }
-
-    if (ventana) {
-
-        ventana.style.display =
-            "block";
-    }
-
-    if (fechaIngreso) {
+        fechaSalidaSeleccionada =
+            null;
 
         fechaIngreso.value =
-            "";
-
-        fechaIngreso.onchange =
-            calcularPrecio;
-    }
-
-    if (fechaSalida) {
+            iso;
 
         fechaSalida.value =
             "";
 
-        fechaSalida.onchange =
-            calcularPrecio;
-    }
+        modoCalendario =
+            "salida";
 
-    if (campoPersonas) {
+        const fecha =
+            crearFechaLocal(iso);
 
-        campoPersonas.oninput = null;
-        campoPersonas.onchange = null;
+        mesCalendarioActual =
+            new Date(
+                fecha.getFullYear(),
+                fecha.getMonth(),
+                1
+            );
 
-        configurarCampoPersonas(
-            campoPersonas
-        );
-    }
+        renderizarCalendario();
 
-    if (nombreCampo) {
+        calcularPrecio();
 
-        nombreCampo.value =
-            "";
-    }
-
-    if (telefonoCampo) {
-
-        telefonoCampo.value =
-            "";
-    }
-
-    if (cantidadNoches) {
-
-        cantidadNoches.textContent =
-            "0";
-    }
-
-    if (precioTotal) {
-
-        precioTotal.textContent =
-            "Q0";
-    }
-
-    crearSolicitudPersonasExtra();
-
-    const checkbox =
-        document.getElementById(
-            "aceptarPersonasExtra"
-        );
-
-    if (checkbox) {
-
-        checkbox.checked =
-            false;
-    }
-
-    actualizarSolicitudPersonasExtra();
-}
-
-// ==========================================
-// CERRAR RESERVA
-// ==========================================
-
-function cerrarReserva() {
-
-    const ventana =
-        document.getElementById(
-            "ventanaReserva"
-        );
-
-    if (ventana) {
-
-        ventana.style.display =
-            "none";
-    }
-}
-
-// ==========================================
-// CALCULAR PRECIO
-// ==========================================
-
-function calcularPrecio() {
-
-    if (!alojamientoActual) {
         return;
     }
 
-    const ingreso =
-        document.getElementById(
-            "fechaIngreso"
-        ).value;
+    if (modoCalendario === "salida") {
 
-    const salida =
-        document.getElementById(
-            "fechaSalida"
-        ).value;
+        if (
+            !fechaIngresoSeleccionada
+        ) {
 
-    const campoPersonas =
-        document.getElementById(
-            "personas"
-        );
+            modoCalendario =
+                "ingreso";
 
-    const cantidadNoches =
-        document.getElementById(
-            "cantidadNoches"
-        );
+            seleccionarFechaCalendario(
+                iso
+            );
 
-    const precioTotal =
-        document.getElementById(
-            "precioTotal"
-        );
+            return;
+        }
 
-    let personas =
-        Number(
-            campoPersonas.value
-        );
+        if (
+            iso <=
+            fechaIngresoSeleccionada
+        ) {
+
+            fechaIngresoSeleccionada =
+                iso;
+
+            fechaSalidaSeleccionada =
+                null;
+
+            fechaIngreso.value =
+                iso;
+
+            fechaSalida.value =
+                "";
+
+            renderizarCalendario();
+
+            calcularPrecio();
+
+            return;
+        }
+
+        if (
+            rangoTieneBloqueo(
+                fechaIngresoSeleccionada,
+                iso
+            )
+        ) {
+
+            const mensaje =
+                document.getElementById(
+                    "calendarioMensaje"
+                );
+
+            if (mensaje) {
+
+                mensaje.textContent =
+                    "La estadía atraviesa una fecha no disponible. Seleccione otra fecha de salida.";
+
+                mensaje.className =
+                    "calendario-mensaje error";
+            }
+
+            fechaSalidaSeleccionada =
+                null;
+
+            fechaSalida.value = "";
+
+            renderizarCalendario();
+
+            calcularPrecio();
+
+            return;
+        }
+
+        fechaSalidaSeleccionada =
+            iso;
+
+        fechaSalida.value =
+            iso;
+
+        calcularPrecio();
+
+        renderizarCalendario();
+
+        // Después de seleccionar ambas fechas
+        // mantenemos visible el calendario.
+    }
+}
+
+
+// ==========================================================
+// DISPONIBILIDAD AIRBNB
+// ==========================================================
+
+async function cargarDisponibilidad(
+    mostrarCalendarioDespues = true
+) {
 
     if (
-        !Number.isFinite(
-            personas
-        )
+        !alojamientoActual ||
+        !alojamientoActual.id
     ) {
 
-        personas = 1;
+        disponibilidadVerificada =
+            false;
+
+        return false;
     }
 
-    personas =
-        Math.floor(personas);
+    cargandoDisponibilidad =
+        true;
 
-    if (personas < 1) {
-        personas = 1;
+    disponibilidadVerificada =
+        false;
+
+    fechasBloqueadas =
+        new Set();
+
+    if (mostrarCalendarioDespues) {
+
+        mostrarCalendario();
+
+        renderizarCalendario();
     }
 
-    if (personas > 50) {
-        personas = 50;
+    try {
+
+        const { data, error } =
+            await clienteSupabase.functions.invoke(
+                "obtener-disponibilidad",
+                {
+                    body: {
+                        alojamiento_id:
+                            alojamientoActual.id
+                    }
+                }
+            );
+
+        if (error) {
+
+            console.error(
+                "Error consultando disponibilidad:",
+                error
+            );
+
+            throw error;
+        }
+
+        const bloqueadas =
+            Array.isArray(data?.blocked)
+                ? data.blocked
+                : [];
+
+        fechasBloqueadas =
+            new Set(
+                bloqueadas.filter(
+                    fecha =>
+                        /^\d{4}-\d{2}-\d{2}$/.test(
+                            fecha
+                        )
+                )
+            );
+
+        disponibilidadVerificada =
+            true;
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo consultar disponibilidad:",
+            error
+        );
+
+        disponibilidadVerificada =
+            false;
+
+        fechasBloqueadas =
+            new Set();
+
+        return false;
+
+    } finally {
+
+        cargandoDisponibilidad =
+            false;
+
+        renderizarCalendario();
     }
-
-    campoPersonas.value =
-        personas;
-
-    actualizarSolicitudPersonasExtra();
-
-    if (!ingreso || !salida) {
-
-        cantidadNoches.textContent =
-            "0";
-
-        precioTotal.textContent =
-            "Q0";
-
-        return;
-    }
-
-    const fechaIngreso =
-        new Date(
-            ingreso +
-            "T00:00:00"
-        );
-
-    const fechaSalida =
-        new Date(
-            salida +
-            "T00:00:00"
-        );
-
-    const diferencia =
-        fechaSalida -
-        fechaIngreso;
-
-    const noches =
-        Math.round(
-            diferencia /
-            (
-                1000 *
-                60 *
-                60 *
-                24
-            )
-        );
-
-    if (noches <= 0) {
-
-        cantidadNoches.textContent =
-            "0";
-
-        precioTotal.textContent =
-            "Q0";
-
-        return;
-    }
-
-    const personasAdicionales =
-        Math.max(
-            personas -
-            alojamientoActual.personasIncluidas,
-            0
-        );
-
-    const precioPorNoche =
-        alojamientoActual.precioBase +
-        (
-            personasAdicionales *
-            alojamientoActual.precioPersona
-        );
-
-    const total =
-        precioPorNoche *
-        noches;
-
-    cantidadNoches.textContent =
-        noches;
-
-    precioTotal.textContent =
-        "Q" +
-        total.toFixed(2);
 }
 
-// ==========================================
-// ENVIAR WHATSAPP
-// ==========================================
 
-function enviarWhatsApp() {
+// ==========================================================
+// CAMPO PERSONAS
+// ==========================================================
 
-    if (!alojamientoActual) {
+function crearSolicitudPersonasExtra() {
+
+    if (
+        !alojamientoActual
+    ) {
         return;
     }
-
-    const ingreso =
-        document.getElementById(
-            "fechaIngreso"
-        ).value;
-
-    const salida =
-        document.getElementById(
-            "fechaSalida"
-        ).value;
 
     const personas =
         Number(
             document.getElementById(
                 "personas"
-            ).value
+            )?.value || 1
         );
+
+    const incluidas =
+        Number(
+            alojamientoActual
+                .personas_incluidas || 0
+        );
+
+    const max =
+        Number(
+            alojamientoActual
+                .max_huespedes || 0
+        );
+
+    if (
+        personas > incluidas &&
+        personas <= max
+    ) {
+
+        solicitudPersonasExtra = true;
+
+    } else {
+
+        solicitudPersonasExtra = false;
+    }
+}
+
+
+function actualizarSolicitudPersonasExtra() {
+
+    crearSolicitudPersonasExtra();
+}
+
+
+function configurarCampoPersonas() {
+
+    const campo =
+        document.getElementById(
+            "personas"
+        );
+
+    if (!campo) {
+        return;
+    }
+
+    campo.oninput =
+        function () {
+
+            if (
+                alojamientoActual &&
+                alojamientoActual.max_huespedes
+            ) {
+
+                const max =
+                    Number(
+                        alojamientoActual
+                            .max_huespedes
+                    );
+
+                if (
+                    Number(campo.value) >
+                    max
+                ) {
+
+                    campo.value =
+                        max;
+                }
+            }
+
+            calcularPrecio();
+        };
+
+    campo.onchange =
+        function () {
+
+            calcularPrecio();
+        };
+}
+
+
+// ==========================================================
+// ABRIR RESERVA
+// ==========================================================
+
+async function abrirReserva() {
+
+    if (
+        !alojamientoActual
+    ) {
+        return;
+    }
+
+    const modal =
+        document.getElementById(
+            "ventanaReserva"
+        );
+
+    if (!modal) {
+        return;
+    }
 
     const nombre =
         document.getElementById(
+            "nombreAlojamiento"
+        );
+
+    const fechaIngreso =
+        document.getElementById(
+            "fechaIngreso"
+        );
+
+    const fechaSalida =
+        document.getElementById(
+            "fechaSalida"
+        );
+
+    const personas =
+        document.getElementById(
+            "personas"
+        );
+
+    const nombreCliente =
+        document.getElementById(
             "nombre"
-        ).value.trim();
+        );
 
     const telefono =
         document.getElementById(
             "telefono"
-        ).value.trim();
-
-    const noches =
-        document.getElementById(
-            "cantidadNoches"
-        ).textContent;
-
-    const total =
-        document.getElementById(
-            "precioTotal"
-        ).textContent;
-
-    const checkbox =
-        document.getElementById(
-            "aceptarPersonasExtra"
         );
 
-    const solicitaPersonasExtra =
-        personas >
-        alojamientoActual.maxHuespedes;
+    if (nombre) {
 
-    if (
-        !ingreso ||
-        !salida ||
-        !nombre ||
-        !telefono
-    ) {
-
-        alert(
-            "Por favor complete todos los datos."
-        );
-
-        return;
+        nombre.textContent =
+            alojamientoActual.nombre || "";
     }
 
-    if (
-        !Number.isInteger(personas) ||
-        personas < 1 ||
-        personas > 50
-    ) {
-
-        alert(
-            "La cantidad de huéspedes debe ser válida."
-        );
-
-        return;
+    if (fechaIngreso) {
+        fechaIngreso.value = "";
     }
 
-    if (solicitaPersonasExtra) {
+    if (fechaSalida) {
+        fechaSalida.value = "";
+    }
+
+    if (personas) {
+
+        personas.value = 1;
 
         if (
-            !checkbox ||
-            !checkbox.checked
+            alojamientoActual.max_huespedes
         ) {
 
-            alert(
-                "La cantidad indicada supera la capacidad máxima de " +
-                alojamientoActual.maxHuespedes +
-                " personas. Si desea solicitar ingresar con personas adicionales, marque la opción de solicitud especial."
-            );
-
-            return;
+            personas.max =
+                alojamientoActual
+                    .max_huespedes;
         }
     }
 
-    if (Number(noches) <= 0) {
+    if (nombreCliente) {
+        nombreCliente.value = "";
+    }
+
+    if (telefono) {
+        telefono.value = "";
+    }
+
+    document.getElementById(
+        "cantidadNoches"
+    ).textContent = "0";
+
+    document.getElementById(
+        "precioTotal"
+    ).textContent = "Q0";
+
+    fechaIngresoSeleccionada =
+        null;
+
+    fechaSalidaSeleccionada =
+        null;
+
+    solicitudPersonasExtra =
+        null;
+
+    disponibilidadVerificada =
+        false;
+
+    fechasBloqueadas =
+        new Set();
+
+    mesCalendarioActual =
+        new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+        );
+
+    modoCalendario =
+        "ingreso";
+
+    configurarCalendarioReserva();
+
+    modal.style.display = "flex";
+
+    modal.classList.add("activo");
+
+    document.body.classList.add(
+        "sin-scroll"
+    );
+
+    configurarCampoPersonas();
+
+    renderizarCalendario();
+
+    // Mostrar inmediatamente el calendario
+    // dentro de la ventana de reserva.
+    mostrarCalendario();
+
+    await cargarDisponibilidad(
+        true
+    );
+}
+
+
+// ==========================================================
+// CERRAR RESERVA
+// ==========================================================
+
+function cerrarReserva() {
+
+    const modal =
+        document.getElementById(
+            "ventanaReserva"
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove(
+        "activo"
+    );
+
+    modal.style.display =
+        "none";
+
+    document.body.classList.remove(
+        "sin-scroll"
+    );
+
+    ocultarCalendario();
+}
+
+
+// ==========================================================
+// CALCULAR PRECIO
+// ==========================================================
+
+function calcularPrecio() {
+
+    if (
+        !alojamientoActual
+    ) {
+        return;
+    }
+
+    const fechaIngreso =
+        document.getElementById(
+            "fechaIngreso"
+        )?.value;
+
+    const fechaSalida =
+        document.getElementById(
+            "fechaSalida"
+        )?.value;
+
+    const personas =
+        Number(
+            document.getElementById(
+                "personas"
+            )?.value || 1
+        );
+
+    const elementoNoches =
+        document.getElementById(
+            "cantidadNoches"
+        );
+
+    const elementoTotal =
+        document.getElementById(
+            "precioTotal"
+        );
+
+    if (
+        !fechaIngreso ||
+        !fechaSalida
+    ) {
+
+        if (elementoNoches) {
+            elementoNoches.textContent =
+                "0";
+        }
+
+        if (elementoTotal) {
+            elementoTotal.textContent =
+                "Q0";
+        }
+
+        return;
+    }
+
+    const inicio =
+        crearFechaLocal(
+            fechaIngreso
+        );
+
+    const salida =
+        crearFechaLocal(
+            fechaSalida
+        );
+
+    if (
+        !inicio ||
+        !salida ||
+        salida <= inicio
+    ) {
+
+        if (elementoNoches) {
+            elementoNoches.textContent =
+                "0";
+        }
+
+        if (elementoTotal) {
+            elementoTotal.textContent =
+                "Q0";
+        }
+
+        return;
+    }
+
+    const diferencia =
+        salida.getTime() -
+        inicio.getTime();
+
+    const noches =
+        Math.round(
+            diferencia /
+            (1000 * 60 * 60 * 24)
+        );
+
+    const precioBase =
+        Number(
+            alojamientoActual
+                .precio_base || 0
+        );
+
+    const precioPersona =
+        Number(
+            alojamientoActual
+                .precio_persona || 0
+        );
+
+    const personasIncluidas =
+        Number(
+            alojamientoActual
+                .personas_incluidas || 0
+        );
+
+    const personasExtra =
+        Math.max(
+            personas -
+            personasIncluidas,
+            0
+        );
+
+    const totalPorNoche =
+        precioBase +
+        (
+            personasExtra *
+            precioPersona
+        );
+
+    const total =
+        totalPorNoche *
+        noches;
+
+    if (elementoNoches) {
+
+        elementoNoches.textContent =
+            noches;
+    }
+
+    if (elementoTotal) {
+
+        elementoTotal.textContent =
+            `Q${total.toLocaleString(
+                "es-GT",
+                {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2
+                }
+            )}`;
+    }
+
+    actualizarSolicitudPersonasExtra();
+}
+
+
+// ==========================================================
+// VERIFICACIÓN FINAL
+// ==========================================================
+
+async function verificarDisponibilidadAntesDeEnviar() {
+
+    const correcto =
+        await cargarDisponibilidad(
+            false
+        );
+
+    if (!correcto) {
+        return false;
+    }
+
+    const fechaIngreso =
+        document.getElementById(
+            "fechaIngreso"
+        )?.value;
+
+    const fechaSalida =
+        document.getElementById(
+            "fechaSalida"
+        )?.value;
+
+    if (
+        !fechaIngreso ||
+        !fechaSalida
+    ) {
+        return false;
+    }
+
+    if (
+        fechasBloqueadas.has(
+            fechaIngreso
+        )
+    ) {
+        return false;
+    }
+
+    if (
+        fechasBloqueadas.has(
+            fechaSalida
+        )
+    ) {
+        return false;
+    }
+
+    if (
+        rangoTieneBloqueo(
+            fechaIngreso,
+            fechaSalida
+        )
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
+
+// ==========================================================
+// ENVIAR WHATSAPP
+// ==========================================================
+
+async function enviarWhatsApp() {
+
+    if (
+        !alojamientoActual
+    ) {
+        alert(
+            "No se encontró el alojamiento."
+        );
+
+        return;
+    }
+
+    const nombre =
+        document.getElementById(
+            "nombre"
+        )?.value.trim();
+
+    const telefono =
+        document.getElementById(
+            "telefono"
+        )?.value.trim();
+
+    const fechaIngreso =
+        document.getElementById(
+            "fechaIngreso"
+        )?.value;
+
+    const fechaSalida =
+        document.getElementById(
+            "fechaSalida"
+        )?.value;
+
+    const personas =
+        Number(
+            document.getElementById(
+                "personas"
+            )?.value || 0
+        );
+
+    if (!fechaIngreso) {
+
+        alert(
+            "Seleccione la fecha de ingreso."
+        );
+
+        return;
+    }
+
+    if (!fechaSalida) {
+
+        alert(
+            "Seleccione la fecha de salida."
+        );
+
+        return;
+    }
+
+    if (fechaSalida <= fechaIngreso) {
 
         alert(
             "La fecha de salida debe ser posterior a la fecha de ingreso."
@@ -2199,90 +2620,211 @@ function enviarWhatsApp() {
         return;
     }
 
-    let informacionExtra = "";
+    const maxHuespedes =
+        Number(
+            alojamientoActual
+                .max_huespedes || 0
+        );
 
-    if (solicitaPersonasExtra) {
+    if (
+        maxHuespedes > 0 &&
+        personas > maxHuespedes
+    ) {
 
-        const cantidadExtra =
-            personas -
-            alojamientoActual.maxHuespedes;
+        alert(
+            `Este alojamiento permite un máximo de ${maxHuespedes} huéspedes.`
+        );
 
-        informacionExtra =
-            "\n\n" +
-            "SOLICITUD ESPECIAL DE PERSONAS ADICIONALES\n" +
-            "Capacidad máxima: " +
-            alojamientoActual.maxHuespedes +
-            " personas\n" +
-            "Personas solicitadas: " +
-            personas +
-            "\n" +
-            "Personas adicionales: " +
-            cantidadExtra +
-            "\n" +
-            "El huésped declara conocer la capacidad máxima del alojamiento y manifiesta estar dispuesto(a) a acomodarse en el alojamiento.\n" +
-            "Esta solicitud especial queda sujeta a confirmación.";
+        return;
     }
+
+    if (
+        !nombre
+    ) {
+
+        alert(
+            "Ingrese su nombre completo."
+        );
+
+        return;
+    }
+
+    if (
+        !telefono
+    ) {
+
+        alert(
+            "Ingrese su número de teléfono."
+        );
+
+        return;
+    }
+
+    // ======================================================
+    // VERIFICACIÓN ACTUALIZADA
+    // ======================================================
+
+    const boton =
+        document.querySelector(
+            ".boton-whatsapp"
+        );
+
+    if (boton) {
+
+        boton.disabled = true;
+
+        boton.textContent =
+            "Verificando disponibilidad...";
+    }
+
+    const disponible =
+        await verificarDisponibilidadAntesDeEnviar();
+
+    if (!disponible) {
+
+        if (boton) {
+
+            boton.disabled = false;
+
+            boton.textContent =
+                "📱 Solicitar por WhatsApp";
+        }
+
+        renderizarCalendario();
+
+        alert(
+            "Las fechas seleccionadas ya no están disponibles. Seleccione otras fechas."
+        );
+
+        return;
+    }
+
+    // ======================================================
+    // CALCULAR DATOS
+    // ======================================================
+
+    const inicio =
+        crearFechaLocal(
+            fechaIngreso
+        );
+
+    const salida =
+        crearFechaLocal(
+            fechaSalida
+        );
+
+    const noches =
+        Math.round(
+            (
+                salida.getTime() -
+                inicio.getTime()
+            ) /
+            (
+                1000 *
+                60 *
+                60 *
+                24
+            )
+        );
+
+    const precioBase =
+        Number(
+            alojamientoActual
+                .precio_base || 0
+        );
+
+    const precioPersona =
+        Number(
+            alojamientoActual
+                .precio_persona || 0
+        );
+
+    const personasIncluidas =
+        Number(
+            alojamientoActual
+                .personas_incluidas || 0
+        );
+
+    const personasExtra =
+        Math.max(
+            personas -
+            personasIncluidas,
+            0
+        );
+
+    const total =
+        (
+            precioBase +
+            (
+                personasExtra *
+                precioPersona
+            )
+        ) *
+        noches;
 
     const numeroWhatsApp =
         "50254134493";
 
-    const mensaje =
-        "SOLICITUD DE RESERVA\n\n" +
+    let mensaje =
+        `Hola, quiero solicitar una reserva.%0A%0A` +
 
-        "Estancias Agradables\n\n" +
+        `🏠 Alojamiento: ${encodeURIComponent(
+            alojamientoActual.nombre || ""
+        )}%0A` +
 
-        "Alojamiento: " +
-        alojamientoActual.nombre +
+        `👤 Nombre: ${encodeURIComponent(
+            nombre
+        )}%0A` +
 
-        "\n\n" +
+        `📞 Teléfono: ${encodeURIComponent(
+            telefono
+        )}%0A` +
 
-        "Nombre: " +
-        nombre +
+        `📅 Ingreso: ${encodeURIComponent(
+            formatearFechaVisible(
+                fechaIngreso
+            )
+        )}%0A` +
 
-        "\n" +
+        `📅 Salida: ${encodeURIComponent(
+            formatearFechaVisible(
+                fechaSalida
+            )
+        )}%0A` +
 
-        "Telefono: " +
-        telefono +
+        `🌙 Noches: ${noches}%0A` +
 
-        "\n" +
+        `👥 Huéspedes: ${personas}%0A` +
 
-        "Ingreso: " +
-        ingreso +
+        `💰 Total estimado: Q${total.toLocaleString(
+            "es-GT",
+            {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }
+        )}%0A%0A`;
 
-        "\n" +
+    if (
+        personasExtra > 0
+    ) {
 
-        "Salida: " +
-        salida +
+        mensaje +=
+            `ℹ️ La solicitud incluye ${personasExtra} persona(s) adicional(es) sobre las personas incluidas en la tarifa.%0A%0A`;
+    }
 
-        "\n" +
+    mensaje +=
+        `La selección de estas fechas no confirma la reserva. La solicitud queda sujeta a confirmación de disponibilidad por parte del anfitrión.`;
 
-        "Noches: " +
-        noches +
+    if (boton) {
 
-        "\n" +
+        boton.disabled = false;
 
-        "Personas: " +
-        personas +
-
-        "\n" +
-
-        "Total estimado: " +
-        total +
-
-        informacionExtra +
-
-        "\n\n" +
-
-        "Esta es una solicitud de reserva. " +
-        "La reserva queda sujeta a confirmacion de disponibilidad.";
+        boton.textContent =
+            "📱 Solicitar por WhatsApp";
+    }
 
     const url =
-        "https://wa.me/" +
-        numeroWhatsApp +
-        "?text=" +
-        encodeURIComponent(
-            mensaje
-        );
+        `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
 
     window.open(
         url,
@@ -2290,36 +2832,51 @@ function enviarWhatsApp() {
     );
 }
 
-// ==========================================
-// CERRAR MODALES CON ESCAPE
-// ==========================================
+
+// ==========================================================
+// CERRAR MODALES HACIENDO CLICK FUERA
+// ==========================================================
 
 document.addEventListener(
-    "keydown",
-    function (evento) {
+    "click",
+    function (event) {
+
+        const ventanaReserva =
+            document.getElementById(
+                "ventanaReserva"
+            );
 
         if (
-            evento.key !== "Escape"
+            ventanaReserva &&
+            event.target === ventanaReserva
         ) {
-            return;
+
+            cerrarReserva();
         }
-
-        cerrarReserva();
-
-        cerrarModalAlojamiento();
     }
 );
 
-// ==========================================
-// INICIAR PÁGINA
-// ==========================================
+
+// ==========================================================
+// INICIALIZACIÓN
+// ==========================================================
 
 document.addEventListener(
     "DOMContentLoaded",
     function () {
 
+        insertarEstilosCalendario();
+
+        crearModalAlojamiento();
+
         cargarPortada();
 
         cargarAlojamientos();
+
+        configurarCalendarioReserva();
+
+        console.log(
+            "Estancias Agradables iniciado correctamente."
+        );
     }
 );
