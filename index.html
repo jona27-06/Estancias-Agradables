@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
@@ -139,6 +138,7 @@
         <button
             class="cerrar"
             onclick="cerrarReserva()"
+            type="button"
         >
             ×
         </button>
@@ -147,30 +147,65 @@
             Solicitar reserva
         </h2>
 
-        <p id="nombreAlojamiento"></p>
+        <p
+            id="nombreAlojamiento"
+            class="nombre-reserva"
+        ></p>
 
+
+        <!-- ==================================
+             FECHA DE INGRESO
+             ================================== -->
 
         <label>
             Fecha de ingreso
         </label>
 
         <input
-            type="date"
+            type="text"
             id="fechaIngreso"
-            onchange="calcularPrecio()"
+            placeholder="Seleccione la fecha de ingreso"
+            readonly
+            autocomplete="off"
         >
 
+
+        <!-- ==================================
+             FECHA DE SALIDA
+             ================================== -->
 
         <label>
             Fecha de salida
         </label>
 
         <input
-            type="date"
+            type="text"
             id="fechaSalida"
-            onchange="calcularPrecio()"
+            placeholder="Seleccione la fecha de salida"
+            readonly
+            autocomplete="off"
         >
 
+
+        <!-- ==================================
+             CALENDARIO
+             ================================== -->
+
+        <div
+            id="contenedorCalendario"
+            class="calendario-contenedor"
+        >
+
+            <div class="calendario-cargando">
+                Cargando disponibilidad...
+            </div>
+
+        </div>
+
+
+        <!-- ==================================
+             PERSONAS
+             ================================== -->
 
         <label>
             Cantidad de personas
@@ -185,9 +220,12 @@
             step="1"
             inputmode="numeric"
             autocomplete="off"
-            onchange="calcularPrecio()"
         >
 
+
+        <!-- ==================================
+             NOMBRE
+             ================================== -->
 
         <label>
             Nombre completo
@@ -197,8 +235,13 @@
             type="text"
             id="nombre"
             placeholder="Escriba su nombre"
+            autocomplete="name"
         >
 
+
+        <!-- ==================================
+             TELÉFONO
+             ================================== -->
 
         <label>
             Número de teléfono
@@ -208,8 +251,13 @@
             type="tel"
             id="telefono"
             placeholder="Ej. 5555-5555"
+            autocomplete="tel"
         >
 
+
+        <!-- ==================================
+             RESUMEN
+             ================================== -->
 
         <div class="resumen">
 
@@ -230,9 +278,33 @@
         </div>
 
 
+        <!-- ==================================
+             AVISO DE CONFIRMACIÓN
+             ================================== -->
+
+        <div class="aviso-reserva">
+
+            <strong>
+                Importante
+            </strong>
+
+            <p>
+                Seleccionar estas fechas no confirma la reserva.
+                La solicitud queda sujeta a la confirmación
+                de disponibilidad por parte del anfitrión.
+            </p>
+
+        </div>
+
+
+        <!-- ==================================
+             WHATSAPP
+             ================================== -->
+
         <button
             class="boton-whatsapp"
             onclick="enviarWhatsApp()"
+            type="button"
         >
             📱 Solicitar por WhatsApp
         </button>
@@ -242,6 +314,7 @@
 </div>
 
 
+```html
 <!-- ==========================================
      PIE DE PÁGINA
      ========================================== -->
@@ -256,11 +329,39 @@
         Un lugar para disfrutar de una estancia agradable.
     </p>
 
+    <div class="redes-sociales">
+
+        <a
+            href="https://www.instagram.com/estanciasagradables"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            📸 Instagram
+        </a>
+
+        <a
+            href="https://www.tiktok.com/@estanciasagradables"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            🎵 TikTok
+        </a>
+
+        <a
+            href="tel:+50254134493"
+        >
+            📞 +502 5413 4493
+        </a>
+
+    </div>
+
     <p>
         © 2026 Estancias Agradables
     </p>
 
 </footer>
+```
+
 
 
 <!-- ==========================================
