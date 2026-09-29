@@ -2589,6 +2589,7 @@ async function cargarAlojamientos() {
                         cambiarFoto(
                             indiceFoto - 1
                         );
+
                     }
 
                 },
@@ -3459,6 +3460,62 @@ function renderizarCalendario() {
 function seleccionarFechaCalendario(
     fechaISO
 ) {
+
+    // ======================================================
+    // SI YA EXISTEN FECHA DE INGRESO Y FECHA DE SALIDA,
+    // LA NUEVA FECHA SE CONVIERTE EN EL NUEVO INGRESO
+    // ======================================================
+
+    if (
+        fechaIngresoSeleccionada &&
+        fechaSalidaSeleccionada
+    ) {
+
+        fechaIngresoSeleccionada =
+            fechaISO;
+
+        fechaSalidaSeleccionada =
+            null;
+
+        const fechaIngreso =
+            document.getElementById(
+                "fechaIngreso"
+            );
+
+        const fechaSalida =
+            document.getElementById(
+                "fechaSalida"
+            );
+
+        if (
+            fechaIngreso
+        ) {
+
+            fechaIngreso.value =
+                fechaISO;
+        }
+
+        if (
+            fechaSalida
+        ) {
+
+            fechaSalida.value =
+                "";
+        }
+
+        modoCalendario =
+            "salida";
+
+        disponibilidadVerificada =
+            false;
+
+        calcularPrecio();
+
+        renderizarCalendario();
+
+        return;
+    }
+
 
     if (
         modoCalendario ===
