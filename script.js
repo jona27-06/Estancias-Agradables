@@ -1,5 +1,5 @@
 // ==========================================================
-// ESTANCIAS AGRADABLES - SCRIPT COMPLETO
+// ESTANCIAS AGRADABLES - SCRIPT COMPLETO CORREGIDO
 // ==========================================================
 
 // ==========================================================
@@ -61,13 +61,19 @@ let calendarioInicializado = false;
 
 function insertarEstilosCalendario() {
 
-    if (document.getElementById("estancias-calendario-estilos")) {
+    if (
+        document.getElementById(
+            "estancias-calendario-estilos"
+        )
+    ) {
         return;
     }
 
-    const estilos = document.createElement("style");
+    const estilos =
+        document.createElement("style");
 
-    estilos.id = "estancias-calendario-estilos";
+    estilos.id =
+        "estancias-calendario-estilos";
 
     estilos.textContent = `
 
@@ -295,29 +301,30 @@ function obtenerHoyISO() {
 
     const hoy = new Date();
 
-    const año = hoy.getFullYear();
-    const mes = String(hoy.getMonth() + 1).padStart(2, "0");
-    const dia = String(hoy.getDate()).padStart(2, "0");
-
-    return `${año}-${mes}-${dia}`;
+    return `${hoy.getFullYear()}-${String(
+        hoy.getMonth() + 1
+    ).padStart(2, "0")}-${String(
+        hoy.getDate()
+    ).padStart(2, "0")}`;
 }
 
 
 function fechaISO(fecha) {
 
-    const año = fecha.getFullYear();
-
-    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-
-    const dia = String(fecha.getDate()).padStart(2, "0");
-
-    return `${año}-${mes}-${dia}`;
+    return `${fecha.getFullYear()}-${String(
+        fecha.getMonth() + 1
+    ).padStart(2, "0")}-${String(
+        fecha.getDate()
+    ).padStart(2, "0")}`;
 }
 
 
 function crearFechaLocal(iso) {
 
-    if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+    if (
+        !iso ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(iso)
+    ) {
         return null;
     }
 
@@ -339,7 +346,9 @@ function sumarDiasISO(iso, cantidad) {
         return null;
     }
 
-    fecha.setDate(fecha.getDate() + cantidad);
+    fecha.setDate(
+        fecha.getDate() + cantidad
+    );
 
     return fechaISO(fecha);
 }
@@ -347,21 +356,20 @@ function sumarDiasISO(iso, cantidad) {
 
 function formatearFechaVisible(iso) {
 
-    if (!iso) {
-        return "";
-    }
-
     const fecha = crearFechaLocal(iso);
 
     if (!fecha) {
-        return iso;
+        return "";
     }
 
-    return fecha.toLocaleDateString("es-GT", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-    });
+    return fecha.toLocaleDateString(
+        "es-GT",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
 }
 
 
@@ -371,7 +379,10 @@ function esFechaPasada(iso) {
 }
 
 
-function rangoTieneBloqueo(inicio, salida) {
+function rangoTieneBloqueo(
+    inicio,
+    salida
+) {
 
     if (!inicio || !salida) {
         return false;
@@ -381,11 +392,17 @@ function rangoTieneBloqueo(inicio, salida) {
 
     while (fecha < salida) {
 
-        if (fechasBloqueadas.has(fecha)) {
+        if (
+            fechasBloqueadas.has(fecha)
+        ) {
             return true;
         }
 
-        fecha = sumarDiasISO(fecha, 1);
+        fecha =
+            sumarDiasISO(
+                fecha,
+                1
+            );
     }
 
     return false;
@@ -403,16 +420,22 @@ async function obtenerFotosPortada() {
         const { data, error } =
             await clienteSupabase
                 .storage
-                .from("fotos-alojamientos")
-                .list("portada", {
-                    limit: 100,
-                    sortBy: {
-                        column: "name",
-                        order: "asc"
+                .from(
+                    "fotos-alojamientos"
+                )
+                .list(
+                    "portada",
+                    {
+                        limit: 100,
+                        sortBy: {
+                            column: "name",
+                            order: "asc"
+                        }
                     }
-                });
+                );
 
         if (error) {
+
             console.error(
                 "Error obteniendo fotos de portada:",
                 error
@@ -434,33 +457,45 @@ async function obtenerFotosPortada() {
             ".avif"
         ];
 
-        const archivos = data.filter(archivo => {
+        const archivos =
+            data.filter(
+                archivo => {
 
-            if (!archivo || !archivo.name) {
-                return false;
-            }
+                    if (
+                        !archivo ||
+                        !archivo.name
+                    ) {
+                        return false;
+                    }
 
-            const nombre =
-                archivo.name.toLowerCase();
+                    const nombre =
+                        archivo.name.toLowerCase();
 
-            return extensionesPermitidas.some(
-                extension =>
-                    nombre.endsWith(extension)
-            );
-        });
-
-        return archivos.map(archivo => {
-
-            const { data: urlData } =
-                clienteSupabase
-                    .storage
-                    .from("fotos-alojamientos")
-                    .getPublicUrl(
-                        `portada/${archivo.name}`
+                    return extensionesPermitidas.some(
+                        extension =>
+                            nombre.endsWith(
+                                extension
+                            )
                     );
+                }
+            );
 
-            return urlData.publicUrl;
-        });
+        return archivos.map(
+            archivo => {
+
+                const { data: urlData } =
+                    clienteSupabase
+                        .storage
+                        .from(
+                            "fotos-alojamientos"
+                        )
+                        .getPublicUrl(
+                            `portada/${archivo.name}`
+                        );
+
+                return urlData.publicUrl;
+            }
+        );
 
     } catch (error) {
 
@@ -477,10 +512,14 @@ async function obtenerFotosPortada() {
 async function cargarPortada() {
 
     const fondoA =
-        document.querySelector(".portada-fondo-a");
+        document.querySelector(
+            ".portada-fondo-a"
+        );
 
     const fondoB =
-        document.querySelector(".portada-fondo-b");
+        document.querySelector(
+            ".portada-fondo-b"
+        );
 
     if (!fondoA || !fondoB) {
 
@@ -496,8 +535,11 @@ async function cargarPortada() {
 
     if (!fotosPortada.length) {
 
-        fondoA.style.backgroundImage = "none";
-        fondoB.style.backgroundImage = "none";
+        fondoA.style.backgroundImage =
+            "none";
+
+        fondoB.style.backgroundImage =
+            "none";
 
         return;
     }
@@ -513,10 +555,14 @@ async function cargarPortada() {
 
     crearIndicadoresPortada();
 
-    if (fotosPortada.length > 1) {
+    if (
+        fotosPortada.length > 1
+    ) {
 
         if (intervaloPortada) {
-            clearInterval(intervaloPortada);
+            clearInterval(
+                intervaloPortada
+            );
         }
 
         intervaloPortada =
@@ -542,7 +588,10 @@ function crearIndicadoresPortada() {
     contenedor.innerHTML = "";
 
     const cantidadVisible =
-        Math.min(fotosPortada.length, 3);
+        Math.min(
+            fotosPortada.length,
+            3
+        );
 
     for (
         let i = 0;
@@ -551,16 +600,22 @@ function crearIndicadoresPortada() {
     ) {
 
         const indicador =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
         indicador.className =
             "indicador-portada";
 
         if (i === 0) {
-            indicador.classList.add("activo");
+            indicador.classList.add(
+                "activo"
+            );
         }
 
-        contenedor.appendChild(indicador);
+        contenedor.appendChild(
+            indicador
+        );
     }
 }
 
@@ -590,7 +645,9 @@ function actualizarIndicadoresPortada() {
 
 function cambiarFotoPortada() {
 
-    if (fotosPortada.length < 2) {
+    if (
+        fotosPortada.length < 2
+    ) {
         return;
     }
 
@@ -609,7 +666,9 @@ function cambiarFotoPortada() {
     }
 
     const siguiente =
-        (indicePortada + 1) %
+        (
+            indicePortada + 1
+        ) %
         fotosPortada.length;
 
     const mostrandoA =
@@ -628,11 +687,14 @@ function cambiarFotoPortada() {
     fondoEntrante.style.backgroundImage =
         `url("${fotosPortada[siguiente]}")`;
 
-    fondoEntrante.style.opacity = "1";
+    fondoEntrante.style.opacity =
+        "1";
 
-    fondoSaliente.style.opacity = "0";
+    fondoSaliente.style.opacity =
+        "0";
 
-    indicePortada = siguiente;
+    indicePortada =
+        siguiente;
 
     actualizarIndicadoresPortada();
 }
@@ -642,21 +704,28 @@ function cambiarFotoPortada() {
 // FOTOS DE ALOJAMIENTO
 // ==========================================================
 
-async function obtenerFotos(idAlojamiento) {
+async function obtenerFotos(
+    idAlojamiento
+) {
 
     try {
 
         const { data, error } =
             await clienteSupabase
                 .storage
-                .from("fotos-alojamientos")
-                .list(String(idAlojamiento), {
-                    limit: 100,
-                    sortBy: {
-                        column: "name",
-                        order: "asc"
+                .from(
+                    "fotos-alojamientos"
+                )
+                .list(
+                    String(idAlojamiento),
+                    {
+                        limit: 100,
+                        sortBy: {
+                            column: "name",
+                            order: "asc"
+                        }
                     }
-                });
+                );
 
         if (error) {
 
@@ -682,28 +751,36 @@ async function obtenerFotos(idAlojamiento) {
         ];
 
         return data
-            .filter(archivo => {
+            .filter(
+                archivo => {
 
-                const nombre =
-                    archivo.name.toLowerCase();
+                    const nombre =
+                        archivo.name.toLowerCase();
 
-                return extensionesPermitidas.some(
-                    extension =>
-                        nombre.endsWith(extension)
-                );
-            })
-            .map(archivo => {
+                    return extensionesPermitidas.some(
+                        extension =>
+                            nombre.endsWith(
+                                extension
+                            )
+                    );
+                }
+            )
+            .map(
+                archivo => {
 
-                const { data: urlData } =
-                    clienteSupabase
-                        .storage
-                        .from("fotos-alojamientos")
-                        .getPublicUrl(
-                            `${idAlojamiento}/${archivo.name}`
-                        );
+                    const { data: urlData } =
+                        clienteSupabase
+                            .storage
+                            .from(
+                                "fotos-alojamientos"
+                            )
+                            .getPublicUrl(
+                                `${idAlojamiento}/${archivo.name}`
+                            );
 
-                return urlData.publicUrl;
-            });
+                    return urlData.publicUrl;
+                }
+            );
 
     } catch (error) {
 
@@ -739,7 +816,9 @@ async function cargarAlojamientos() {
 
         const { data, error } =
             await clienteSupabase
-                .from("alojamientos")
+                .from(
+                    "alojamientos"
+                )
                 .select(`
                     id,
                     nombre,
@@ -754,10 +833,16 @@ async function cargarAlojamientos() {
                     publicado,
                     created_at
                 `)
-                .eq("publicado", true)
-                .order("created_at", {
-                    ascending: false
-                });
+                .eq(
+                    "publicado",
+                    true
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
 
         if (error) {
 
@@ -769,7 +854,10 @@ async function cargarAlojamientos() {
             return;
         }
 
-        if (!data || data.length === 0) {
+        if (
+            !data ||
+            data.length === 0
+        ) {
 
             contenedor.innerHTML =
                 "<p>No hay alojamientos publicados actualmente.</p>";
@@ -779,18 +867,32 @@ async function cargarAlojamientos() {
 
         contenedor.innerHTML = "";
 
-        for (const alojamiento of data) {
+        for (
+            const alojamiento of data
+        ) {
 
             const fotos =
                 await obtenerFotos(
                     alojamiento.id
                 );
 
+            /*
+             * ==================================================
+             * IMPORTANTE:
+             * ESTA ES LA PARTE QUE ESTABA ROMPIENDO LOS ANUNCIOS.
+             *
+             * Ahora utilizamos "alojamiento" como clase principal
+             * para que vuelva a utilizar el diseño original.
+             * ==================================================
+             */
+
             const tarjeta =
-                document.createElement("article");
+                document.createElement(
+                    "article"
+                );
 
             tarjeta.className =
-                "tarjeta-alojamiento";
+                "alojamiento tarjeta-alojamiento";
 
             const imagenPrincipal =
                 fotos.length
@@ -830,7 +932,7 @@ async function cargarAlojamientos() {
 
                 </div>
 
-                <div class="contenido-tarjeta">
+                <div class="alojamiento-info contenido-tarjeta">
 
                     <h3>
                         ${escapeHTML(
@@ -871,17 +973,29 @@ async function cargarAlojamientos() {
                     ".boton-principal"
                 );
 
-            boton.addEventListener(
-                "click",
-                () => {
-                    abrirModalAlojamiento(
-                        alojamiento,
-                        fotos
-                    );
-                }
-            );
+            if (boton) {
 
-            contenedor.appendChild(tarjeta);
+                boton.addEventListener(
+                    "click",
+                    function () {
+
+                        abrirModalAlojamiento(
+                            alojamiento,
+                            fotos
+                        );
+                    }
+                );
+            }
+
+            /*
+             * Evita que una clase agregada por el
+             * calendario o por otro elemento cambie
+             * la distribución de las tarjetas.
+             */
+
+            contenedor.appendChild(
+                tarjeta
+            );
         }
 
     } catch (error) {
@@ -903,16 +1017,34 @@ async function cargarAlojamientos() {
 
 function escapeHTML(valor) {
 
-    if (valor === null || valor === undefined) {
+    if (
+        valor === null ||
+        valor === undefined
+    ) {
         return "";
     }
 
     return String(valor)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
@@ -931,7 +1063,9 @@ function crearModalAlojamiento() {
     }
 
     const modal =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     modal.id =
         "modalAlojamiento";
@@ -976,8 +1110,7 @@ function crearModalAlojamiento() {
                 <div
                     id="contadorGaleriaAlojamiento"
                     class="contador-galeria"
-                >
-                </div>
+                ></div>
 
             </div>
 
@@ -998,8 +1131,7 @@ function crearModalAlojamiento() {
                 <div
                     id="detalleCaracteristicas"
                     class="detalle-caracteristicas"
-                >
-                </div>
+                ></div>
 
                 <button
                     id="botonAbrirReserva"
@@ -1014,7 +1146,9 @@ function crearModalAlojamiento() {
         </div>
     `;
 
-    document.body.appendChild(modal);
+    document.body.appendChild(
+        modal
+    );
 
     modal
         .querySelector(".cerrar")
@@ -1041,7 +1175,9 @@ function crearModalAlojamiento() {
         "click",
         event => {
 
-            if (event.target === modal) {
+            if (
+                event.target === modal
+            ) {
                 cerrarModalAlojamiento();
             }
         }
@@ -1058,20 +1194,28 @@ function crearModalAlojamiento() {
 
             if (
                 !modalActual ||
-                !modalActual.classList.contains("activo")
+                !modalActual.classList.contains(
+                    "activo"
+                )
             ) {
                 return;
             }
 
-            if (event.key === "Escape") {
+            if (
+                event.key === "Escape"
+            ) {
                 cerrarModalAlojamiento();
             }
 
-            if (event.key === "ArrowLeft") {
+            if (
+                event.key === "ArrowLeft"
+            ) {
                 fotoAnterior();
             }
 
-            if (event.key === "ArrowRight") {
+            if (
+                event.key === "ArrowRight"
+            ) {
                 fotoSiguiente();
             }
         }
@@ -1087,14 +1231,14 @@ function abrirModalAlojamiento(
     crearModalAlojamiento();
 
     alojamientoActual = {
-        ...alojamiento,
-        airbnbCalendarUrl: null
+        ...alojamiento
     };
 
     fotosAlojamiento =
         fotos || [];
 
-    indiceFotoAlojamiento = 0;
+    indiceFotoAlojamiento =
+        0;
 
     const modal =
         document.getElementById(
@@ -1146,7 +1290,6 @@ function abrirModalAlojamiento(
             </strong>
             huéspedes
         </div>
-
     `;
 
     actualizarGaleria();
@@ -1156,7 +1299,9 @@ function abrirModalAlojamiento(
     ).onclick =
         abrirReserva;
 
-    modal.classList.add("activo");
+    modal.classList.add(
+        "activo"
+    );
 
     document.body.classList.add(
         "sin-scroll"
@@ -1175,7 +1320,9 @@ function cerrarModalAlojamiento() {
         return;
     }
 
-    modal.classList.remove("activo");
+    modal.classList.remove(
+        "activo"
+    );
 
     document.body.classList.remove(
         "sin-scroll"
@@ -1209,20 +1356,27 @@ function actualizarGaleria() {
         return;
     }
 
-    if (!fotosAlojamiento.length) {
+    if (
+        !fotosAlojamiento.length
+    ) {
 
-        imagen.style.display = "none";
+        imagen.style.display =
+            "none";
 
         contador.textContent =
             "Sin fotografías";
 
-        anterior.style.display = "none";
-        siguiente.style.display = "none";
+        anterior.style.display =
+            "none";
+
+        siguiente.style.display =
+            "none";
 
         return;
     }
 
-    imagen.style.display = "block";
+    imagen.style.display =
+        "block";
 
     imagen.src =
         fotosAlojamiento[
@@ -1230,7 +1384,8 @@ function actualizarGaleria() {
         ];
 
     imagen.alt =
-        alojamientoActual?.nombre || "";
+        alojamientoActual?.nombre ||
+        "";
 
     contador.textContent =
         `${indiceFotoAlojamiento + 1} / ${fotosAlojamiento.length}`;
@@ -1249,13 +1404,17 @@ function actualizarGaleria() {
 
 function fotoAnterior() {
 
-    if (!fotosAlojamiento.length) {
+    if (
+        !fotosAlojamiento.length
+    ) {
         return;
     }
 
     indiceFotoAlojamiento--;
 
-    if (indiceFotoAlojamiento < 0) {
+    if (
+        indiceFotoAlojamiento < 0
+    ) {
 
         indiceFotoAlojamiento =
             fotosAlojamiento.length - 1;
@@ -1267,7 +1426,9 @@ function fotoAnterior() {
 
 function fotoSiguiente() {
 
-    if (!fotosAlojamiento.length) {
+    if (
+        !fotosAlojamiento.length
+    ) {
         return;
     }
 
@@ -1278,7 +1439,8 @@ function fotoSiguiente() {
         fotosAlojamiento.length
     ) {
 
-        indiceFotoAlojamiento = 0;
+        indiceFotoAlojamiento =
+            0;
     }
 
     actualizarGaleria();
@@ -1291,7 +1453,9 @@ function fotoSiguiente() {
 
 function configurarCalendarioReserva() {
 
-    if (calendarioInicializado) {
+    if (
+        calendarioInicializado
+    ) {
         return;
     }
 
@@ -1307,23 +1471,29 @@ function configurarCalendarioReserva() {
             "fechaSalida"
         );
 
-    if (!fechaIngreso || !fechaSalida) {
+    if (
+        !fechaIngreso ||
+        !fechaSalida
+    ) {
 
         console.error(
-            "No se encontraron fechaIngreso o fechaSalida."
+            "No se encontraron los campos de fechas."
         );
 
         return;
     }
 
-    // Cambiamos los inputs date por texto.
-    // El calendario personalizado se encarga
-    // de colocar las fechas.
-    fechaIngreso.type = "text";
-    fechaSalida.type = "text";
+    fechaIngreso.type =
+        "text";
 
-    fechaIngreso.readOnly = true;
-    fechaSalida.readOnly = true;
+    fechaSalida.type =
+        "text";
+
+    fechaIngreso.readOnly =
+        true;
+
+    fechaSalida.readOnly =
+        true;
 
     fechaIngreso.placeholder =
         "Seleccione la fecha";
@@ -1338,7 +1508,9 @@ function configurarCalendarioReserva() {
         "pointer";
 
     calendarioReserva =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     calendarioReserva.id =
         "calendarioReserva";
@@ -1354,7 +1526,6 @@ function configurarCalendarioReserva() {
                 id="calendarioMesAnterior"
                 class="calendario-nav"
                 type="button"
-                aria-label="Mes anterior"
             >
                 ‹
             </button>
@@ -1362,14 +1533,12 @@ function configurarCalendarioReserva() {
             <div
                 id="calendarioMes"
                 class="calendario-mes"
-            >
-            </div>
+            ></div>
 
             <button
                 id="calendarioMesSiguiente"
                 class="calendario-nav"
                 type="button"
-                aria-label="Mes siguiente"
             >
                 ›
             </button>
@@ -1391,8 +1560,7 @@ function configurarCalendarioReserva() {
         <div
             id="calendarioDias"
             class="calendario-dias"
-        >
-        </div>
+        ></div>
 
         <div
             id="calendarioMensaje"
@@ -1431,45 +1599,50 @@ function configurarCalendarioReserva() {
         calendarioReserva
     );
 
-    fechaIngreso.onclick = function () {
-
-        modoCalendario = "ingreso";
-
-        mostrarCalendario();
-
-        renderizarCalendario();
-    };
-
-    fechaSalida.onclick = function () {
-
-        modoCalendario = "salida";
-
-        mostrarCalendario();
-
-        renderizarCalendario();
-    };
-
-    document
-        .getElementById(
-            "calendarioMesAnterior"
-        )
-        .onclick =
+    fechaIngreso.onclick =
         function () {
 
-            cambiarMesCalendario(-1);
+            modoCalendario =
+                "ingreso";
+
+            mostrarCalendario();
+
+            renderizarCalendario();
         };
 
-    document
-        .getElementById(
-            "calendarioMesSiguiente"
-        )
-        .onclick =
+    fechaSalida.onclick =
         function () {
 
-            cambiarMesCalendario(1);
+            modoCalendario =
+                "salida";
+
+            mostrarCalendario();
+
+            renderizarCalendario();
         };
 
-    calendarioInicializado = true;
+    document.getElementById(
+        "calendarioMesAnterior"
+    ).onclick =
+        function () {
+
+            cambiarMesCalendario(
+                -1
+            );
+        };
+
+    document.getElementById(
+        "calendarioMesSiguiente"
+    ).onclick =
+        function () {
+
+            cambiarMesCalendario(
+                1
+            );
+        };
+
+    calendarioInicializado =
+        true;
 }
 
 
@@ -1481,11 +1654,6 @@ function mostrarCalendario() {
 
     calendarioReserva.style.display =
         "block";
-
-    calendarioReserva.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
-    });
 }
 
 
@@ -1507,7 +1675,8 @@ function cambiarMesCalendario(
     const nuevoMes =
         new Date(
             mesCalendarioActual.getFullYear(),
-            mesCalendarioActual.getMonth() + cantidad,
+            mesCalendarioActual.getMonth() +
+                cantidad,
             1
         );
 
@@ -1518,7 +1687,9 @@ function cambiarMesCalendario(
             1
         );
 
-    if (nuevoMes < mesActual) {
+    if (
+        nuevoMes < mesActual
+    ) {
         return;
     }
 
@@ -1553,11 +1724,6 @@ function renderizarCalendario() {
     const botonAnterior =
         document.getElementById(
             "calendarioMesAnterior"
-        );
-
-    const botonSiguiente =
-        document.getElementById(
-            "calendarioMesSiguiente"
         );
 
     if (
@@ -1600,8 +1766,6 @@ function renderizarCalendario() {
     let posicionPrimerDia =
         primerDia.getDay();
 
-    // Convertir domingo=0 a
-    // lunes=0
     posicionPrimerDia =
         posicionPrimerDia === 0
             ? 6
@@ -1610,7 +1774,8 @@ function renderizarCalendario() {
     const cantidadDias =
         ultimoDia.getDate();
 
-    contenedor.innerHTML = "";
+    contenedor.innerHTML =
+        "";
 
     for (
         let i = 0;
@@ -1619,12 +1784,16 @@ function renderizarCalendario() {
     ) {
 
         const vacio =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         vacio.className =
             "calendario-dia vacio";
 
-        contenedor.appendChild(vacio);
+        contenedor.appendChild(
+            vacio
+        );
     }
 
     for (
@@ -1644,9 +1813,12 @@ function renderizarCalendario() {
             fechaISO(fecha);
 
         const boton =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
-        boton.type = "button";
+        boton.type =
+            "button";
 
         boton.className =
             "calendario-dia";
@@ -1668,7 +1840,9 @@ function renderizarCalendario() {
             esFechaPasada(iso);
 
         const bloqueado =
-            fechasBloqueadas.has(iso);
+            fechasBloqueadas.has(
+                iso
+            );
 
         if (pasado) {
 
@@ -1676,7 +1850,8 @@ function renderizarCalendario() {
                 "pasado"
             );
 
-            boton.disabled = true;
+            boton.disabled =
+                true;
         }
 
         if (bloqueado) {
@@ -1685,14 +1860,17 @@ function renderizarCalendario() {
                 "bloqueado"
             );
 
-            boton.disabled = true;
+            boton.disabled =
+                true;
         }
 
         if (
             fechaIngresoSeleccionada &&
             fechaSalidaSeleccionada &&
-            iso > fechaIngresoSeleccionada &&
-            iso < fechaSalidaSeleccionada
+            iso >
+                fechaIngresoSeleccionada &&
+            iso <
+                fechaSalidaSeleccionada
         ) {
 
             boton.classList.add(
@@ -1753,10 +1931,9 @@ function renderizarCalendario() {
         mesCalendarioActual <=
         mesActual;
 
-    botonSiguiente.disabled =
-        false;
-
-    if (cargandoDisponibilidad) {
+    if (
+        cargandoDisponibilidad
+    ) {
 
         mensaje.textContent =
             "Consultando disponibilidad...";
@@ -1764,7 +1941,9 @@ function renderizarCalendario() {
         mensaje.className =
             "calendario-mensaje";
 
-    } else if (!disponibilidadVerificada) {
+    } else if (
+        !disponibilidadVerificada
+    ) {
 
         mensaje.textContent =
             "No se pudo consultar la disponibilidad.";
@@ -1816,15 +1995,11 @@ function seleccionarFechaCalendario(
     iso
 ) {
 
-    if (!disponibilidadVerificada) {
-        return;
-    }
-
-    if (esFechaPasada(iso)) {
-        return;
-    }
-
-    if (fechasBloqueadas.has(iso)) {
+    if (
+        !disponibilidadVerificada ||
+        esFechaPasada(iso) ||
+        fechasBloqueadas.has(iso)
+    ) {
         return;
     }
 
@@ -1838,7 +2013,10 @@ function seleccionarFechaCalendario(
             "fechaSalida"
         );
 
-    if (modoCalendario === "ingreso") {
+    if (
+        modoCalendario ===
+        "ingreso"
+    ) {
 
         fechaIngresoSeleccionada =
             iso;
@@ -1872,7 +2050,10 @@ function seleccionarFechaCalendario(
         return;
     }
 
-    if (modoCalendario === "salida") {
+    if (
+        modoCalendario ===
+        "salida"
+    ) {
 
         if (
             !fechaIngresoSeleccionada
@@ -1936,7 +2117,8 @@ function seleccionarFechaCalendario(
             fechaSalidaSeleccionada =
                 null;
 
-            fechaSalida.value = "";
+            fechaSalida.value =
+                "";
 
             renderizarCalendario();
 
@@ -1954,15 +2136,12 @@ function seleccionarFechaCalendario(
         calcularPrecio();
 
         renderizarCalendario();
-
-        // Después de seleccionar ambas fechas
-        // mantenemos visible el calendario.
     }
 }
 
 
 // ==========================================================
-// DISPONIBILIDAD AIRBNB
+// DISPONIBILIDAD
 // ==========================================================
 
 async function cargarDisponibilidad(
@@ -1989,7 +2168,9 @@ async function cargarDisponibilidad(
     fechasBloqueadas =
         new Set();
 
-    if (mostrarCalendarioDespues) {
+    if (
+        mostrarCalendarioDespues
+    ) {
 
         mostrarCalendario();
 
@@ -2020,7 +2201,9 @@ async function cargarDisponibilidad(
         }
 
         const bloqueadas =
-            Array.isArray(data?.blocked)
+            Array.isArray(
+                data?.blocked
+            )
                 ? data.blocked
                 : [];
 
@@ -2065,7 +2248,7 @@ async function cargarDisponibilidad(
 
 
 // ==========================================================
-// CAMPO PERSONAS
+// PERSONAS
 // ==========================================================
 
 function crearSolicitudPersonasExtra() {
@@ -2095,17 +2278,9 @@ function crearSolicitudPersonasExtra() {
                 .max_huespedes || 0
         );
 
-    if (
+    solicitudPersonasExtra =
         personas > incluidas &&
-        personas <= max
-    ) {
-
-        solicitudPersonasExtra = true;
-
-    } else {
-
-        solicitudPersonasExtra = false;
-    }
+        personas <= max;
 }
 
 
@@ -2213,48 +2388,63 @@ async function abrirReserva() {
         );
 
     if (nombre) {
-
         nombre.textContent =
             alojamientoActual.nombre || "";
     }
 
     if (fechaIngreso) {
-        fechaIngreso.value = "";
+        fechaIngreso.value =
+            "";
     }
 
     if (fechaSalida) {
-        fechaSalida.value = "";
+        fechaSalida.value =
+            "";
     }
 
     if (personas) {
 
-        personas.value = 1;
+        personas.value =
+            1;
 
         if (
             alojamientoActual.max_huespedes
         ) {
 
             personas.max =
-                alojamientoActual
-                    .max_huespedes;
+                alojamientoActual.max_huespedes;
         }
     }
 
     if (nombreCliente) {
-        nombreCliente.value = "";
+        nombreCliente.value =
+            "";
     }
 
     if (telefono) {
-        telefono.value = "";
+        telefono.value =
+            "";
     }
 
-    document.getElementById(
-        "cantidadNoches"
-    ).textContent = "0";
+    const cantidadNoches =
+        document.getElementById(
+            "cantidadNoches"
+        );
 
-    document.getElementById(
-        "precioTotal"
-    ).textContent = "Q0";
+    const precioTotal =
+        document.getElementById(
+            "precioTotal"
+        );
+
+    if (cantidadNoches) {
+        cantidadNoches.textContent =
+            "0";
+    }
+
+    if (precioTotal) {
+        precioTotal.textContent =
+            "Q0";
+    }
 
     fechaIngresoSeleccionada =
         null;
@@ -2283,9 +2473,12 @@ async function abrirReserva() {
 
     configurarCalendarioReserva();
 
-    modal.style.display = "flex";
+    modal.style.display =
+        "flex";
 
-    modal.classList.add("activo");
+    modal.classList.add(
+        "activo"
+    );
 
     document.body.classList.add(
         "sin-scroll"
@@ -2295,8 +2488,6 @@ async function abrirReserva() {
 
     renderizarCalendario();
 
-    // Mostrar inmediatamente el calendario
-    // dentro de la ventana de reserva.
     mostrarCalendario();
 
     await cargarDisponibilidad(
@@ -2421,14 +2612,18 @@ function calcularPrecio() {
         return;
     }
 
-    const diferencia =
-        salida.getTime() -
-        inicio.getTime();
-
     const noches =
         Math.round(
-            diferencia /
-            (1000 * 60 * 60 * 24)
+            (
+                salida.getTime() -
+                inicio.getTime()
+            ) /
+            (
+                1000 *
+                60 *
+                60 *
+                24
+            )
         );
 
     const precioBase =
@@ -2456,19 +2651,17 @@ function calcularPrecio() {
             0
         );
 
-    const totalPorNoche =
-        precioBase +
-        (
-            personasExtra *
-            precioPersona
-        );
-
     const total =
-        totalPorNoche *
+        (
+            precioBase +
+            (
+                personasExtra *
+                precioPersona
+            )
+        ) *
         noches;
 
     if (elementoNoches) {
-
         elementoNoches.textContent =
             noches;
     }
@@ -2559,6 +2752,7 @@ async function enviarWhatsApp() {
     if (
         !alojamientoActual
     ) {
+
         alert(
             "No se encontró el alojamiento."
         );
@@ -2611,7 +2805,10 @@ async function enviarWhatsApp() {
         return;
     }
 
-    if (fechaSalida <= fechaIngreso) {
+    if (
+        fechaSalida <=
+        fechaIngreso
+    ) {
 
         alert(
             "La fecha de salida debe ser posterior a la fecha de ingreso."
@@ -2638,9 +2835,7 @@ async function enviarWhatsApp() {
         return;
     }
 
-    if (
-        !nombre
-    ) {
+    if (!nombre) {
 
         alert(
             "Ingrese su nombre completo."
@@ -2649,9 +2844,7 @@ async function enviarWhatsApp() {
         return;
     }
 
-    if (
-        !telefono
-    ) {
+    if (!telefono) {
 
         alert(
             "Ingrese su número de teléfono."
@@ -2660,10 +2853,6 @@ async function enviarWhatsApp() {
         return;
     }
 
-    // ======================================================
-    // VERIFICACIÓN ACTUALIZADA
-    // ======================================================
-
     const boton =
         document.querySelector(
             ".boton-whatsapp"
@@ -2671,7 +2860,8 @@ async function enviarWhatsApp() {
 
     if (boton) {
 
-        boton.disabled = true;
+        boton.disabled =
+            true;
 
         boton.textContent =
             "Verificando disponibilidad...";
@@ -2684,7 +2874,8 @@ async function enviarWhatsApp() {
 
         if (boton) {
 
-            boton.disabled = false;
+            boton.disabled =
+                false;
 
             boton.textContent =
                 "📱 Solicitar por WhatsApp";
@@ -2698,10 +2889,6 @@ async function enviarWhatsApp() {
 
         return;
     }
-
-    // ======================================================
-    // CALCULAR DATOS
-    // ======================================================
 
     const inicio =
         crearFechaLocal(
@@ -2817,7 +3004,8 @@ async function enviarWhatsApp() {
 
     if (boton) {
 
-        boton.disabled = false;
+        boton.disabled =
+            false;
 
         boton.textContent =
             "📱 Solicitar por WhatsApp";
@@ -2834,7 +3022,7 @@ async function enviarWhatsApp() {
 
 
 // ==========================================================
-// CERRAR MODALES HACIENDO CLICK FUERA
+// CERRAR RESERVA AL HACER CLICK AFUERA
 // ==========================================================
 
 document.addEventListener(
@@ -2848,7 +3036,8 @@ document.addEventListener(
 
         if (
             ventanaReserva &&
-            event.target === ventanaReserva
+            event.target ===
+                ventanaReserva
         ) {
 
             cerrarReserva();
