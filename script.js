@@ -81,7 +81,14 @@ let modoCalendario = "ingreso";
 
 let disponibilidadVerificada = false;
 
+// Indica si el usuario aceptó expresamente superar
+// la capacidad máxima del alojamiento.
 let excesoHuespedesAceptado = false;
+
+// Guarda la cantidad de huéspedes que fue aceptada.
+// Esto permite volver a pedir confirmación si el usuario
+// cambia posteriormente la cantidad.
+let cantidadHuespedesAceptada = null;
 
 let calendarioReserva = null;
 
@@ -2321,6 +2328,9 @@ async function abrirReserva(
     excesoHuespedesAceptado =
         false;
 
+    cantidadHuespedesAceptada =
+        null;
+
     const ventana =
         document.getElementById(
             "ventanaReserva"
@@ -2364,9 +2374,18 @@ async function abrirReserva(
 
         /*
          * IMPORTANTE:
-         * El campo NO se limita al máximo del alojamiento.
-         * Se permite introducir una cantidad superior para
-         * mostrar la confirmación de exceso de huéspedes.
+         * NO utilizamos maxHuespedes como atributo max.
+         *
+         * El usuario puede escribir una cantidad superior
+         * para posteriormente confirmar que es consciente
+         * de que supera la capacidad máxima.
+         */
+        personas.removeAttribute("max");
+
+        /*
+         * Límite técnico amplio para evitar cantidades
+         * absurdamente grandes, pero no limita la capacidad
+         * real del alojamiento.
          */
         personas.max =
             50;
@@ -2530,6 +2549,9 @@ function cerrarReserva() {
 
     excesoHuespedesAceptado =
         false;
+
+    cantidadHuespedesAceptada =
+        null;
 
 }
 
@@ -2933,9 +2955,6 @@ function renderizarCalendario() {
     let primerDiaSemana =
         primerDia.getDay();
 
-    /*
-     * Convertimos domingo = 0 a lunes = 0
-     */
     primerDiaSemana =
         primerDiaSemana === 0
             ? 6
@@ -3603,21 +3622,40 @@ function calcularPrecio() {
 
     }
 
-    const fechaIngreso =
+    const elementoFechaIngreso =
         document.getElementById(
             "fechaIngreso"
-        ).value;
+        );
 
-    const fechaSalida =
+    const elementoFechaSalida =
         document.getElementById(
             "fechaSalida"
-        ).value;
+        );
+
+    const elementoPersonas =
+        document.getElementById(
+            "personas"
+        );
+
+    if (
+        !elementoFechaIngreso ||
+        !elementoFechaSalida ||
+        !elementoPersonas
+    ) {
+
+        return;
+
+    }
+
+    const fechaIngreso =
+        elementoFechaIngreso.value;
+
+    const fechaSalida =
+        elementoFechaSalida.value;
 
     const personas =
         Number(
-            document.getElementById(
-                "personas"
-            ).value
+            elementoPersonas.value
         );
 
     const cantidadNoches =
@@ -3751,11 +3789,6 @@ function calcularPrecio() {
             alojamientoActual.personas_incluidas
         ) || 0;
 
-    /*
-     * Aquí se permite calcular incluso cuando
-     * la cantidad de personas supera la capacidad máxima.
-     * El exceso se confirma mediante el mensaje correspondiente.
-     */
     const personasAdicionales =
         Math.max(
             personas -
@@ -3797,7 +3830,7 @@ function calcularPrecio() {
 
 
 // ==========================================================
-// VALIDACIÓN DE PERSONAS
+// VALIDAR / CONFIRMAR EXCESO DE HUÉSPEDES
 // ==========================================================
 
 function confirmarExcesoHuespedes(
@@ -3805,19 +3838,46 @@ function confirmarExcesoHuespedes(
 ) {
 
     if (
-        !alojamientoActual ||
-        personas <= alojamientoActual.maxHuespedes
+        !alojamientoActual
     ) {
-
-        excesoHuespedesAceptado =
-            false;
 
         return true;
 
     }
 
+    const maxHuespedes =
+        Number(
+            alojamientoActual.max_huespedes
+        ) || 1;
+
+    personas =
+        Number(personas);
+
+    /*
+     * Si está dentro de la capacidad,
+     * no hace falta confirmación.
+     */
     if (
-        excesoHuespedesAceptado
+        personas <= maxHuespedes
+    ) {
+
+        excesoHuespedesAceptado =
+            false;
+
+        cantidadHuespedesAceptada =
+            null;
+
+        return true;
+
+    }
+
+    /*
+     * Si ya aceptó exactamente esa cantidad,
+     * no volvemos a preguntarle.
+     */
+    if (
+        excesoHuespedesAceptado &&
+        cantidadHuespedesAceptada === personas
     ) {
 
         return true;
@@ -3826,12 +3886,12 @@ function confirmarExcesoHuespedes(
 
     const personasAdicionales =
         personas -
-        alojamientoActual.maxHuespedes;
+        maxHuespedes;
 
     const acepta =
         window.confirm(
             "Este alojamiento tiene una capacidad máxima de " +
-            alojamientoActual.maxHuespedes +
+            maxHuespedes +
             " personas.\n\n" +
             "Usted ha indicado " +
             personas +
@@ -3854,6 +3914,9 @@ function confirmarExcesoHuespedes(
         excesoHuespedesAceptado =
             true;
 
+        cantidadHuespedesAceptada =
+            personas;
+
         return true;
 
     }
@@ -3861,13 +3924,16 @@ function confirmarExcesoHuespedes(
     excesoHuespedesAceptado =
         false;
 
+    cantidadHuespedesAceptada =
+        null;
+
     return false;
 
 }
 
 
 // ==========================================================
-// EVENTO DE CANTIDAD DE PERSONAS
+// EVENTO INPUT DE CANTIDAD DE PERSONAS
 // ==========================================================
 
 document.addEventListener(
@@ -3896,6 +3962,32 @@ document.addEventListener(
                 evento.target.value
             );
 
+        /*
+         * Si está vacío mientras el usuario escribe,
+         * no hacemos nada todavía.
+         */
+        if (
+            evento.target.value === ""
+        ) {
+
+            excesoHuespedesAceptado =
+                false;
+
+            cantidadHuespedesAceptada =
+                null;
+
+            return;
+
+        }
+
+        if (
+            !Number.isFinite(personas)
+        ) {
+
+            return;
+
+        }
+
         if (
             personas < 1
         ) {
@@ -3906,43 +3998,166 @@ document.addEventListener(
             evento.target.value =
                 1;
 
-            excesoHuespedesAceptado =
-                false;
-
         }
 
+        /*
+         * MUY IMPORTANTE:
+         *
+         * AQUÍ YA NO SE EJECUTA confirm().
+         *
+         * Esto permite que el usuario escriba libremente
+         * 6, 7, 8, 10, etc., aunque el alojamiento tenga
+         * una capacidad menor.
+         */
+
+        const maxHuespedes =
+            Number(
+                alojamientoActual.max_huespedes
+            ) || 1;
+
+        /*
+         * Si cambia la cantidad después de haber aceptado
+         * un exceso, se invalida la aceptación anterior.
+         */
         if (
-            personas <=
-            alojamientoActual.maxHuespedes
+            personas !==
+            cantidadHuespedesAceptada
         ) {
 
             excesoHuespedesAceptado =
                 false;
 
-        } else {
-
-            const aceptado =
-                confirmarExcesoHuespedes(
-                    personas
-                );
-
-            if (
-                !aceptado
-            ) {
-
-                evento.target.value =
-                    alojamientoActual.maxHuespedes;
-
-                personas =
-                    alojamientoActual.maxHuespedes;
-
-            }
+            cantidadHuespedesAceptada =
+                null;
 
         }
 
+        /*
+         * El precio se calcula normalmente incluso si
+         * supera la capacidad máxima.
+         */
         calcularPrecio();
 
     }
+);
+
+
+// ==========================================================
+// CONFIRMAR AL SALIR DEL CAMPO DE HUÉSPEDES
+// ==========================================================
+
+document.addEventListener(
+    "blur",
+    function(evento) {
+
+        if (
+            evento.target.id !==
+            "personas"
+        ) {
+
+            return;
+
+        }
+
+        if (
+            !alojamientoActual
+        ) {
+
+            return;
+
+        }
+
+        const personas =
+            Number(
+                evento.target.value
+            );
+
+        if (
+            !Number.isFinite(personas) ||
+            personas < 1
+        ) {
+
+            evento.target.value =
+                1;
+
+            excesoHuespedesAceptado =
+                false;
+
+            cantidadHuespedesAceptada =
+                null;
+
+            calcularPrecio();
+
+            return;
+
+        }
+
+        const maxHuespedes =
+            Number(
+                alojamientoActual.max_huespedes
+            ) || 1;
+
+        /*
+         * Si no supera la capacidad, todo normal.
+         */
+        if (
+            personas <= maxHuespedes
+        ) {
+
+            excesoHuespedesAceptado =
+                false;
+
+            cantidadHuespedesAceptada =
+                null;
+
+            calcularPrecio();
+
+            return;
+
+        }
+
+        /*
+         * Ahora sí mostramos la confirmación,
+         * pero solamente cuando terminó de escribir.
+         */
+        const aceptado =
+            confirmarExcesoHuespedes(
+                personas
+            );
+
+        if (
+            !aceptado
+        ) {
+
+            /*
+             * Si NO acepta, regresamos al máximo permitido.
+             */
+            event.target.value =
+                maxHuespedes;
+
+            excesoHuespedesAceptado =
+                false;
+
+            cantidadHuespedesAceptada =
+                null;
+
+            calcularPrecio();
+
+        } else {
+
+            /*
+             * Si acepta, dejamos exactamente la cantidad
+             * que escribió.
+             */
+            event.target.value =
+                personas;
+
+            calcularPrecio();
+
+        }
+
+    },
+    true
 );
 
 
@@ -4080,11 +4295,14 @@ async function enviarWhatsApp() {
             "fechaSalida"
         ).value;
 
+    const campoPersonas =
+        document.getElementById(
+            "personas"
+        );
+
     const personas =
         Number(
-            document.getElementById(
-                "personas"
-            ).value
+            campoPersonas.value
         );
 
     const nombre =
@@ -4149,32 +4367,57 @@ async function enviarWhatsApp() {
     }
 
     /*
-     * Si supera la capacidad máxima,
-     * debe haber aceptado expresamente el aviso.
+     * ======================================================
+     * VALIDACIÓN FINAL DE HUÉSPEDES
+     * ======================================================
      */
+
+    const maxHuespedes =
+        Number(
+            alojamientoActual.max_huespedes
+        ) || 1;
+
     if (
         personas >
-        alojamientoActual.maxHuespedes
+        maxHuespedes
     ) {
 
-        const aceptaExceso =
-            confirmarExcesoHuespedes(
-                personas
-            );
-
+        /*
+         * Si todavía no ha aceptado esta cantidad exacta,
+         * se vuelve a mostrar la confirmación.
+         */
         if (
-            !aceptaExceso
+            !(
+                excesoHuespedesAceptado &&
+                cantidadHuespedesAceptada === personas
+            )
         ) {
 
-            alert(
-                "No se puede continuar con una cantidad de huéspedes superior a la capacidad permitida sin aceptar esta condición."
-            );
+            const aceptaExceso =
+                confirmarExcesoHuespedes(
+                    personas
+                );
 
-            return;
+            if (
+                !aceptaExceso
+            ) {
+
+                alert(
+                    "No se puede continuar con una cantidad de huéspedes superior a la capacidad máxima sin aceptar esta condición."
+                );
+
+                return;
+
+            }
 
         }
 
     }
+
+
+    // ======================================================
+    // VERIFICAR DISPONIBILIDAD
+    // ======================================================
 
     if (
         !rangoDisponible(
@@ -4207,6 +4450,11 @@ async function enviarWhatsApp() {
         return;
 
     }
+
+
+    // ======================================================
+    // WHATSAPP
+    // ======================================================
 
     const numeroWhatsApp =
         "50254134493";
