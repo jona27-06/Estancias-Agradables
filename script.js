@@ -85,6 +85,15 @@ let calendarioReserva = null;
 
 
 // ==========================================================
+// VARIABLES DEL SELECTOR DE HUÉSPEDES
+// ==========================================================
+
+const MAXIMO_HUESPEDES_ABSOLUTO = 50;
+
+let advertenciaHuespedesAceptada = false;
+
+
+// ==========================================================
 // ESTILOS ADICIONALES DEL VISOR
 // ==========================================================
 
@@ -567,6 +576,586 @@ function insertarEstilosCalendario() {
     `;
 
     document.head.appendChild(estilos);
+}
+
+
+// ==========================================================
+// ESTILOS DEL SELECTOR DE HUÉSPEDES
+// ==========================================================
+
+function insertarEstilosSelectorHuespedes() {
+
+    if (
+        document.getElementById(
+            "estilosSelectorHuespedes"
+        )
+    ) {
+        return;
+    }
+
+    const estilos =
+        document.createElement("style");
+
+    estilos.id =
+        "estilosSelectorHuespedes";
+
+    estilos.textContent = `
+
+        .selector-huespedes {
+            position: relative;
+            width: 100%;
+        }
+
+        .selector-huespedes input#personas {
+            padding-right: 45px;
+            text-align: center;
+            cursor: default;
+            user-select: none;
+            -webkit-user-select: none;
+            caret-color: transparent;
+        }
+
+        .selector-huespedes-flechas {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .selector-huespedes-flecha {
+            width: 24px;
+            height: 17px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: transparent;
+            color: #777;
+            font-size: 11px;
+            line-height: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .selector-huespedes-flecha:hover {
+            background: #f2f2f2;
+            color: #f28c28;
+        }
+
+        .selector-huespedes-flecha:active {
+            background: #e9e9e9;
+        }
+
+        .selector-huespedes-flecha:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .advertencia-huespedes {
+            display: none;
+            margin-top: 8px;
+            padding: 10px 11px;
+            border-radius: 8px;
+            background: #fff7ed;
+            border: 1px solid #f5c58b;
+            color: #6b4b25;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .advertencia-huespedes.visible {
+            display: block;
+        }
+
+        .advertencia-huespedes-texto {
+            margin: 0 0 8px 0;
+        }
+
+        .advertencia-huespedes-confirmacion {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            cursor: pointer;
+        }
+
+        .advertencia-huespedes-confirmacion input {
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .advertencia-huespedes-confirmacion span {
+            flex: 1;
+        }
+
+    `;
+
+    document.head.appendChild(estilos);
+}
+
+
+// ==========================================================
+// CREAR SELECTOR DE HUÉSPEDES
+// ==========================================================
+
+function configurarSelectorHuespedes() {
+
+    insertarEstilosSelectorHuespedes();
+
+    const personas =
+        document.getElementById(
+            "personas"
+        );
+
+    if (
+        !personas
+    ) {
+        return;
+    }
+
+    personas.type =
+        "text";
+
+    personas.readOnly =
+        true;
+
+    personas.inputMode =
+        "none";
+
+    personas.min =
+        1;
+
+    personas.max =
+        MAXIMO_HUESPEDES_ABSOLUTO;
+
+    personas.setAttribute(
+        "readonly",
+        "readonly"
+    );
+
+    personas.setAttribute(
+        "inputmode",
+        "none"
+    );
+
+    personas.setAttribute(
+        "autocomplete",
+        "off"
+    );
+
+    let contenedor =
+        personas.closest(
+            ".selector-huespedes"
+        );
+
+    if (
+        !contenedor
+    ) {
+
+        contenedor =
+            document.createElement(
+                "div"
+            );
+
+        contenedor.className =
+            "selector-huespedes";
+
+        personas.parentNode.insertBefore(
+            contenedor,
+            personas
+        );
+
+        contenedor.appendChild(
+            personas
+        );
+    }
+
+    let flechas =
+        contenedor.querySelector(
+            ".selector-huespedes-flechas"
+        );
+
+    if (
+        !flechas
+    ) {
+
+        flechas =
+            document.createElement(
+                "div"
+            );
+
+        flechas.className =
+            "selector-huespedes-flechas";
+
+        const botonSubir =
+            document.createElement(
+                "button"
+            );
+
+        botonSubir.type =
+            "button";
+
+        botonSubir.className =
+            "selector-huespedes-flecha";
+
+        botonSubir.innerHTML =
+            "▲";
+
+        botonSubir.setAttribute(
+            "aria-label",
+            "Aumentar cantidad de huéspedes"
+        );
+
+        botonSubir.addEventListener(
+            "click",
+            function(evento) {
+
+                evento.preventDefault();
+                evento.stopPropagation();
+
+                cambiarCantidadHuespedes(
+                    1
+                );
+
+            }
+        );
+
+        const botonBajar =
+            document.createElement(
+                "button"
+            );
+
+        botonBajar.type =
+            "button";
+
+        botonBajar.className =
+            "selector-huespedes-flecha";
+
+        botonBajar.innerHTML =
+            "▼";
+
+        botonBajar.setAttribute(
+            "aria-label",
+            "Disminuir cantidad de huéspedes"
+        );
+
+        botonBajar.addEventListener(
+            "click",
+            function(evento) {
+
+                evento.preventDefault();
+                evento.stopPropagation();
+
+                cambiarCantidadHuespedes(
+                    -1
+                );
+
+            }
+        );
+
+        flechas.appendChild(
+            botonSubir
+        );
+
+        flechas.appendChild(
+            botonBajar
+        );
+
+        contenedor.appendChild(
+            flechas
+        );
+    }
+
+    let advertencia =
+        document.getElementById(
+            "advertenciaHuespedes"
+        );
+
+    if (
+        !advertencia
+    ) {
+
+        advertencia =
+            document.createElement(
+                "div"
+            );
+
+        advertencia.id =
+            "advertenciaHuespedes";
+
+        advertencia.className =
+            "advertencia-huespedes";
+
+        advertencia.innerHTML = `
+
+            <p
+                class="advertencia-huespedes-texto"
+                id="textoAdvertenciaHuespedes"
+            ></p>
+
+            <label
+                class="advertencia-huespedes-confirmacion"
+            >
+
+                <input
+                    type="checkbox"
+                    id="aceptarHuespedesAdicionales"
+                >
+
+                <span>
+                    Entiendo y acepto que estoy solicitando
+                    una cantidad de huéspedes superior a la
+                    capacidad establecida del alojamiento.
+                </span>
+
+            </label>
+
+        `;
+
+        contenedor.insertAdjacentElement(
+            "afterend",
+            advertencia
+        );
+
+        const checkbox =
+            document.getElementById(
+                "aceptarHuespedesAdicionales"
+            );
+
+        if (
+            checkbox
+        ) {
+
+            checkbox.addEventListener(
+                "change",
+                function() {
+
+                    advertenciaHuespedesAceptada =
+                        checkbox.checked;
+
+                }
+            );
+        }
+    }
+
+    actualizarSelectorHuespedes();
+}
+
+
+// ==========================================================
+// CAMBIAR CANTIDAD DE HUÉSPEDES
+// ==========================================================
+
+function cambiarCantidadHuespedes(
+    cambio
+) {
+
+    const personas =
+        document.getElementById(
+            "personas"
+        );
+
+    if (
+        !personas
+    ) {
+        return;
+    }
+
+    let cantidad =
+        Number(
+            personas.value
+        );
+
+    if (
+        !Number.isFinite(
+            cantidad
+        )
+    ) {
+
+        cantidad =
+            1;
+    }
+
+    cantidad =
+        Math.round(
+            cantidad
+        );
+
+    cantidad +=
+        cambio;
+
+    if (
+        cantidad < 1
+    ) {
+
+        cantidad =
+            1;
+    }
+
+    if (
+        cantidad >
+        MAXIMO_HUESPEDES_ABSOLUTO
+    ) {
+
+        cantidad =
+            MAXIMO_HUESPEDES_ABSOLUTO;
+    }
+
+    personas.value =
+        cantidad;
+
+    actualizarSelectorHuespedes();
+
+    calcularPrecio();
+}
+
+
+// ==========================================================
+// ACTUALIZAR SELECTOR DE HUÉSPEDES
+// ==========================================================
+
+function actualizarSelectorHuespedes() {
+
+    const personas =
+        document.getElementById(
+            "personas"
+        );
+
+    if (
+        !personas
+    ) {
+        return;
+    }
+
+    let cantidad =
+        Number(
+            personas.value
+        );
+
+    if (
+        !Number.isFinite(
+            cantidad
+        ) ||
+        cantidad < 1
+    ) {
+
+        cantidad =
+            1;
+
+        personas.value =
+            1;
+    }
+
+    if (
+        cantidad >
+        MAXIMO_HUESPEDES_ABSOLUTO
+    ) {
+
+        cantidad =
+            MAXIMO_HUESPEDES_ABSOLUTO;
+
+        personas.value =
+            MAXIMO_HUESPEDES_ABSOLUTO;
+    }
+
+    const contenedor =
+        personas.closest(
+            ".selector-huespedes"
+        );
+
+    if (
+        contenedor
+    ) {
+
+        const botones =
+            contenedor.querySelectorAll(
+                ".selector-huespedes-flecha"
+            );
+
+        if (
+            botones.length >= 2
+        ) {
+
+            botones[0].disabled =
+                cantidad >=
+                MAXIMO_HUESPEDES_ABSOLUTO;
+
+            botones[1].disabled =
+                cantidad <= 1;
+        }
+    }
+
+    const advertencia =
+        document.getElementById(
+            "advertenciaHuespedes"
+        );
+
+    const texto =
+        document.getElementById(
+            "textoAdvertenciaHuespedes"
+        );
+
+    const checkbox =
+        document.getElementById(
+            "aceptarHuespedesAdicionales"
+        );
+
+    if (
+        alojamientoActual &&
+        cantidad >
+        alojamientoActual.maxHuespedes
+    ) {
+
+        if (
+            texto
+        ) {
+
+            texto.textContent =
+                "Este alojamiento tiene una capacidad establecida para " +
+                alojamientoActual.maxHuespedes +
+                " personas. Está solicitando " +
+                cantidad +
+                " huéspedes, por lo que deberá aceptar esta condición antes de continuar.";
+        }
+
+        if (
+            advertencia
+        ) {
+
+            advertencia.classList.add(
+                "visible"
+            );
+        }
+
+    } else {
+
+        if (
+            advertencia
+        ) {
+
+            advertencia.classList.remove(
+                "visible"
+            );
+        }
+
+        advertenciaHuespedesAceptada =
+            false;
+
+        if (
+            checkbox
+        ) {
+
+            checkbox.checked =
+                false;
+        }
+    }
 }
 
 
@@ -1861,6 +2450,7 @@ function abrirModalAlojamiento(
             </span>
 
         `;
+
     }
 
     if (
@@ -2214,10 +2804,6 @@ async function cargarAlojamientos() {
     contenedor.innerHTML =
         "";
 
-    // ======================================================
-    // RECORRER ALOJAMIENTOS
-    // ======================================================
-
     for (
         const alojamiento of alojamientos
     ) {
@@ -2237,10 +2823,6 @@ async function cargarAlojamientos() {
 
         tarjeta.tabIndex =
             0;
-
-        // ==================================================
-        // GALERÍA
-        // ==================================================
 
         let galeria;
 
@@ -2295,10 +2877,6 @@ async function cargarAlojamientos() {
                 imagen
             );
 
-            // ==================================================
-            // CONTADOR
-            // ==================================================
-
             const contadorFotos =
                 document.createElement(
                     "div"
@@ -2315,10 +2893,6 @@ async function cargarAlojamientos() {
             galeria.appendChild(
                 contadorFotos
             );
-
-            // ==================================================
-            // INDICADORES
-            // ==================================================
 
             let indicadores =
                 null;
@@ -2373,10 +2947,6 @@ async function cargarAlojamientos() {
                     indicadores
                 );
             }
-
-            // ==================================================
-            // CAMBIAR FOTO
-            // ==================================================
 
             function cambiarFoto(
                 nuevoIndice
@@ -2456,10 +3026,6 @@ async function cargarAlojamientos() {
                 }
             }
 
-            // ==================================================
-            // FLECHAS COMPUTADORA
-            // ==================================================
-
             const esTelefono =
                 window.matchMedia(
                     "(max-width: 600px)"
@@ -2532,10 +3098,6 @@ async function cargarAlojamientos() {
                     botonSiguiente
                 );
             }
-
-            // ==================================================
-            // DESLIZAR EN CELULAR
-            // ==================================================
 
             let posicionInicialX =
                 0;
@@ -2613,10 +3175,6 @@ async function cargarAlojamientos() {
             galeria
         );
 
-        // ==================================================
-        // NOMBRE
-        // ==================================================
-
         const nombreAlojamiento =
             document.createElement(
                 "div"
@@ -2632,10 +3190,6 @@ async function cargarAlojamientos() {
         tarjeta.appendChild(
             nombreAlojamiento
         );
-
-        // ==================================================
-        // ABRIR MODAL AL HACER CLICK EN LA TARJETA
-        // ==================================================
 
         tarjeta.addEventListener(
             "click",
@@ -2745,6 +3299,9 @@ async function abrirReserva(
 
     };
 
+    advertenciaHuespedesAceptada =
+        false;
+
     const ventana =
         document.getElementById(
             "ventanaReserva"
@@ -2815,7 +3372,36 @@ async function abrirReserva(
             1;
 
         personas.max =
-            alojamientoActual.maxHuespedes;
+            MAXIMO_HUESPEDES_ABSOLUTO;
+
+        configurarSelectorHuespedes();
+    }
+
+    const checkbox =
+        document.getElementById(
+            "aceptarHuespedesAdicionales"
+        );
+
+    if (
+        checkbox
+    ) {
+
+        checkbox.checked =
+            false;
+    }
+
+    const advertencia =
+        document.getElementById(
+            "advertenciaHuespedes"
+        );
+
+    if (
+        advertencia
+    ) {
+
+        advertencia.classList.remove(
+            "visible"
+        );
     }
 
     if (
@@ -3453,20 +4039,6 @@ function seleccionarFechaCalendario(
     fechaISO
 ) {
 
-    // ======================================================
-    // SI YA EXISTE UN RANGO COMPLETO
-    //
-    // AL SELECCIONAR UNA NUEVA FECHA:
-    // LA NUEVA FECHA SE CONVIERTE EN EL NUEVO INGRESO.
-    //
-    // EJEMPLO:
-    // 1 -> 3
-    // DESPUÉS SELECCIONAR 4
-    // RESULTADO: 4 -> ?
-    //
-    // YA NO SE AMPLÍA 1 -> 4.
-    // ======================================================
-
     if (
         fechaIngresoSeleccionada &&
         fechaSalidaSeleccionada
@@ -3517,11 +4089,6 @@ function seleccionarFechaCalendario(
         return;
     }
 
-
-    // ======================================================
-    // SELECCIONAR FECHA DE INGRESO
-    // ======================================================
-
     if (
         modoCalendario ===
         "ingreso"
@@ -3571,11 +4138,6 @@ function seleccionarFechaCalendario(
 
         return;
     }
-
-
-    // ======================================================
-    // SELECCIONAR FECHA DE SALIDA
-    // ======================================================
 
     if (
         modoCalendario ===
@@ -3910,33 +4472,42 @@ function calcularPrecio() {
     const salida =
         elementoSalida.value;
 
-    const personas =
+    let personas =
         Number(
             elementoPersonas.value
         );
 
     if (
-        !ingreso ||
-        !salida
+        !Number.isFinite(
+            personas
+        ) ||
+        personas < 1
     ) {
 
-        document.getElementById(
-            "cantidadNoches"
-        ).textContent =
-            "0";
+        personas =
+            1;
 
-        document.getElementById(
-            "precioTotal"
-        ).textContent =
-            "Q0";
-
-        return;
+        elementoPersonas.value =
+            1;
     }
 
     if (
-        personas < 1 ||
         personas >
-        alojamientoActual.maxHuespedes
+        MAXIMO_HUESPEDES_ABSOLUTO
+    ) {
+
+        personas =
+            MAXIMO_HUESPEDES_ABSOLUTO;
+
+        elementoPersonas.value =
+            MAXIMO_HUESPEDES_ABSOLUTO;
+    }
+
+    actualizarSelectorHuespedes();
+
+    if (
+        !ingreso ||
+        !salida
     ) {
 
         document.getElementById(
@@ -4052,30 +4623,29 @@ document.addEventListener(
             );
 
         if (
+            !Number.isFinite(
+                personas
+            ) ||
             personas < 1
         ) {
 
             personas =
                 1;
-
-            evento.target.value =
-                1;
         }
 
         if (
             personas >
-            alojamientoActual.maxHuespedes
+            MAXIMO_HUESPEDES_ABSOLUTO
         ) {
 
-            evento.target.value =
-                alojamientoActual.maxHuespedes;
-
-            alert(
-                "Este alojamiento permite un máximo de " +
-                alojamientoActual.maxHuespedes +
-                " personas."
-            );
+            personas =
+                MAXIMO_HUESPEDES_ABSOLUTO;
         }
+
+        evento.target.value =
+            personas;
+
+        actualizarSelectorHuespedes();
 
         calcularPrecio();
     }
@@ -4266,16 +4836,48 @@ async function enviarWhatsApp() {
     if (
         personas < 1 ||
         personas >
-        alojamientoActual.maxHuespedes
+        MAXIMO_HUESPEDES_ABSOLUTO
     ) {
 
         alert(
-            "Este alojamiento permite un máximo de " +
-            alojamientoActual.maxHuespedes +
-            " personas."
+            "La cantidad de huéspedes debe estar entre 1 y " +
+            MAXIMO_HUESPEDES_ABSOLUTO +
+            "."
         );
 
         return;
+    }
+
+    // ======================================================
+    // VERIFICAR SI SUPERA LA CAPACIDAD NORMAL
+    // ======================================================
+
+    if (
+        personas >
+        alojamientoActual.maxHuespedes
+    ) {
+
+        const checkbox =
+            document.getElementById(
+                "aceptarHuespedesAdicionales"
+            );
+
+        if (
+            !checkbox ||
+            !checkbox.checked
+        ) {
+
+            actualizarSelectorHuespedes();
+
+            alert(
+                "Debe aceptar la condición de huéspedes adicionales antes de continuar."
+            );
+
+            return;
+        }
+
+        advertenciaHuespedesAceptada =
+            true;
     }
 
     if (
@@ -4355,6 +4957,15 @@ async function enviarWhatsApp() {
         total +
 
         "\n\n" +
+
+        (
+            personas >
+            alojamientoActual.maxHuespedes
+                ? "ADVERTENCIA: El huésped solicitó una cantidad superior a la capacidad establecida de " +
+                  alojamientoActual.maxHuespedes +
+                  " personas y aceptó esta condición.\n\n"
+                : ""
+        ) +
 
         "La selección de estas fechas no confirma la reserva. " +
         "La solicitud queda sujeta a confirmación de disponibilidad por parte del anfitrión.";
@@ -4476,6 +5087,8 @@ document.addEventListener(
         insertarEstilosVisor();
 
         insertarEstilosModalAlojamiento();
+
+        insertarEstilosSelectorHuespedes();
 
         crearVisorFotos();
 
