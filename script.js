@@ -2232,7 +2232,6 @@ async function cargarAlojamientos() {
                 "article"
             );
 
-        // ESTA CLASE ES LA QUE TU CSS UTILIZA
         tarjeta.className =
             "alojamiento";
 
@@ -2254,7 +2253,6 @@ async function cargarAlojamientos() {
                     "div"
                 );
 
-            // ESTA CLASE ES LA QUE TU CSS UTILIZA
             galeria.className =
                 "galeria-alojamiento";
 
@@ -2270,7 +2268,6 @@ async function cargarAlojamientos() {
                 alojamiento.nombre ||
                 "Alojamiento";
 
-            // ESTA CLASE ES LA QUE TU CSS UTILIZA
             imagen.className =
                 "foto-principal";
 
@@ -2619,11 +2616,6 @@ async function cargarAlojamientos() {
         // ==================================================
         // NOMBRE
         // ==================================================
-
-        // IMPORTANTE:
-        // Tu CSS tiene .nombre-alojamiento.
-        // Ya no se mete toda la descripción,
-        // datos y precio dentro de la tarjeta.
 
         const nombreAlojamiento =
             document.createElement(
@@ -3462,8 +3454,17 @@ function seleccionarFechaCalendario(
 ) {
 
     // ======================================================
-    // SI YA EXISTEN FECHA DE INGRESO Y FECHA DE SALIDA,
-    // LA NUEVA FECHA SE CONVIERTE EN EL NUEVO INGRESO
+    // SI YA EXISTE UN RANGO COMPLETO
+    //
+    // AL SELECCIONAR UNA NUEVA FECHA:
+    // LA NUEVA FECHA SE CONVIERTE EN EL NUEVO INGRESO.
+    //
+    // EJEMPLO:
+    // 1 -> 3
+    // DESPUÉS SELECCIONAR 4
+    // RESULTADO: 4 -> ?
+    //
+    // YA NO SE AMPLÍA 1 -> 4.
     // ======================================================
 
     if (
@@ -3517,6 +3518,10 @@ function seleccionarFechaCalendario(
     }
 
 
+    // ======================================================
+    // SELECCIONAR FECHA DE INGRESO
+    // ======================================================
+
     if (
         modoCalendario ===
         "ingreso"
@@ -3560,10 +3565,17 @@ function seleccionarFechaCalendario(
         disponibilidadVerificada =
             false;
 
+        calcularPrecio();
+
         renderizarCalendario();
 
         return;
     }
+
+
+    // ======================================================
+    // SELECCIONAR FECHA DE SALIDA
+    // ======================================================
 
     if (
         modoCalendario ===
