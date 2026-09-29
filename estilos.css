@@ -367,15 +367,24 @@ body.sin-scroll {
     position: relative;
     width: 100%;
     max-width: 1100px;
+
+    /* IMPORTANTE:
+       Le damos una altura real al modal en computadora
+       para que la columna derecha pueda desplazarse. */
+    height: calc(100vh - 60px);
     max-height: calc(100vh - 60px);
+
     display: grid;
     grid-template-columns: 1.25fr 0.75fr;
+
     overflow: hidden;
     min-height: 0;
+
     background: white;
     border-radius: 18px;
     box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.35);
+
     margin: auto;
 }
 
@@ -418,7 +427,8 @@ body.sin-scroll {
 
 .modal-alojamiento-galeria {
     position: relative;
-    min-height: 620px;
+    min-height: 0;
+    height: 100%;
     background: #eeeeee;
     overflow: hidden;
     touch-action: pan-y;
@@ -428,7 +438,7 @@ body.sin-scroll {
 .modal-alojamiento-foto {
     width: 100%;
     height: 100%;
-    min-height: 620px;
+    min-height: 0;
     display: block;
     object-fit: contain;
     object-position: center;
@@ -509,13 +519,21 @@ body.sin-scroll {
 
 .modal-alojamiento-informacion {
     padding: 50px 38px 35px 38px;
+
+    /* ESTE ES EL SCROLL DE LA INFORMACIÓN */
     overflow-y: auto;
     overflow-x: hidden;
+
     -webkit-overflow-scrolling: touch;
+
     display: flex;
     flex-direction: column;
+
     min-height: 0;
     height: 100%;
+
+    /* Permite que el elemento grid se reduzca */
+    min-width: 0;
 }
 
 .modal-alojamiento-informacion h2 {
@@ -1021,13 +1039,17 @@ footer h3 {
     .modal-alojamiento-contenido {
         grid-template-columns:
             1fr 1fr;
+
+        height: calc(100vh - 40px);
         max-height: calc(100vh - 40px);
+
         min-height: 0;
     }
 
     .modal-alojamiento-galeria,
     .modal-alojamiento-foto {
-        min-height: 520px;
+        min-height: 0;
+        height: 100%;
     }
 
     .modal-alojamiento-informacion {
