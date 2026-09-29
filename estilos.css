@@ -1313,3 +1313,23 @@ footer h3 {
         gap: 8px;
     }
 }
+
+css
+/* REDES SOCIALES Y TELÉFONO */
+
+footer#contacto .redes-sociales {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+footer#contacto .redes-sociales a,
+footer#contacto .redes-sociales a:visited,
+footer#contacto .redes-sociales a:hover,
+footer#contacto .redes-sociales a:active {
+    color: #ffffff !important;
+    text-decoration: none;
+}
