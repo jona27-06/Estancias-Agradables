@@ -1,4 +1,7 @@
-ESTILO.CSS
+/* ==========================================================
+   ESTANCIAS AGRADABLES
+   ESTILO.CSS
+   ========================================================== */
 
 * {
     box-sizing: border-box;
@@ -525,7 +528,6 @@ body.sin-scroll {
     /* ESTE ES EL SCROLL DE LA INFORMACIÓN */
     overflow-y: auto;
     overflow-x: hidden;
-
     -webkit-overflow-scrolling: touch;
 
     display: flex;
@@ -635,7 +637,6 @@ body.sin-scroll {
 .modal-boton-reserva:active {
     transform: scale(0.98);
 }
-
 
 /* ==========================================
    MODAL DE RESERVA
@@ -1314,4 +1315,622 @@ footer h3 {
     .calendario-leyenda {
         gap: 8px;
     }
+}
+
+/* ==========================================================
+   AJUSTES RESPONSIVE + CUADRÍCULA DE ALOJAMIENTOS
+   ========================================================== */
+
+
+/* ==========================================
+   CORRECCIÓN GENERAL DEL ANCHO
+   ========================================== */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+img,
+video,
+iframe {
+    max-width: 100%;
+}
+
+.encabezado,
+.portada,
+.seccion,
+footer {
+    max-width: 100%;
+}
+
+
+/* ==========================================
+   COMPUTADORA
+   6 ALOJAMIENTOS POR FILA
+   ========================================== */
+
+.alojamientos {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+
+    gap: 28px 16px;
+}
+
+
+/* ==========================================
+   TARJETA DE ALOJAMIENTO
+   ========================================== */
+
+.alojamiento {
+    width: 100%;
+    min-width: 0;
+
+    background: transparent;
+
+    border-radius: 0;
+
+    box-shadow: none;
+
+    overflow: visible;
+
+    cursor: pointer;
+}
+
+
+/* Quitamos el efecto grande de tarjeta
+   en computadora */
+
+.alojamiento:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+
+.alojamiento:focus-visible {
+    border-radius: 14px;
+
+    box-shadow:
+        0 0 0 3px #f28c28;
+}
+
+
+/* ==========================================
+   FOTOGRAFÍA CUADRADA
+   ========================================== */
+
+.galeria-alojamiento {
+    position: relative;
+
+    width: 100%;
+    max-width: 100%;
+
+    height: auto;
+
+    aspect-ratio: 1 / 1;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    background: #eeeeee;
+}
+
+
+.galeria-alojamiento .foto-principal {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 14px;
+
+    background: #eeeeee;
+}
+
+
+/* ==========================================
+   NOMBRE DEBAJO DE LA FOTOGRAFÍA
+   ========================================== */
+
+.nombre-alojamiento {
+    padding: 10px 4px 0;
+
+    background: transparent;
+
+    color: #222;
+
+    font-size: 16px;
+    line-height: 1.25;
+
+    font-weight: 600;
+
+    overflow-wrap: break-word;
+}
+
+
+/* ==========================================
+   CONTADOR DE FOTOGRAFÍAS
+   ========================================== */
+
+.contador-fotos {
+    top: 10px;
+    right: 10px;
+
+    padding: 5px 9px;
+
+    border-radius: 14px;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   SEGURIDAD DE ANCHO EN LOS MODALES
+   ========================================== */
+
+#modalAlojamiento,
+#ventanaReserva {
+    width: 100%;
+    max-width: 100vw;
+}
+
+
+.modal-alojamiento-contenido {
+    width: min(1100px, 100%);
+
+    max-width: 100%;
+
+    min-width: 0;
+}
+
+
+.modal-alojamiento-galeria,
+.modal-alojamiento-informacion {
+    min-width: 0;
+
+    max-width: 100%;
+}
+
+
+#ventanaReserva .modal-contenido {
+    width: min(500px, 100%);
+
+    max-width: 100%;
+}
+
+
+#calendarioReserva,
+#contenedorCalendario {
+    width: 100%;
+
+    max-width: 100%;
+
+    min-width: 0;
+}
+
+
+/* ==========================================================
+   COMPUTADORAS DE TAMAÑO MEDIANO
+   5 ALOJAMIENTOS POR FILA
+   ========================================================== */
+
+@media (min-width: 1101px) and (max-width: 1350px) {
+
+    .alojamientos {
+        grid-template-columns:
+            repeat(5, minmax(0, 1fr));
+    }
+
+}
+
+
+/* ==========================================================
+   COMPUTADORAS PEQUEÑAS
+   4 ALOJAMIENTOS POR FILA
+   ========================================================== */
+
+@media (min-width: 901px) and (max-width: 1100px) {
+
+    .alojamientos {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+   3 ALOJAMIENTOS POR FILA
+   ========================================================== */
+
+@media (min-width: 601px) and (max-width: 900px) {
+
+    .alojamientos {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 24px 14px;
+    }
+
+
+    .nombre-alojamiento {
+        font-size: 15px;
+    }
+
+
+    .galeria-alojamiento {
+        height: auto;
+
+        aspect-ratio: 1 / 1;
+    }
+
+
+    .galeria-alojamiento .foto-principal {
+        height: 100%;
+    }
+
+}
+
+
+/* ==========================================================
+   TELÉFONO
+   UNA TARJETA POR FILA
+   ========================================================== */
+
+@media (max-width: 600px) {
+
+    html,
+    body {
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: hidden;
+    }
+
+
+    /* ======================================
+       ENCABEZADO
+       ====================================== */
+
+    .encabezado {
+        width: 100%;
+
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+
+    .encabezado nav {
+        width: 100%;
+
+        justify-content: center;
+
+        flex-wrap: wrap;
+
+        gap: 10px 16px;
+    }
+
+
+    /* ======================================
+       PORTADA
+       ====================================== */
+
+    .portada {
+        width: 100%;
+
+        max-width: 100%;
+    }
+
+
+    .portada-contenido {
+        width: 100%;
+
+        max-width: 100%;
+
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+
+    .portada-contenido h1 {
+        font-size: clamp(
+            28px,
+            9vw,
+            36px
+        );
+
+        overflow-wrap: break-word;
+    }
+
+
+    /* ======================================
+       SECCIÓN ALOJAMIENTOS
+       ====================================== */
+
+    .seccion {
+        width: 100%;
+
+        max-width: 100%;
+
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+
+    .alojamientos {
+        width: 100%;
+
+        max-width: 100%;
+
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 28px;
+    }
+
+
+    /* ======================================
+       TARJETA EN TELÉFONO
+       ====================================== */
+
+    .alojamiento {
+        width: 100%;
+
+        min-width: 0;
+
+        background: white;
+
+        border-radius: 16px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 6px 18px
+            rgba(0, 0, 0, 0.10);
+    }
+
+
+    .alojamiento:hover {
+        transform: none;
+
+        box-shadow:
+            0 6px 18px
+            rgba(0, 0, 0, 0.10);
+    }
+
+
+    /* ======================================
+       FOTO EN TELÉFONO
+       ====================================== */
+
+    .galeria-alojamiento {
+        width: 100%;
+
+        height: auto;
+
+        aspect-ratio: 1 / 1;
+
+        border-radius:
+            16px 16px 0 0;
+    }
+
+
+    .galeria-alojamiento .foto-principal {
+        width: 100%;
+
+        height: 100%;
+
+        object-fit: cover;
+
+        object-position: center;
+
+        border-radius:
+            16px 16px 0 0;
+    }
+
+
+    /* ======================================
+       NOMBRE EN TELÉFONO
+       ====================================== */
+
+    .nombre-alojamiento {
+        padding:
+            16px 18px 18px;
+
+        background: white;
+
+        color: #222;
+
+        font-size: 20px;
+
+        font-weight: 600;
+
+        line-height: 1.2;
+    }
+
+
+    /* ======================================
+       CONTADOR DE FOTOS
+       ====================================== */
+
+    .contador-fotos {
+        top: 12px;
+
+        right: 12px;
+
+        padding:
+            6px 10px;
+
+        font-size: 13px;
+    }
+
+
+    /* ======================================
+       MODAL DEL ALOJAMIENTO
+       ====================================== */
+
+    #modalAlojamiento {
+        width: 100%;
+
+        max-width: 100%;
+
+        padding: 0;
+    }
+
+
+    .modal-alojamiento-contenido {
+        width: 100%;
+
+        max-width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .modal-alojamiento-informacion {
+        width: 100%;
+
+        max-width: 100%;
+    }
+
+
+    /* ======================================
+       MODAL DE RESERVACIÓN
+       ====================================== */
+
+    #ventanaReserva {
+        width: 100%;
+
+        max-width: 100%;
+
+        padding: 8px;
+    }
+
+
+    #ventanaReserva .modal-contenido {
+        width: 100%;
+
+        max-width: 100%;
+    }
+
+
+    #ventanaReserva input,
+    #ventanaReserva button {
+        max-width: 100%;
+    }
+
+
+    /* ======================================
+       CALENDARIO
+       ====================================== */
+
+    #calendarioReserva,
+    #contenedorCalendario {
+        width: 100%;
+
+        max-width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .calendario-dias,
+    .calendario-dias-semana {
+        width: 100%;
+
+        grid-template-columns:
+            repeat(
+                7,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .calendario-dia {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+}
+
+
+/* ==========================================================
+   TELÉFONOS PEQUEÑOS
+   ========================================================== */
+
+@media (max-width: 380px) {
+
+    .encabezado {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .logo {
+        font-size: 20px;
+    }
+
+
+    .encabezado nav a {
+        font-size: 13px;
+    }
+
+
+    .portada-contenido {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+
+    .portada-contenido h1 {
+        font-size: 28px;
+    }
+
+
+    .seccion {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    #ventanaReserva {
+        padding: 5px;
+    }
+
+
+    #ventanaReserva .modal-contenido {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .calendario-dia {
+        min-height: 31px;
+
+        font-size: 11px;
+    }
+
 }
