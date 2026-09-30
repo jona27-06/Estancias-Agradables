@@ -2911,6 +2911,11 @@ async function abrirReserva(
             "";
     }
 
+
+    // ======================================================
+    // CANTIDAD DE PERSONAS
+    // ======================================================
+
     if (
         personas
     ) {
@@ -2921,9 +2926,18 @@ async function abrirReserva(
         personas.min =
             1;
 
-        personas.max =
-            alojamientoActual.maxHuespedes;
+        // La capacidad publicada NO bloquea
+        // cantidades superiores.
+        //
+        // Si el huésped supera esta cantidad,
+        // mostraremos posteriormente el aviso
+        // de confirmación correspondiente.
+
+        personas.removeAttribute(
+            "max"
+        );
     }
+
 
     if (
         cantidadNoches
@@ -2941,6 +2955,7 @@ async function abrirReserva(
             "Q0";
     }
 
+
     const nombreCliente =
         document.getElementById(
             "nombre"
@@ -2951,6 +2966,7 @@ async function abrirReserva(
             "telefono"
         );
 
+
     if (
         nombreCliente
     ) {
@@ -2958,6 +2974,7 @@ async function abrirReserva(
         nombreCliente.value =
             "";
     }
+
 
     if (
         telefono
@@ -2967,31 +2984,56 @@ async function abrirReserva(
             "";
     }
 
+
+    // ======================================================
+    // REINICIAR DISPONIBILIDAD Y FECHAS
+    // ======================================================
+
     fechasBloqueadas =
         new Set();
+
 
     fechaIngresoSeleccionada =
         null;
 
+
     fechaSalidaSeleccionada =
         null;
+
 
     disponibilidadVerificada =
         false;
 
+
     mesCalendarioActual =
         new Date();
+
 
     mesCalendarioActual.setDate(
         1
     );
 
+
     modoCalendario =
         "ingreso";
 
+
+    // ======================================================
+    // PREPARAR RESERVA
+    // ======================================================
+
     insertarEstilosReserva();
+
     configurarCalendarioReserva();
-    actualizarAvisoCapacidad(false);
+
+    actualizarAvisoCapacidad(
+        false
+    );
+
+
+    // ======================================================
+    // MOSTRAR VENTANA
+    // ======================================================
 
     if (
         ventana
@@ -3009,12 +3051,16 @@ async function abrirReserva(
         );
     }
 
+
     mostrarCalendario();
+
+
+    // ======================================================
+    // CONSULTAR FECHAS DISPONIBLES
+    // ======================================================
 
     await cargarDisponibilidad();
 }
-
-
 // ==========================================================
 // CERRAR RESERVA
 // ==========================================================
