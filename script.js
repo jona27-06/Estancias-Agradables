@@ -309,6 +309,10 @@ function insertarEstilosModalAlojamiento() {
 
     estilos.textContent = `
 
+        /* ==================================================
+           INDICADORES DE FOTOS
+           ================================================== */
+
         .modal-alojamiento-indicadores {
             position: absolute;
             bottom: 18px;
@@ -332,7 +336,59 @@ function insertarEstilosModalAlojamiento() {
             transform: scale(1.25);
         }
 
+
+        /* ==================================================
+           DESPLAZAMIENTO DE LA FICHA
+           ================================================== */
+
+        .modal-alojamiento {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            max-height: 100vh;
+        }
+
+        .modal-alojamiento-contenido {
+            max-height: calc(100vh - 30px);
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
+        }
+
+
+        /* ==================================================
+           ASEGURAR QUE EL FINAL DE LA FICHA SEA VISIBLE
+           ================================================== */
+
+        .modal-alojamiento-contenido::after {
+            content: "";
+            display: block;
+            height: 40px;
+            width: 100%;
+        }
+
+
+        /* ==================================================
+           CELULAR
+           ================================================== */
+
         @media (max-width: 600px) {
+
+            .modal-alojamiento {
+                align-items: flex-start !important;
+                padding: 10px !important;
+                overflow-y: auto !important;
+            }
+
+            .modal-alojamiento-contenido {
+                width: 100%;
+                max-height: calc(100vh - 20px);
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 30px;
+            }
 
             .modal-alojamiento-indicadores {
                 bottom: 12px;
