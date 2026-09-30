@@ -2,6 +2,7 @@
 // ESTANCIAS AGRADABLES - SCRIPT COMPLETO
 // ==========================================================
 
+
 // ==========================================================
 // SUPABASE
 // ==========================================================
@@ -599,6 +600,18 @@ function insertarEstilosCalendario() {
             background: #f28c28;
         }
 
+        .aviso-capacidad-reserva {
+            margin-top: 7px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .aviso-capacidad-reserva.advertencia {
+            color: #b42318;
+            font-weight: 600;
+        }
+
         @media (max-width: 600px) {
 
             #calendarioReserva {
@@ -1097,8 +1110,6 @@ function actualizarIndicadoresPortada() {
     );
 }
 
-
-// ==========================================================
 // OBTENER FOTOS DE ALOJAMIENTO
 // ==========================================================
 
@@ -1547,7 +1558,6 @@ function actualizarVisor() {
 // ==========================================================
 // MODAL DETALLE DEL ALOJAMIENTO
 // ==========================================================
-
 function crearModalAlojamiento() {
 
     insertarEstilosModalAlojamiento();
@@ -2779,6 +2789,7 @@ async function cargarAlojamientos() {
 
     }
 }
+
 // ==========================================================
 // ABRIR RESERVA
 // ==========================================================
@@ -2978,14 +2989,24 @@ async function abrirReserva(
     modoCalendario =
         "ingreso";
 
+    insertarEstilosReserva();
     configurarCalendarioReserva();
+    actualizarAvisoCapacidad(false);
 
     if (
         ventana
     ) {
 
+        ventana.classList.add(
+            "reserva-visible"
+        );
+
         ventana.style.display =
-            "block";
+            "";
+
+        document.body.classList.add(
+            "sin-scroll"
+        );
     }
 
     mostrarCalendario();
@@ -3009,9 +3030,17 @@ function cerrarReserva() {
         ventana
     ) {
 
+        ventana.classList.remove(
+            "reserva-visible"
+        );
+
         ventana.style.display =
-            "none";
+            "";
     }
+
+    document.body.classList.remove(
+        "sin-scroll"
+    );
 
     if (
         calendarioReserva
@@ -3179,10 +3208,29 @@ function configurarCalendarioReserva() {
 
     `;
 
-    fechaSalida.insertAdjacentElement(
-        "afterend",
-        calendarioReserva
-    );
+    const contenedorCalendario =
+        document.getElementById(
+            "contenedorCalendario"
+        );
+
+    if (
+        contenedorCalendario
+    ) {
+
+        contenedorCalendario.innerHTML =
+            "";
+
+        contenedorCalendario.appendChild(
+            calendarioReserva
+        );
+
+    } else {
+
+        fechaSalida.insertAdjacentElement(
+            "afterend",
+            calendarioReserva
+        );
+    }
 
     document.getElementById(
         "calendarioMesAnterior"
@@ -3539,11 +3587,6 @@ function renderizarCalendario() {
         }
     }
 }
-
-
-// ==========================================================
-// SELECCIONAR FECHA
-// ==========================================================
 
 function seleccionarFechaCalendario(
     fechaISO
@@ -4044,6 +4087,47 @@ function calcularPrecio() {
 
 
 // ==========================================================
+// AVISO DE CAPACIDAD
+// ==========================================================
+
+function actualizarAvisoCapacidad(excedida) {
+
+    const personas =
+        document.getElementById("personas");
+
+    if (!personas || !alojamientoActual) {
+        return;
+    }
+
+    let aviso =
+        document.getElementById("avisoCapacidad");
+
+    if (!aviso) {
+        aviso = document.createElement("p");
+        aviso.id = "avisoCapacidad";
+        personas.insertAdjacentElement("afterend", aviso);
+    }
+
+    aviso.classList.toggle(
+        "aviso-capacidad-error",
+        Boolean(excedida)
+    );
+
+    if (excedida) {
+        aviso.textContent =
+            "Capacidad máxima alcanzada. Este alojamiento admite hasta " +
+            alojamientoActual.maxHuespedes +
+            " personas.";
+    } else {
+        aviso.textContent =
+            "Capacidad máxima: " +
+            alojamientoActual.maxHuespedes +
+            " personas.";
+    }
+}
+
+
+// ==========================================================
 // VALIDACIÓN DE PERSONAS
 // ==========================================================
 
@@ -4090,11 +4174,17 @@ document.addEventListener(
             evento.target.value =
                 alojamientoActual.maxHuespedes;
 
+            actualizarAvisoCapacidad(true);
+
             alert(
                 "Este alojamiento permite un máximo de " +
                 alojamientoActual.maxHuespedes +
                 " personas."
             );
+
+        } else {
+
+            actualizarAvisoCapacidad(false);
         }
 
         calcularPrecio();
@@ -4153,27 +4243,30 @@ async function verificarDisponibilidadAntesDeEnviar() {
         ) {
 
             console.error(
-                "Error en verificación final:",
+                "Error al verificar disponibilidad:",
                 resultado.error
             );
 
             return false;
         }
 
-        const bloqueadasActualizadas =
+        fechasBloqueadas =
             new Set();
 
+        const datos =
+            resultado.data;
+
         if (
-            resultado.data &&
+            datos &&
             Array.isArray(
-                resultado.data.blocked
+                datos.blocked
             )
         ) {
 
-            resultado.data.blocked.forEach(
+            datos.blocked.forEach(
                 function(fecha) {
 
-                    bloqueadasActualizadas.add(
+                    fechasBloqueadas.add(
                         fecha
                     );
 
@@ -4181,18 +4274,12 @@ async function verificarDisponibilidadAntesDeEnviar() {
             );
         }
 
-        fechasBloqueadas =
-            bloqueadasActualizadas;
-
-        const disponible =
-            rangoDisponible(
-                ingreso,
-                salida
-            );
-
         renderizarCalendario();
 
-        return disponible;
+        return rangoDisponible(
+            ingreso,
+            salida
+        );
 
     } catch (error) {
 
@@ -4205,9 +4292,224 @@ async function verificarDisponibilidadAntesDeEnviar() {
     }
 }
 
+// ==========================================================
+// ESTILOS DE LA VENTANA DE RESERVA
+// ==========================================================
+
+function insertarEstilosReserva() {
+
+    if (
+        document.getElementById(
+            "estilosReservaCorregida"
+        )
+    ) {
+        return;
+    }
+
+    const estilos =
+        document.createElement(
+            "style"
+        );
+
+    estilos.id =
+        "estilosReservaCorregida";
+
+    estilos.textContent = `
+
+        #ventanaReserva {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.65);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #ventanaReserva.reserva-visible {
+            display: flex !important;
+        }
+
+        #ventanaReserva .modal-contenido {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px;
+            box-sizing: border-box;
+            box-shadow:
+                0 20px 60px
+                rgba(0, 0, 0, 0.25);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #ventanaReserva .cerrar {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 50%;
+            background: #f2f2f2;
+            color: #333333;
+            font-size: 25px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #ventanaReserva .cerrar:hover {
+            background: #e6e6e6;
+        }
+
+        #ventanaReserva h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            padding-right: 45px;
+        }
+
+        #ventanaReserva .nombre-reserva {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #666666;
+            font-weight: 600;
+        }
+
+        #ventanaReserva label {
+            display: block;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        #ventanaReserva input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 13px;
+            border: 1px solid #d6d6d6;
+            border-radius: 9px;
+            background: #ffffff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        #ventanaReserva input:focus {
+            border-color: #f28c28;
+            box-shadow:
+                0 0 0 3px
+                rgba(242, 140, 40, 0.12);
+        }
+
+        #ventanaReserva input[readonly] {
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        #contenedorCalendario {
+            width: 100%;
+        }
+
+        #ventanaReserva .resumen {
+            margin-top: 20px;
+            padding: 14px 16px;
+            background: #f7f7f7;
+            border-radius: 10px;
+        }
+
+        #ventanaReserva .resumen p {
+            margin: 5px 0;
+        }
+
+        #ventanaReserva .aviso-reserva {
+            margin-top: 16px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #7c2d12;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        #ventanaReserva .aviso-reserva p {
+            margin:
+                5px 0 0 0;
+        }
+
+        #ventanaReserva .boton-whatsapp {
+            width: 100%;
+            margin-top: 18px;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 10px;
+            background: #25d366;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        #ventanaReserva .boton-whatsapp:hover {
+            filter: brightness(0.95);
+        }
+
+        #avisoCapacidad {
+            margin:
+                6px 0 0 0;
+            font-size: 13px;
+            color: #666666;
+        }
+
+        #avisoCapacidad.aviso-capacidad-error {
+            color: #b42318;
+            font-weight: 600;
+        }
+
+        body.sin-scroll {
+            overflow: hidden;
+        }
+
+        @media (max-width: 600px) {
+
+            #ventanaReserva {
+                align-items: flex-start;
+                padding: 10px;
+            }
+
+            #ventanaReserva .modal-contenido {
+                max-height:
+                    calc(100vh - 20px);
+                padding:
+                    22px 16px 28px;
+                border-radius: 13px;
+            }
+
+            #ventanaReserva h2 {
+                font-size: 21px;
+            }
+
+        }
+
+    `;
+
+    document.head.appendChild(
+        estilos
+    );
+}
+
 
 // ==========================================================
-// ENVIAR WHATSAPP
+// ENVIAR SOLICITUD POR WHATSAPP
 // ==========================================================
 
 async function enviarWhatsApp() {
@@ -4216,64 +4518,104 @@ async function enviarWhatsApp() {
         !alojamientoActual
     ) {
 
+        alert(
+            "No se ha seleccionado ningún alojamiento."
+        );
+
         return;
     }
 
-    const ingreso =
+    const fechaIngreso =
         document.getElementById(
             "fechaIngreso"
-        ).value;
+        );
 
-    const salida =
+    const fechaSalida =
         document.getElementById(
             "fechaSalida"
-        ).value;
+        );
 
     const personas =
-        Number(
-            document.getElementById(
-                "personas"
-            ).value
+        document.getElementById(
+            "personas"
         );
 
     const nombre =
         document.getElementById(
             "nombre"
-        ).value.trim();
+        );
 
     const telefono =
         document.getElementById(
             "telefono"
-        ).value.trim();
-
-    const noches =
-        Number(
-            document.getElementById(
-                "cantidadNoches"
-            ).textContent
         );
 
-    const total =
-        document.getElementById(
-            "precioTotal"
-        ).textContent;
-
     if (
-        !ingreso ||
-        !salida ||
+        !fechaIngreso ||
+        !fechaSalida ||
+        !personas ||
         !nombre ||
         !telefono
     ) {
 
         alert(
-            "Por favor complete todos los datos."
+            "No se pudo encontrar el formulario de reserva."
         );
 
         return;
     }
 
+    const ingreso =
+        fechaIngreso.value.trim();
+
+    const salida =
+        fechaSalida.value.trim();
+
+    const cantidadPersonas =
+        Number(
+            personas.value
+        );
+
+    const nombreCliente =
+        nombre.value.trim();
+
+    const telefonoCliente =
+        telefono.value.trim();
+
     if (
-        noches <= 0
+        !ingreso
+    ) {
+
+        alert(
+            "Seleccione la fecha de ingreso."
+        );
+
+        mostrarCalendario();
+
+        return;
+    }
+
+    if (
+        !salida
+    ) {
+
+        alert(
+            "Seleccione la fecha de salida."
+        );
+
+        modoCalendario =
+            "salida";
+
+        mostrarCalendario();
+
+        return;
+    }
+
+    if (
+        diferenciaDias(
+            ingreso,
+            salida
+        ) <= 0
     ) {
 
         alert(
@@ -4284,10 +4626,27 @@ async function enviarWhatsApp() {
     }
 
     if (
-        personas < 1 ||
-        personas >
+        !cantidadPersonas ||
+        cantidadPersonas < 1
+    ) {
+
+        alert(
+            "Ingrese una cantidad válida de personas."
+        );
+
+        personas.focus();
+
+        return;
+    }
+
+    if (
+        cantidadPersonas >
         alojamientoActual.maxHuespedes
     ) {
+
+        actualizarAvisoCapacidad(
+            true
+        );
 
         alert(
             "Este alojamiento permite un máximo de " +
@@ -4295,89 +4654,164 @@ async function enviarWhatsApp() {
             " personas."
         );
 
+        personas.value =
+            alojamientoActual.maxHuespedes;
+
+        calcularPrecio();
+
         return;
     }
 
     if (
-        !rangoDisponible(
-            ingreso,
-            salida
-        )
+        !nombreCliente
     ) {
 
         alert(
-            "Las fechas seleccionadas ya no están disponibles. Seleccione otras fechas."
+            "Ingrese su nombre completo."
         );
 
-        await cargarDisponibilidad();
+        nombre.focus();
 
         return;
     }
 
-    const disponibilidadFinal =
+    if (
+        !telefonoCliente
+    ) {
+
+        alert(
+            "Ingrese su número de teléfono."
+        );
+
+        telefono.focus();
+
+        return;
+    }
+
+    const boton =
+        document.querySelector(
+            "#ventanaReserva .boton-whatsapp"
+        );
+
+    const textoOriginal =
+        boton
+            ? boton.textContent
+            : "";
+
+    if (
+        boton
+    ) {
+
+        boton.disabled =
+            true;
+
+        boton.textContent =
+            "Verificando disponibilidad...";
+    }
+
+    const disponible =
         await verificarDisponibilidadAntesDeEnviar();
 
     if (
-        !disponibilidadFinal
+        !disponible
     ) {
 
+        if (
+            boton
+        ) {
+
+            boton.disabled =
+                false;
+
+            boton.textContent =
+                textoOriginal;
+        }
+
         alert(
-            "Las fechas seleccionadas ya no están disponibles. Por favor seleccione otras fechas."
+            "Lo sentimos, las fechas seleccionadas ya no están disponibles. Por favor seleccione otras fechas."
         );
+
+        fechaSalidaSeleccionada =
+            null;
+
+        fechaSalida.value =
+            "";
+
+        modoCalendario =
+            "salida";
+
+        calcularPrecio();
+
+        mostrarCalendario();
 
         return;
     }
 
-    const numeroWhatsApp =
-        "50254134493";
+    const noches =
+        diferenciaDias(
+            ingreso,
+            salida
+        );
+
+    const personasAdicionales =
+        Math.max(
+            cantidadPersonas -
+            alojamientoActual.personasIncluidas,
+            0
+        );
+
+    const precioPorNoche =
+        alojamientoActual.precioBase +
+        (
+            personasAdicionales *
+            alojamientoActual.precioPersona
+        );
+
+    const total =
+        precioPorNoche *
+        noches;
 
     const mensaje =
-        "SOLICITUD DE RESERVA\n\n" +
 
-        "Estancias Agradables\n\n" +
+        "Hola, me gustaría solicitar una reserva." +
+        "\n\n" +
 
-        "Alojamiento: " +
+        "🏠 Alojamiento: " +
         alojamientoActual.nombre +
-
-        "\n\n" +
-
-        "Nombre: " +
-        nombre +
-
         "\n" +
 
-        "Telefono: " +
-        telefono +
-
-        "\n" +
-
-        "Ingreso: " +
+        "📅 Fecha de ingreso: " +
         ingreso +
-
         "\n" +
 
-        "Salida: " +
+        "📅 Fecha de salida: " +
         salida +
-
         "\n" +
 
-        "Noches: " +
+        "🌙 Noches: " +
         noches +
-
         "\n" +
 
-        "Personas: " +
-        personas +
-
+        "👥 Personas: " +
+        cantidadPersonas +
         "\n" +
 
-        "Total estimado: " +
-        total +
+        "👤 Nombre: " +
+        nombreCliente +
+        "\n" +
 
+        "📞 Teléfono: " +
+        telefonoCliente +
         "\n\n" +
 
-        "La selección de estas fechas no confirma la reserva. " +
-        "La solicitud queda sujeta a confirmación de disponibilidad por parte del anfitrión.";
+        "💰 Total estimado: Q" +
+        total.toFixed(2) +
+        "\n\n" +
+
+        "Entiendo que esta solicitud está sujeta a confirmación de disponibilidad por parte del anfitrión.";
+
+    const numeroWhatsApp =
+        "50254134493";
 
     const url =
         "https://wa.me/" +
@@ -4387,123 +4821,185 @@ async function enviarWhatsApp() {
             mensaje
         );
 
+    if (
+        boton
+    ) {
+
+        boton.disabled =
+            false;
+
+        boton.textContent =
+            textoOriginal;
+    }
+
     window.open(
         url,
-        "_blank"
+        "_blank",
+        "noopener,noreferrer"
     );
 }
 
 
 // ==========================================================
-// CERRAR MODALES CON ESCAPE
+// EVENTOS GENERALES
 // ==========================================================
 
-document.addEventListener(
-    "keydown",
-    function(evento) {
+function configurarEventosGenerales() {
 
-        if (
-            evento.key !==
-            "Escape"
-        ) {
-            return;
-        }
+    const ventanaReserva =
+        document.getElementById(
+            "ventanaReserva"
+        );
 
-        if (
-            visorFotos &&
-            visorFotos.classList.contains(
-                "visor-visible"
-            )
-        ) {
+    if (
+        ventanaReserva &&
+        !ventanaReserva.dataset.eventosConfigurados
+    ) {
 
-            cerrarVisorFotos();
+        ventanaReserva.dataset.eventosConfigurados =
+            "true";
 
-            return;
-        }
+        ventanaReserva.addEventListener(
+            "click",
+            function(evento) {
 
-        if (
-            modalAlojamiento &&
-            modalAlojamiento.classList.contains(
-                "modal-alojamiento-visible"
-            )
-        ) {
+                if (
+                    evento.target ===
+                    ventanaReserva
+                ) {
 
-            cerrarModalAlojamiento();
+                    cerrarReserva();
+                }
 
-            return;
-        }
-
-        const ventana =
-            document.getElementById(
-                "ventanaReserva"
-            );
-
-        if (
-            ventana &&
-            ventana.style.display ===
-            "block"
-        ) {
-
-            cerrarReserva();
-        }
-
+            }
+        );
     }
-);
 
+    document.addEventListener(
+        "keydown",
+        function(evento) {
 
-// ==========================================================
-// CERRAR MODAL DE RESERVA AL HACER CLICK FUERA
-// ==========================================================
+            if (
+                evento.key !==
+                "Escape"
+            ) {
 
-document.addEventListener(
-    "click",
-    function(evento) {
+                return;
+            }
 
-        const ventana =
-            document.getElementById(
-                "ventanaReserva"
-            );
+            if (
+                visorFotos &&
+                visorFotos.classList.contains(
+                    "visor-visible"
+                )
+            ) {
 
-        if (
-            !ventana
-        ) {
+                cerrarVisorFotos();
 
-            return;
+                return;
+            }
+
+            if (
+                modalAlojamiento &&
+                modalAlojamiento.classList.contains(
+                    "modal-alojamiento-visible"
+                )
+            ) {
+
+                cerrarModalAlojamiento();
+
+                return;
+            }
+
+            const reserva =
+                document.getElementById(
+                    "ventanaReserva"
+                );
+
+            if (
+                reserva &&
+                reserva.classList.contains(
+                    "reserva-visible"
+                )
+            ) {
+
+                cerrarReserva();
+            }
+
         }
-
-        if (
-            evento.target ===
-            ventana
-        ) {
-
-            cerrarReserva();
-        }
-
-    }
-);
+    );
+}
 
 
 // ==========================================================
-// INICIAR PÁGINA
+// INICIALIZACIÓN
 // ==========================================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
+async function iniciarSitio() {
 
-        insertarEstilosCalendario();
+    try {
 
         insertarEstilosVisor();
 
         insertarEstilosModalAlojamiento();
 
+        insertarEstilosCalendario();
+
+        insertarEstilosReserva();
+
         crearVisorFotos();
 
         crearModalAlojamiento();
 
-        cargarPortada();
+        configurarEventosGenerales();
 
-        cargarAlojamientos();
+        await cargarPortada();
 
+        await cargarAlojamientos();
+
+        console.log(
+            "Estancias Agradables iniciado correctamente."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error al iniciar el sitio:",
+            error
+        );
     }
-);
+}
+
+
+// ==========================================================
+// INICIAR CUANDO EL DOM ESTÉ DISPONIBLE
+// ==========================================================
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        iniciarSitio
+    );
+
+} else {
+
+    iniciarSitio();
+}
+
+
+// ==========================================================
+// FUNCIONES GLOBALES PARA BOTONES DEL HTML
+// ==========================================================
+
+window.cerrarReserva =
+    cerrarReserva;
+
+window.enviarWhatsApp =
+    enviarWhatsApp;
+
+window.abrirReserva =
+    abrirReserva;
