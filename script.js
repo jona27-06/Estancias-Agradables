@@ -4141,35 +4141,127 @@ function actualizarAvisoCapacidad(excedida) {
     const personas =
         document.getElementById("personas");
 
-    if (!personas || !alojamientoActual) {
+    if (
+        !personas ||
+        !alojamientoActual
+    ) {
         return;
     }
 
     let aviso =
-        document.getElementById("avisoCapacidad");
+        document.getElementById(
+            "avisoCapacidad"
+        );
 
     if (!aviso) {
-        aviso = document.createElement("p");
-        aviso.id = "avisoCapacidad";
-        personas.insertAdjacentElement("afterend", aviso);
+
+        aviso =
+            document.createElement("div");
+
+        aviso.id =
+            "avisoCapacidad";
+
+        personas.insertAdjacentElement(
+            "afterend",
+            aviso
+        );
     }
 
-    aviso.classList.toggle(
-        "aviso-capacidad-error",
-        Boolean(excedida)
-    );
 
-    if (excedida) {
-        aviso.textContent =
-            "Capacidad máxima alcanzada. Este alojamiento admite hasta " +
-            alojamientoActual.maxHuespedes +
+    const cantidad =
+        Number(personas.value) || 1;
+
+    const capacidad =
+        Number(
+            alojamientoActual.maxHuespedes
+        ) || 1;
+
+
+    // ======================================================
+    // NO SUPERA LA CAPACIDAD
+    // ======================================================
+
+    if (
+        !excedida ||
+        cantidad <= capacidad
+    ) {
+
+        aviso.className =
+            "aviso-capacidad-reserva";
+
+        aviso.innerHTML =
+            "Capacidad indicada: " +
+            capacidad +
             " personas.";
-    } else {
-        aviso.textContent =
-            "Capacidad máxima: " +
-            alojamientoActual.maxHuespedes +
-            " personas.";
+
+        return;
     }
+
+
+    // ======================================================
+    // SUPERA LA CAPACIDAD
+    // ======================================================
+
+    aviso.className =
+        "aviso-capacidad-reserva aviso-capacidad-superada";
+
+    aviso.innerHTML = `
+
+        <div class="aviso-capacidad-cabecera">
+
+            <span class="aviso-capacidad-icono">
+                !
+            </span>
+
+            <div>
+
+                <strong>
+                    La cantidad de huéspedes supera
+                    la capacidad indicada
+                </strong>
+
+                <p>
+                    Este alojamiento está publicado
+                    para una capacidad de
+                    <b>${capacidad} personas</b>
+                    y estás solicitando alojamiento
+                    para
+                    <b>${cantidad} personas</b>.
+                </p>
+
+            </div>
+
+        </div>
+
+        <p class="aviso-capacidad-texto">
+
+            Puedes continuar con la solicitud.
+            Sin embargo, antes de hacerlo confirma
+            que has revisado la descripción del
+            alojamiento, la distribución de sus
+            espacios, camas y amenidades, y que
+            comprendes que la propiedad está
+            equipada y distribuida tomando como
+            referencia la capacidad indicada.
+
+        </p>
+
+        <label class="aceptacion-capacidad">
+
+            <input
+                type="checkbox"
+                id="aceptaCapacidadExcedida"
+            >
+
+            <span>
+                He revisado la información del
+                alojamiento y comprendo que mi
+                solicitud supera la capacidad
+                indicada.
+            </span>
+
+        </label>
+    `;
 }
 
 
@@ -4185,53 +4277,46 @@ document.addEventListener(
             evento.target.id !==
             "personas"
         ) {
-
             return;
         }
 
         if (
             !alojamientoActual
         ) {
-
             return;
         }
 
-        let personas =
+        let cantidad =
             Number(
                 evento.target.value
             );
 
-        if (
-            personas < 1
-        ) {
-
-            personas =
-                1;
-
-            evento.target.value =
-                1;
-        }
 
         if (
-            personas >
-            alojamientoActual.maxHuespedes
+            !cantidad ||
+            cantidad < 1
         ) {
 
-            evento.target.value =
-                alojamientoActual.maxHuespedes;
+            cantidad = 1;
 
-            actualizarAvisoCapacidad(true);
-
-            alert(
-                "Este alojamiento permite un máximo de " +
-                alojamientoActual.maxHuespedes +
-                " personas."
-            );
-
-        } else {
-
-            actualizarAvisoCapacidad(false);
+            evento.target.value = 1;
         }
+
+
+        const capacidad =
+            Number(
+                alojamientoActual.maxHuespedes
+            ) || 1;
+
+
+        // IMPORTANTE:
+        // Ya NO reducimos automáticamente
+        // la cantidad al máximo.
+
+        actualizarAvisoCapacidad(
+            cantidad > capacidad
+        );
+
 
         calcularPrecio();
     }
