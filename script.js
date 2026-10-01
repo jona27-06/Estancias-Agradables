@@ -3985,9 +3985,9 @@ function calcularPrecio() {
     if (
         !alojamientoActual
     ) {
-
         return;
     }
+
 
     const elementoIngreso =
         document.getElementById(
@@ -4004,62 +4004,85 @@ function calcularPrecio() {
             "personas"
         );
 
+    const elementoNoches =
+        document.getElementById(
+            "cantidadNoches"
+        );
+
+    const elementoTotal =
+        document.getElementById(
+            "precioTotal"
+        );
+
+
     if (
         !elementoIngreso ||
         !elementoSalida ||
-        !elementoPersonas
+        !elementoPersonas ||
+        !elementoNoches ||
+        !elementoTotal
     ) {
-
         return;
     }
 
+
     const ingreso =
-        elementoIngreso.value;
+        elementoIngreso.value.trim();
 
     const salida =
-        elementoSalida.value;
+        elementoSalida.value.trim();
 
-    const personas =
-        Number(
-            elementoPersonas.value
+    let personas =
+        parseInt(
+            elementoPersonas.value,
+            10
         );
+
+
+    // ======================================================
+    // VALIDAR FECHAS
+    // ======================================================
 
     if (
         !ingreso ||
         !salida
     ) {
 
-        document.getElementById(
-            "cantidadNoches"
-        ).textContent =
+        elementoNoches.textContent =
             "0";
 
-        document.getElementById(
-            "precioTotal"
-        ).textContent =
+        elementoTotal.textContent =
             "Q0";
 
         return;
     }
+
+
+    // ======================================================
+    // VALIDAR PERSONAS
+    // ======================================================
+
+    // Solamente impedimos cantidades menores a 1.
+    // Superar la capacidad publicada SÍ está permitido.
 
     if (
-        personas < 1 ||
-        personas >
-        alojamientoActual.maxHuespedes
+        !Number.isFinite(personas) ||
+        personas < 1
     ) {
 
-        document.getElementById(
-            "cantidadNoches"
-        ).textContent =
+        elementoNoches.textContent =
             "0";
 
-        document.getElementById(
-            "precioTotal"
-        ).textContent =
+        elementoTotal.textContent =
             "Q0";
 
         return;
     }
+
+
+    // ======================================================
+    // CALCULAR NOCHES
+    // ======================================================
 
     const fechaIngreso =
         fechaDesdeISO(
@@ -4076,57 +4099,86 @@ function calcularPrecio() {
         fechaIngreso;
 
     const noches =
-        diferencia /
-        (
-            1000 *
-            60 *
-            60 *
-            24
+        Math.round(
+            diferencia /
+            (
+                1000 *
+                60 *
+                60 *
+                24
+            )
         );
 
+
     if (
+        !Number.isFinite(noches) ||
         noches <= 0
     ) {
 
-        document.getElementById(
-            "cantidadNoches"
-        ).textContent =
+        elementoNoches.textContent =
             "0";
 
-        document.getElementById(
-            "precioTotal"
-        ).textContent =
+        elementoTotal.textContent =
             "Q0";
 
         return;
     }
 
+
+    // ======================================================
+    // CALCULAR PERSONAS ADICIONALES
+    // ======================================================
+
+    const personasIncluidas =
+        Number(
+            alojamientoActual.personasIncluidas
+        ) || 0;
+
+    const precioBase =
+        Number(
+            alojamientoActual.precioBase
+        ) || 0;
+
+    const precioPersona =
+        Number(
+            alojamientoActual.precioPersona
+        ) || 0;
+
+
     const personasAdicionales =
         Math.max(
             personas -
-            alojamientoActual.personasIncluidas,
+            personasIncluidas,
             0
         );
 
+
+    // ======================================================
+    // PRECIO POR NOCHE
+    // ======================================================
+
     const precioPorNoche =
-        alojamientoActual.precioBase +
+        precioBase +
         (
             personasAdicionales *
-            alojamientoActual.precioPersona
+            precioPersona
         );
+
+
+    // ======================================================
+    // TOTAL
+    // ======================================================
 
     const total =
         precioPorNoche *
         noches;
 
-    document.getElementById(
-        "cantidadNoches"
-    ).textContent =
+
+    elementoNoches.textContent =
         noches;
 
-    document.getElementById(
-        "precioTotal"
-    ).textContent =
+
+    elementoTotal.textContent =
         "Q" +
         total.toFixed(2);
 }
