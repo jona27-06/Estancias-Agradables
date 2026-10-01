@@ -4269,59 +4269,67 @@ function actualizarAvisoCapacidad(excedida) {
 // VALIDACIÓN DE PERSONAS
 // ==========================================================
 
+function procesarCantidadPersonas() {
+
+    if (!alojamientoActual) {
+        return;
+    }
+
+    const campoPersonas =
+        document.getElementById("personas");
+
+    if (!campoPersonas) {
+        return;
+    }
+
+    let cantidad =
+        parseInt(campoPersonas.value, 10);
+
+    if (
+        !Number.isFinite(cantidad) ||
+        cantidad < 1
+    ) {
+        cantidad = 1;
+        campoPersonas.value = 1;
+    }
+
+    const capacidad =
+        Number(alojamientoActual.maxHuespedes) || 1;
+
+    // IMPORTANTE:
+    // NO modificar el número escrito por el huésped.
+    // 7 continúa siendo 7 aunque la capacidad publicada sea 5.
+
+    actualizarAvisoCapacidad(
+        cantidad > capacidad
+    );
+
+    calcularPrecio();
+}
+
+
+// Funciona mientras escribe
 document.addEventListener(
     "input",
     function(evento) {
 
-        if (
-            evento.target.id !==
-            "personas"
-        ) {
-            return;
+        if (evento.target.id === "personas") {
+            procesarCantidadPersonas();
         }
-
-        if (
-            !alojamientoActual
-        ) {
-            return;
-        }
-
-        let cantidad =
-            Number(
-                evento.target.value
-            );
-
-
-        if (
-            !cantidad ||
-            cantidad < 1
-        ) {
-
-            cantidad = 1;
-
-            evento.target.value = 1;
-        }
-
-
-        const capacidad =
-            Number(
-                alojamientoActual.maxHuespedes
-            ) || 1;
-
-
-        // IMPORTANTE:
-        // Ya NO reducimos automáticamente
-        // la cantidad al máximo.
-
-        actualizarAvisoCapacidad(
-            cantidad > capacidad
-        );
-
-
-        calcularPrecio();
     }
 );
 
+
+// Refuerzo para navegadores móviles
+document.addEventListener(
+    "change",
+    function(evento) {
+
+        if (evento.target.id === "personas") {
+            procesarCantidadPersonas();
+        }
+    }
+);
 
 // ==========================================================
 // VERIFICACIÓN FINAL
