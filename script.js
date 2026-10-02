@@ -3125,19 +3125,58 @@ function configurarCalendarioReserva() {
         return;
     }
 
-    if (
+if (
+    document.getElementById(
+        "calendarioReserva"
+    )
+) {
+
+    calendarioReserva =
         document.getElementById(
             "calendarioReserva"
-        )
-    ) {
+        );
 
-        calendarioReserva =
-            document.getElementById(
-                "calendarioReserva"
-            );
 
-        return;
-    }
+    // ======================================================
+    // PERMITIR CAMBIAR FECHA DE INGRESO
+    // ======================================================
+
+    fechaIngreso.onclick =
+        function() {
+
+            modoCalendario =
+                "ingreso";
+
+            mostrarCalendario();
+        };
+
+
+    // ======================================================
+    // PERMITIR CAMBIAR FECHA DE SALIDA
+    // ======================================================
+
+    fechaSalida.onclick =
+        function() {
+
+            if (
+                fechaIngresoSeleccionada
+            ) {
+
+                modoCalendario =
+                    "salida";
+
+            } else {
+
+                modoCalendario =
+                    "ingreso";
+            }
+
+            mostrarCalendario();
+        };
+
+
+    return;
+}
 
     fechaIngreso.type =
         "text";
