@@ -207,20 +207,42 @@
              PERSONAS
              ================================== -->
 
-        <label>
-            Cantidad de personas
-        </label>
+ <label>
+    Cantidad de personas
+</label>
 
-        <input
-            type="number"
-            id="personas"
-            min="1"
-            max="50"
-            value="1"
-            step="1"
-            inputmode="numeric"
-            autocomplete="off"
-        >
+<div class="selector-personas">
+
+    <button
+        type="button"
+        class="boton-personas"
+        id="disminuirPersonas"
+        aria-label="Disminuir cantidad de personas"
+    >
+        −
+    </button>
+
+    <input
+        type="number"
+        id="personas"
+        min="1"
+        max="50"
+        value="1"
+        step="1"
+        inputmode="numeric"
+        autocomplete="off"
+    >
+
+    <button
+        type="button"
+        class="boton-personas"
+        id="aumentarPersonas"
+        aria-label="Aumentar cantidad de personas"
+    >
+        +
+    </button>
+
+</div>
 
 
         <!-- ==================================
