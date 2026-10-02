@@ -4705,9 +4705,11 @@ function insertarEstilosReserva() {
 
 async function enviarWhatsApp() {
 
-    if (
-        !alojamientoActual
-    ) {
+    // ======================================================
+    // COMPROBAR ALOJAMIENTO
+    // ======================================================
+
+    if (!alojamientoActual) {
 
         alert(
             "No se ha seleccionado ningún alojamiento."
@@ -4715,6 +4717,11 @@ async function enviarWhatsApp() {
 
         return;
     }
+
+
+    // ======================================================
+    // OBTENER CAMPOS
+    // ======================================================
 
     const fechaIngreso =
         document.getElementById(
@@ -4741,6 +4748,7 @@ async function enviarWhatsApp() {
             "telefono"
         );
 
+
     if (
         !fechaIngreso ||
         !fechaSalida ||
@@ -4756,6 +4764,11 @@ async function enviarWhatsApp() {
         return;
     }
 
+
+    // ======================================================
+    // OBTENER DATOS DEL FORMULARIO
+    // ======================================================
+
     const ingreso =
         fechaIngreso.value.trim();
 
@@ -4763,8 +4776,9 @@ async function enviarWhatsApp() {
         fechaSalida.value.trim();
 
     const cantidadPersonas =
-        Number(
-            personas.value
+        parseInt(
+            personas.value,
+            10
         );
 
     const nombreCliente =
@@ -4773,22 +4787,27 @@ async function enviarWhatsApp() {
     const telefonoCliente =
         telefono.value.trim();
 
-    if (
-        !ingreso
-    ) {
+
+    // ======================================================
+    // VALIDAR FECHAS
+    // ======================================================
+
+    if (!ingreso) {
 
         alert(
             "Seleccione la fecha de ingreso."
         );
+
+        modoCalendario =
+            "ingreso";
 
         mostrarCalendario();
 
         return;
     }
 
-    if (
-        !salida
-    ) {
+
+    if (!salida) {
 
         alert(
             "Seleccione la fecha de salida."
@@ -4801,6 +4820,7 @@ async function enviarWhatsApp() {
 
         return;
     }
+
 
     if (
         diferenciaDias(
@@ -4816,8 +4836,15 @@ async function enviarWhatsApp() {
         return;
     }
 
+
+    // ======================================================
+    // VALIDAR PERSONAS
+    // ======================================================
+
     if (
-        !cantidadPersonas ||
+        !Number.isFinite(
+            cantidadPersonas
+        ) ||
         cantidadPersonas < 1
     ) {
 
@@ -4830,32 +4857,73 @@ async function enviarWhatsApp() {
         return;
     }
 
-    if (
+
+    // ======================================================
+    // CAPACIDAD DEL ALOJAMIENTO
+    // ======================================================
+
+    const capacidadIndicada =
+        Number(
+            alojamientoActual.maxHuespedes
+        ) || 1;
+
+
+    const superaCapacidad =
         cantidadPersonas >
-        alojamientoActual.maxHuespedes
-    ) {
+        capacidadIndicada;
 
-        actualizarAvisoCapacidad(
-            true
-        );
 
-        alert(
-            "Este alojamiento permite un máximo de " +
-            alojamientoActual.maxHuespedes +
-            " personas."
-        );
+    // ======================================================
+    // SI SUPERA CAPACIDAD, EXIGIR ACEPTACIÓN
+    // ======================================================
 
-        personas.value =
-            alojamientoActual.maxHuespedes;
+    if (superaCapacidad) {
 
-        calcularPrecio();
+        const aceptacion =
+            document.getElementById(
+                "aceptaCapacidadExcedida"
+            );
 
-        return;
+
+        if (
+            !aceptacion ||
+            !aceptacion.checked
+        ) {
+
+            actualizarAvisoCapacidad(
+                true
+            );
+
+            alert(
+                "La cantidad de huéspedes supera la capacidad indicada. Para continuar, debe aceptar la solicitud especial de personas adicionales."
+            );
+
+
+            const aviso =
+                document.getElementById(
+                    "avisoCapacidad"
+                );
+
+
+            if (aviso) {
+
+                aviso.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+
+
+            return;
+        }
     }
 
-    if (
-        !nombreCliente
-    ) {
+
+    // ======================================================
+    // VALIDAR NOMBRE
+    // ======================================================
+
+    if (!nombreCliente) {
 
         alert(
             "Ingrese su nombre completo."
@@ -4866,9 +4934,12 @@ async function enviarWhatsApp() {
         return;
     }
 
-    if (
-        !telefonoCliente
-    ) {
+
+    // ======================================================
+    // VALIDAR TELÉFONO
+    // ======================================================
+
+    if (!telefonoCliente) {
 
         alert(
             "Ingrese su número de teléfono."
@@ -4879,19 +4950,24 @@ async function enviarWhatsApp() {
         return;
     }
 
+
+    // ======================================================
+    // BOTÓN DE WHATSAPP
+    // ======================================================
+
     const boton =
         document.querySelector(
             "#ventanaReserva .boton-whatsapp"
         );
+
 
     const textoOriginal =
         boton
             ? boton.textContent
             : "";
 
-    if (
-        boton
-    ) {
+
+    if (boton) {
 
         boton.disabled =
             true;
@@ -4900,16 +4976,18 @@ async function enviarWhatsApp() {
             "Verificando disponibilidad...";
     }
 
+
+    // ======================================================
+    // VERIFICAR DISPONIBILIDAD
+    // ======================================================
+
     const disponible =
         await verificarDisponibilidadAntesDeEnviar();
 
-    if (
-        !disponible
-    ) {
 
-        if (
-            boton
-        ) {
+    if (!disponible) {
+
+        if (boton) {
 
             boton.disabled =
                 false;
@@ -4918,9 +4996,11 @@ async function enviarWhatsApp() {
                 textoOriginal;
         }
 
+
         alert(
             "Lo sentimos, las fechas seleccionadas ya no están disponibles. Por favor seleccione otras fechas."
         );
+
 
         fechaSalidaSeleccionada =
             null;
@@ -4938,71 +5018,189 @@ async function enviarWhatsApp() {
         return;
     }
 
+
+    // ======================================================
+    // CALCULAR NOCHES
+    // ======================================================
+
     const noches =
         diferenciaDias(
             ingreso,
             salida
         );
 
-    const personasAdicionales =
+
+    // ======================================================
+    // DATOS DE PRECIOS
+    // ======================================================
+
+    const personasIncluidas =
+        Number(
+            alojamientoActual.personasIncluidas
+        ) || 0;
+
+
+    const precioBase =
+        Number(
+            alojamientoActual.precioBase
+        ) || 0;
+
+
+    const precioPersona =
+        Number(
+            alojamientoActual.precioPersona
+        ) || 0;
+
+
+    // ======================================================
+    // CALCULAR TODAS LAS PERSONAS ADICIONALES
+    // ======================================================
+
+    /*
+        IMPORTANTE:
+
+        Este cálculo NO utiliza maxHuespedes.
+
+        Ejemplo:
+
+        Personas incluidas: 2
+        Capacidad indicada: 5
+        Personas solicitadas: 7
+
+        Personas cobradas como adicionales:
+        7 - 2 = 5
+
+        Aunque la capacidad indicada sea 5,
+        el precio se calcula para las 7 personas.
+    */
+
+    const personasAdicionalesPrecio =
         Math.max(
             cantidadPersonas -
-            alojamientoActual.personasIncluidas,
+            personasIncluidas,
             0
         );
 
+
     const precioPorNoche =
-        alojamientoActual.precioBase +
+        precioBase +
         (
-            personasAdicionales *
-            alojamientoActual.precioPersona
+            personasAdicionalesPrecio *
+            precioPersona
         );
+
 
     const total =
         precioPorNoche *
         noches;
 
+
+    // ======================================================
+    // PERSONAS SOBRE LA CAPACIDAD INDICADA
+    // ======================================================
+
+    const personasSobreCapacidad =
+        Math.max(
+            cantidadPersonas -
+            capacidadIndicada,
+            0
+        );
+
+
+    // ======================================================
+    // MENSAJE ESPECIAL
+    // ======================================================
+
+    let mensajeCapacidad =
+        "";
+
+
+    if (superaCapacidad) {
+
+        mensajeCapacidad =
+
+            "\n\n" +
+
+            "SOLICITUD ESPECIAL DE PERSONAS ADICIONALES" +
+            "\n\n" +
+
+            "Capacidad máxima: " +
+            capacidadIndicada +
+            " personas" +
+            "\n" +
+
+            "Personas solicitadas: " +
+            cantidadPersonas +
+            "\n" +
+
+            "Personas adicionales: " +
+            personasSobreCapacidad +
+            "\n\n" +
+
+            "El huésped declara conocer la capacidad máxima del alojamiento y manifiesta estar dispuesto(a) a acomodarse en el alojamiento." +
+            "\n\n" +
+
+            "Esta solicitud especial queda sujeta a confirmación.";
+    }
+
+
+    // ======================================================
+    // CONSTRUIR MENSAJE
+    // ======================================================
+
     const mensaje =
 
-        "Hola, me gustaría solicitar una reserva." +
+        "SOLICITUD DE RESERVA" +
         "\n\n" +
 
-        "🏠 Alojamiento: " +
+        "Estancias Agradables" +
+        "\n\n" +
+
+        "Alojamiento: " +
         alojamientoActual.nombre +
-        "\n" +
+        "\n\n" +
 
-        "📅 Fecha de ingreso: " +
-        ingreso +
-        "\n" +
-
-        "📅 Fecha de salida: " +
-        salida +
-        "\n" +
-
-        "🌙 Noches: " +
-        noches +
-        "\n" +
-
-        "👥 Personas: " +
-        cantidadPersonas +
-        "\n" +
-
-        "👤 Nombre: " +
+        "Nombre: " +
         nombreCliente +
         "\n" +
 
-        "📞 Teléfono: " +
+        "Teléfono: " +
         telefonoCliente +
-        "\n\n" +
+        "\n" +
 
-        "💰 Total estimado: Q" +
+        "Ingreso: " +
+        ingreso +
+        "\n" +
+
+        "Salida: " +
+        salida +
+        "\n" +
+
+        "Noches: " +
+        noches +
+        "\n" +
+
+        "Personas: " +
+        cantidadPersonas +
+        "\n" +
+
+        "Total estimado: Q" +
         total.toFixed(2) +
+
+        mensajeCapacidad +
+
         "\n\n" +
 
-        "Entiendo que esta solicitud está sujeta a confirmación de disponibilidad por parte del anfitrión.";
+        "Esta es una solicitud de reserva. La reserva queda sujeta a confirmación de disponibilidad.";
+
+
+    // ======================================================
+    // WHATSAPP
+    // ======================================================
 
     const numeroWhatsApp =
         "50254134493";
+
 
     const url =
         "https://wa.me/" +
@@ -5012,9 +5210,12 @@ async function enviarWhatsApp() {
             mensaje
         );
 
-    if (
-        boton
-    ) {
+
+    // ======================================================
+    // RESTAURAR BOTÓN
+    // ======================================================
+
+    if (boton) {
 
         boton.disabled =
             false;
@@ -5023,13 +5224,17 @@ async function enviarWhatsApp() {
             textoOriginal;
     }
 
+
+    // ======================================================
+    // ABRIR WHATSAPP
+    // ======================================================
+
     window.open(
         url,
         "_blank",
         "noopener,noreferrer"
     );
 }
-
 
 // ==========================================================
 // EVENTOS GENERALES
