@@ -1883,6 +1883,11 @@ function abrirModalAlojamiento(
             "modalAlojamientoPrecio"
         );
 
+
+    // ==================================================
+    // NOMBRE
+    // ==================================================
+
     if (
         nombre
     ) {
@@ -1892,14 +1897,65 @@ function abrirModalAlojamiento(
             "Alojamiento";
     }
 
+
+    // ==================================================
+    // DESCRIPCIÓN ORDENADA
+    // ==================================================
+
     if (
         descripcion
     ) {
 
-        descripcion.textContent =
+        const textoDescripcion =
             alojamiento.descripcion ||
             "Disfrute de una estancia agradable.";
+
+        const partesDescripcion =
+            textoDescripcion
+                .split("*")
+                .map(
+                    function(parte) {
+
+                        return parte.trim();
+                    }
+                )
+                .filter(
+                    function(parte) {
+
+                        return parte !== "";
+                    }
+                );
+
+        descripcion.innerHTML =
+            "";
+
+        partesDescripcion.forEach(
+            function(parte, indice) {
+
+                const linea =
+                    document.createElement(
+                        "div"
+                    );
+
+                linea.className =
+                    indice === 0
+                        ? "modal-descripcion-principal"
+                        : "modal-descripcion-item";
+
+                linea.textContent =
+                    parte;
+
+                descripcion.appendChild(
+                    linea
+                );
+            }
+        );
     }
+
+
+    // ==================================================
+    // DATOS DEL ALOJAMIENTO
+    // ==================================================
 
     if (
         datos
@@ -1929,6 +1985,11 @@ function abrirModalAlojamiento(
         `;
     }
 
+
+    // ==================================================
+    // UBICACIÓN
+    // ==================================================
+
     if (
         ubicacion
     ) {
@@ -1954,6 +2015,11 @@ function abrirModalAlojamiento(
         }
     }
 
+
+    // ==================================================
+    // PRECIO
+    // ==================================================
+
     if (
         precio
     ) {
@@ -1965,6 +2031,11 @@ function abrirModalAlojamiento(
             ).toFixed(2);
     }
 
+
+    // ==================================================
+    // MOSTRAR MODAL
+    // ==================================================
+
     actualizarFotoModalAlojamiento();
 
     modalAlojamiento.classList.add(
@@ -1972,24 +2043,6 @@ function abrirModalAlojamiento(
     );
 
     document.body.classList.add(
-        "sin-scroll"
-    );
-}
-
-
-function cerrarModalAlojamiento() {
-
-    if (
-        !modalAlojamiento
-    ) {
-        return;
-    }
-
-    modalAlojamiento.classList.remove(
-        "modal-alojamiento-visible"
-    );
-
-    document.body.classList.remove(
         "sin-scroll"
     );
 }
