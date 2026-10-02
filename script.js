@@ -3673,9 +3673,37 @@ function renderizarCalendario() {
     }
 }
 
-function seleccionarFechaCalendario(
-    fechaISO
-) {
+function seleccionarFechaCalendario(fechaISO) {
+
+    const fechaIngreso =
+        document.getElementById(
+            "fechaIngreso"
+        );
+
+    const fechaSalida =
+        document.getElementById(
+            "fechaSalida"
+        );
+
+
+    // ======================================================
+    // SI YA HAY INGRESO Y SALIDA
+    // EMPEZAR UNA NUEVA SELECCIÓN
+    // ======================================================
+
+    if (
+        fechaIngresoSeleccionada &&
+        fechaSalidaSeleccionada
+    ) {
+
+        modoCalendario =
+            "ingreso";
+    }
+
+
+    // ======================================================
+    // SELECCIONAR / CAMBIAR FECHA DE INGRESO
+    // ======================================================
 
     if (
         modoCalendario ===
@@ -3688,42 +3716,45 @@ function seleccionarFechaCalendario(
         fechaSalidaSeleccionada =
             null;
 
-        const fechaIngreso =
-            document.getElementById(
-                "fechaIngreso"
-            );
 
-        const fechaSalida =
-            document.getElementById(
-                "fechaSalida"
-            );
-
-        if (
-            fechaIngreso
-        ) {
+        if (fechaIngreso) {
 
             fechaIngreso.value =
                 fechaISO;
         }
 
-        if (
-            fechaSalida
-        ) {
+
+        if (fechaSalida) {
 
             fechaSalida.value =
                 "";
         }
 
+
+        // Al cambiar el ingreso,
+        // ahora debemos pedir una nueva salida
+
         modoCalendario =
             "salida";
 
+
         disponibilidadVerificada =
             false;
+
+
+        // El precio anterior deja de ser válido
+        calcularPrecio();
+
 
         renderizarCalendario();
 
         return;
     }
+
+
+    // ======================================================
+    // SELECCIONAR FECHA DE SALIDA
+    // ======================================================
 
     if (
         modoCalendario ===
@@ -3742,6 +3773,9 @@ function seleccionarFechaCalendario(
             return;
         }
 
+
+        // La salida siempre debe ser posterior al ingreso
+
         if (
             fechaISO <=
             fechaIngresoSeleccionada
@@ -3754,14 +3788,21 @@ function seleccionarFechaCalendario(
             return;
         }
 
+
+        // ==================================================
+        // COMPROBAR FECHAS BLOQUEADAS EN EL RANGO
+        // ==================================================
+
         const cantidad =
             diferenciaDias(
                 fechaIngresoSeleccionada,
                 fechaISO
             );
 
+
         let hayBloqueo =
             false;
+
 
         for (
             let i = 0;
@@ -3777,10 +3818,12 @@ function seleccionarFechaCalendario(
                     i
                 );
 
+
             const fechaIntermedia =
                 convertirFechaISO(
                     fecha
                 );
+
 
             if (
                 fechasBloqueadas.has(
@@ -3795,9 +3838,8 @@ function seleccionarFechaCalendario(
             }
         }
 
-        if (
-            hayBloqueo
-        ) {
+
+        if (hayBloqueo) {
 
             alert(
                 "El período seleccionado contiene fechas no disponibles. Seleccione otro rango."
@@ -3806,24 +3848,25 @@ function seleccionarFechaCalendario(
             return;
         }
 
+
+        // ==================================================
+        // GUARDAR SALIDA
+        // ==================================================
+
         fechaSalidaSeleccionada =
             fechaISO;
 
-        const fechaSalida =
-            document.getElementById(
-                "fechaSalida"
-            );
 
-        if (
-            fechaSalida
-        ) {
+        if (fechaSalida) {
 
             fechaSalida.value =
                 fechaISO;
         }
 
+
         disponibilidadVerificada =
             false;
+
 
         calcularPrecio();
 
