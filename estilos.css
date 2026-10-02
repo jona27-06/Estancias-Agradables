@@ -1934,3 +1934,163 @@ footer {
     }
 
 }
+
+/* ==========================================================
+   SELECTOR DE CANTIDAD DE PERSONAS
+   ========================================================== */
+
+#ventanaReserva .selector-personas {
+    width: 100%;
+    height: 48px;
+
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 52px;
+
+    margin: 0 0 15px 0;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   CAMPO NUMÉRICO
+   ========================================================== */
+
+#ventanaReserva .selector-personas #personas {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+
+    margin: 0;
+    padding: 0 10px;
+
+    border: none;
+    border-radius: 0;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #333;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    text-align: center;
+
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+
+/* QUITAR FLECHAS NATIVAS DE CHROME / ANDROID */
+
+#ventanaReserva .selector-personas #personas::-webkit-inner-spin-button,
+#ventanaReserva .selector-personas #personas::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+
+/* ==========================================================
+   BOTONES - Y +
+   ========================================================== */
+
+#ventanaReserva .selector-personas .boton-personas {
+    width: 52px;
+    min-width: 52px;
+    max-width: 52px;
+
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    border-radius: 0;
+
+    background: #f5f5f5;
+
+    color: #333;
+
+    font-size: 26px;
+    font-weight: 500;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    touch-action: manipulation;
+}
+
+
+/* LÍNEAS DE SEPARACIÓN */
+
+#ventanaReserva #disminuirPersonas {
+    border-right: 1px solid #ddd;
+}
+
+#ventanaReserva #aumentarPersonas {
+    border-left: 1px solid #ddd;
+}
+
+
+/* EFECTO AL TOCAR */
+
+#ventanaReserva .selector-personas .boton-personas:active {
+    background: #e8e8e8;
+}
+
+
+/* FOCO DEL CAMPO */
+
+#ventanaReserva .selector-personas:focus-within {
+    border-color: #f28c28;
+
+    box-shadow:
+        0 0 0 2px rgba(242, 140, 40, 0.15);
+}
+
+
+/* ==========================================================
+   CELULAR
+   ========================================================== */
+
+@media (max-width: 600px) {
+
+    #ventanaReserva .selector-personas {
+        height: 52px;
+
+        grid-template-columns:
+            56px
+            minmax(0, 1fr)
+            56px;
+    }
+
+
+    #ventanaReserva .selector-personas .boton-personas {
+        width: 56px;
+        min-width: 56px;
+        max-width: 56px;
+
+        font-size: 28px;
+    }
+
+
+    #ventanaReserva .selector-personas #personas {
+        font-size: 18px;
+    }
+}
