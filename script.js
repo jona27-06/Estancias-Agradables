@@ -4480,6 +4480,68 @@ document.addEventListener(
 );
 
 // ==========================================================
+// AUMENTAR / DISMINUIR CANTIDAD DE PERSONAS
+// ==========================================================
+
+function cambiarCantidadPersonas(cambio) {
+
+    const campoPersonas =
+        document.getElementById(
+            "personas"
+        );
+
+    if (!campoPersonas) {
+        return;
+    }
+
+
+    let cantidad =
+        parseInt(
+            campoPersonas.value,
+            10
+        );
+
+
+    // Si el campo está vacío
+    if (
+        !Number.isFinite(cantidad)
+    ) {
+
+        cantidad = 1;
+    }
+
+
+    cantidad =
+        cantidad + cambio;
+
+
+    // Nunca permitir menos de 1
+    if (
+        cantidad < 1
+    ) {
+
+        cantidad = 1;
+    }
+
+
+    // Máximo técnico del formulario
+    if (
+        cantidad > 50
+    ) {
+
+        cantidad = 50;
+    }
+
+
+    campoPersonas.value =
+        cantidad;
+
+
+    // Actualizar aviso y precio
+    procesarCantidadPersonas();
+}
+
+// ==========================================================
 // VERIFICACIÓN FINAL
 // ==========================================================
 
