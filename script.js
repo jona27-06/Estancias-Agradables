@@ -4494,52 +4494,81 @@ function cambiarCantidadPersonas(cambio) {
         return;
     }
 
-
     let cantidad =
         parseInt(
             campoPersonas.value,
             10
         );
 
-
-    // Si el campo está vacío
     if (
         !Number.isFinite(cantidad)
     ) {
-
         cantidad = 1;
     }
-
 
     cantidad =
         cantidad + cambio;
 
-
-    // Nunca permitir menos de 1
+    // Nunca bajar de 1
     if (
         cantidad < 1
     ) {
-
         cantidad = 1;
     }
 
-
-    // Máximo técnico del formulario
+    // Máximo técnico
     if (
         cantidad > 50
     ) {
-
         cantidad = 50;
     }
-
 
     campoPersonas.value =
         cantidad;
 
-
-    // Actualizar aviso y precio
     procesarCantidadPersonas();
 }
+
+
+// ==========================================================
+// BOTONES + Y - DE CANTIDAD DE PERSONAS
+// ==========================================================
+
+document.addEventListener(
+    "click",
+    function(evento) {
+
+        const botonMas =
+            evento.target.closest(
+                "#aumentarPersonas"
+            );
+
+        const botonMenos =
+            evento.target.closest(
+                "#disminuirPersonas"
+            );
+
+        if (botonMas) {
+
+            evento.preventDefault();
+            evento.stopPropagation();
+
+            cambiarCantidadPersonas(1);
+
+            return;
+        }
+
+        if (botonMenos) {
+
+            evento.preventDefault();
+            evento.stopPropagation();
+
+            cambiarCantidadPersonas(-1);
+
+            return;
+        }
+    }
+);
 
 // ==========================================================
 // VERIFICACIÓN FINAL
