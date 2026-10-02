@@ -4275,17 +4275,29 @@ function actualizarAvisoCapacidad(excedida) {
     const personas =
         document.getElementById("personas");
 
+    const selectorPersonas =
+        document.querySelector(
+            ".selector-personas"
+        );
+
     if (
         !personas ||
+        !selectorPersonas ||
         !alojamientoActual
     ) {
         return;
     }
 
+
     let aviso =
         document.getElementById(
             "avisoCapacidad"
         );
+
+
+    // ======================================================
+    // CREAR AVISO DEBAJO DEL SELECTOR COMPLETO
+    // ======================================================
 
     if (!aviso) {
 
@@ -4295,7 +4307,8 @@ function actualizarAvisoCapacidad(excedida) {
         aviso.id =
             "avisoCapacidad";
 
-        personas.insertAdjacentElement(
+
+        selectorPersonas.insertAdjacentElement(
             "afterend",
             aviso
         );
@@ -4304,6 +4317,7 @@ function actualizarAvisoCapacidad(excedida) {
 
     const cantidad =
         Number(personas.value) || 1;
+
 
     const capacidad =
         Number(
@@ -4338,6 +4352,7 @@ function actualizarAvisoCapacidad(excedida) {
 
     aviso.className =
         "aviso-capacidad-reserva aviso-capacidad-superada";
+
 
     aviso.innerHTML = `
 
@@ -4397,7 +4412,6 @@ function actualizarAvisoCapacidad(excedida) {
         </label>
     `;
 }
-
 
 // ==========================================================
 // VALIDACIÓN DE PERSONAS
