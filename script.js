@@ -1558,73 +1558,73 @@ function actualizarVisor() {
 // ==========================================================
 // MODAL DETALLE DEL ALOJAMIENTO
 // ==========================================================
+// ==========================================================
+// MODAL DETALLE DEL ALOJAMIENTO
+// ==========================================================
+
+
+// ==========================================================
+// CERRAR MODAL DEL ALOJAMIENTO
+// ==========================================================
+
+function cerrarModalAlojamiento() {
+
+    const modal =
+        document.getElementById(
+            "modalAlojamiento"
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove(
+        "modal-alojamiento-visible"
+    );
+
+    document.body.classList.remove(
+        "sin-scroll"
+    );
+}
+
+
+// ==========================================================
+// CREAR MODAL DEL ALOJAMIENTO
+// ==========================================================
+
 function crearModalAlojamiento() {
 
     insertarEstilosModalAlojamiento();
 
-    if (
+    // Si ya existe, solamente recuperamos
+    // las referencias y no lo creamos otra vez.
+    const modalExistente =
         document.getElementById(
             "modalAlojamiento"
-        )
-    ) {
+        );
+
+    if (modalExistente) {
 
         modalAlojamiento =
-            document.getElementById(
-                "modalAlojamiento"
-            );
+            modalExistente;
 
         modalAlojamientoFoto =
             document.getElementById(
                 "modalAlojamientoFoto"
             );
 
-        const botonCerrar =
+        modalAlojamientoContador =
             document.getElementById(
-                "cerrarModalAlojamiento"
+                "modalAlojamientoContador"
             );
-
-        if (botonCerrar) {
-
-            botonCerrar.onclick =
-                function(evento) {
-
-                    evento.preventDefault();
-                    evento.stopPropagation();
-
-                    cerrarModalAlojamiento();
-                };
-        }
-
-
-        const botonReservar =
-            document.getElementById(
-                "modalAlojamientoReservar"
-            );
-
-        if (botonReservar) {
-
-            botonReservar.onclick =
-                function(evento) {
-
-                    evento.preventDefault();
-                    evento.stopPropagation();
-
-                    if (alojamientoActual) {
-
-                        const alojamientoParaReserva =
-                            alojamientoActual;
-
-                        cerrarModalAlojamiento();
-
-                        abrirReserva(
-                            alojamientoParaReserva
-                        );
-                    }
-                };
-        }
 
         return;
     }
+
+
+    // ======================================================
+    // CREAR ESTRUCTURA
+    // ======================================================
 
     modalAlojamiento =
         document.createElement(
@@ -1642,6 +1642,7 @@ function crearModalAlojamiento() {
                 type="button"
                 class="modal-alojamiento-cerrar"
                 id="cerrarModalAlojamiento"
+                aria-label="Cerrar"
             >
                 ×
             </button>
@@ -1658,6 +1659,7 @@ function crearModalAlojamiento() {
                     type="button"
                     class="modal-alojamiento-flecha modal-alojamiento-anterior"
                     id="modalAlojamientoAnterior"
+                    aria-label="Fotografía anterior"
                 >
                     &#10094;
                 </button>
@@ -1666,6 +1668,7 @@ function crearModalAlojamiento() {
                     type="button"
                     class="modal-alojamiento-flecha modal-alojamiento-siguiente"
                     id="modalAlojamientoSiguiente"
+                    aria-label="Fotografía siguiente"
                 >
                     &#10095;
                 </button>
@@ -1673,25 +1676,26 @@ function crearModalAlojamiento() {
                 <div
                     class="modal-alojamiento-contador"
                     id="modalAlojamientoContador"
-                >
-                </div>
+                ></div>
 
                 <div
                     class="modal-alojamiento-indicadores"
                     id="modalAlojamientoIndicadores"
-                >
-                </div>
+                ></div>
 
             </div>
 
+
             <div class="modal-alojamiento-informacion">
 
-                <h2 id="modalAlojamientoNombre"></h2>
+                <h2
+                    id="modalAlojamientoNombre"
+                ></h2>
 
-                <p
+                <div
                     id="modalAlojamientoDescripcion"
                     class="modal-descripcion"
-                ></p>
+                ></div>
 
                 <div
                     id="modalAlojamientoDatos"
@@ -1707,8 +1711,7 @@ function crearModalAlojamiento() {
 
                     <strong
                         id="modalAlojamientoPrecio"
-                    >
-                    </strong>
+                    ></strong>
 
                     <span>
                         / noche
@@ -1730,9 +1733,15 @@ function crearModalAlojamiento() {
 
     `;
 
+
     document.body.appendChild(
         modalAlojamiento
     );
+
+
+    // ======================================================
+    // REFERENCIAS
+    // ======================================================
 
     modalAlojamientoFoto =
         document.getElementById(
@@ -1744,62 +1753,122 @@ function crearModalAlojamiento() {
             "modalAlojamientoContador"
         );
 
-    document.getElementById(
-        "cerrarModalAlojamiento"
-    ).addEventListener(
-        "click",
-        cerrarModalAlojamiento
-    );
 
-    document.getElementById(
-        "modalAlojamientoAnterior"
-    ).addEventListener(
-        "click",
-        function(evento) {
+    const botonCerrar =
+        document.getElementById(
+            "cerrarModalAlojamiento"
+        );
 
-            evento.stopPropagation();
+    const botonAnterior =
+        document.getElementById(
+            "modalAlojamientoAnterior"
+        );
 
-            cambiarFotoModalAlojamiento(
-                modalAlojamientoIndice - 1
-            );
+    const botonSiguiente =
+        document.getElementById(
+            "modalAlojamientoSiguiente"
+        );
 
-        }
-    );
+    const botonReservar =
+        document.getElementById(
+            "modalAlojamientoReservar"
+        );
 
-    document.getElementById(
-        "modalAlojamientoSiguiente"
-    ).addEventListener(
-        "click",
-        function(evento) {
 
-            evento.stopPropagation();
+    // ======================================================
+    // BOTÓN CERRAR
+    // ======================================================
 
-            cambiarFotoModalAlojamiento(
-                modalAlojamientoIndice + 1
-            );
+    if (botonCerrar) {
 
-        }
-    );
+        botonCerrar.addEventListener(
+            "click",
+            function(evento) {
 
-    document.getElementById(
-        "modalAlojamientoReservar"
-    ).addEventListener(
-        "click",
-        function() {
+                evento.preventDefault();
+                evento.stopPropagation();
 
-            if (
-                alojamientoActual
-            ) {
+                cerrarModalAlojamiento();
+            }
+        );
+    }
+
+
+    // ======================================================
+    // FOTOGRAFÍA ANTERIOR
+    // ======================================================
+
+    if (botonAnterior) {
+
+        botonAnterior.addEventListener(
+            "click",
+            function(evento) {
+
+                evento.preventDefault();
+                evento.stopPropagation();
+
+                cambiarFotoModalAlojamiento(
+                    modalAlojamientoIndice - 1
+                );
+            }
+        );
+    }
+
+
+    // ======================================================
+    // FOTOGRAFÍA SIGUIENTE
+    // ======================================================
+
+    if (botonSiguiente) {
+
+        botonSiguiente.addEventListener(
+            "click",
+            function(evento) {
+
+                evento.preventDefault();
+                evento.stopPropagation();
+
+                cambiarFotoModalAlojamiento(
+                    modalAlojamientoIndice + 1
+                );
+            }
+        );
+    }
+
+
+    // ======================================================
+    // BOTÓN SOLICITAR RESERVA
+    // ======================================================
+
+    if (botonReservar) {
+
+        botonReservar.addEventListener(
+            "click",
+            function(evento) {
+
+                evento.preventDefault();
+                evento.stopPropagation();
+
+                if (!alojamientoActual) {
+                    return;
+                }
+
+                const alojamientoParaReserva =
+                    alojamientoActual;
 
                 cerrarModalAlojamiento();
 
                 abrirReserva(
-                    alojamientoActual
+                    alojamientoParaReserva
                 );
             }
+        );
+    }
 
-        }
-    );
+
+    // ======================================================
+    // CERRAR HACIENDO CLICK EN EL FONDO
+    // ======================================================
 
     modalAlojamiento.addEventListener(
         "click",
@@ -1812,75 +1881,91 @@ function crearModalAlojamiento() {
 
                 cerrarModalAlojamiento();
             }
-
         }
     );
+
+
+    // ======================================================
+    // DESLIZAR FOTOS EN CELULAR
+    // ======================================================
 
     const galeria =
         modalAlojamiento.querySelector(
             ".modal-alojamiento-galeria"
         );
 
-    galeria.addEventListener(
-        "touchstart",
-        function(evento) {
+    if (galeria) {
 
-            modalTouchInicio =
-                evento.touches[0]
-                    .clientX;
+        galeria.addEventListener(
+            "touchstart",
+            function(evento) {
 
-        },
-        {
-            passive: true
-        }
-    );
+                if (
+                    !evento.touches ||
+                    !evento.touches[0]
+                ) {
+                    return;
+                }
 
-    galeria.addEventListener(
-        "touchend",
-        function(evento) {
-
-            modalTouchFin =
-                evento.changedTouches[0]
-                    .clientX;
-
-            const diferencia =
-                modalTouchInicio -
-                modalTouchFin;
-
-            if (
-                Math.abs(diferencia) < 50
-            ) {
-                return;
+                modalTouchInicio =
+                    evento.touches[0].clientX;
+            },
+            {
+                passive: true
             }
-
-            if (
-                diferencia > 50
-            ) {
-
-                cambiarFotoModalAlojamiento(
-                    modalAlojamientoIndice + 1
-                );
-
-            } else {
-
-                cambiarFotoModalAlojamiento(
-                    modalAlojamientoIndice - 1
-                );
-
-            }
-
-        },
-        {
-            passive: true
-        }
-    );
-
-    modalAlojamientoFoto =
-        document.getElementById(
-            "modalAlojamientoFoto"
         );
+
+
+        galeria.addEventListener(
+            "touchend",
+            function(evento) {
+
+                if (
+                    !evento.changedTouches ||
+                    !evento.changedTouches[0]
+                ) {
+                    return;
+                }
+
+                modalTouchFin =
+                    evento.changedTouches[0].clientX;
+
+                const diferencia =
+                    modalTouchInicio -
+                    modalTouchFin;
+
+                if (
+                    Math.abs(diferencia) < 50
+                ) {
+                    return;
+                }
+
+                if (
+                    diferencia > 50
+                ) {
+
+                    cambiarFotoModalAlojamiento(
+                        modalAlojamientoIndice + 1
+                    );
+
+                } else {
+
+                    cambiarFotoModalAlojamiento(
+                        modalAlojamientoIndice - 1
+                    );
+                }
+            },
+            {
+                passive: true
+            }
+        );
+    }
 }
 
+
+// ==========================================================
+// ABRIR MODAL DEL ALOJAMIENTO
+// ==========================================================
 
 function abrirModalAlojamiento(
     alojamiento,
@@ -1897,6 +1982,7 @@ function abrirModalAlojamiento(
 
     modalAlojamientoIndice =
         0;
+
 
     const nombre =
         document.getElementById(
@@ -1924,13 +2010,11 @@ function abrirModalAlojamiento(
         );
 
 
-    // ==================================================
+    // ======================================================
     // NOMBRE
-    // ==================================================
+    // ======================================================
 
-    if (
-        nombre
-    ) {
+    if (nombre) {
 
         nombre.textContent =
             alojamiento.nombre ||
@@ -1938,13 +2022,11 @@ function abrirModalAlojamiento(
     }
 
 
-    // ==================================================
-    // DESCRIPCIÓN ORDENADA
-    // ==================================================
+    // ======================================================
+    // DESCRIPCIÓN
+    // ======================================================
 
-    if (
-        descripcion
-    ) {
+    if (descripcion) {
 
         const textoDescripcion =
             alojamiento.descripcion ||
@@ -1993,13 +2075,11 @@ function abrirModalAlojamiento(
     }
 
 
-    // ==================================================
+    // ======================================================
     // DATOS DEL ALOJAMIENTO
-    // ==================================================
+    // ======================================================
 
-    if (
-        datos
-    ) {
+    if (datos) {
 
         datos.innerHTML = `
 
@@ -2026,13 +2106,11 @@ function abrirModalAlojamiento(
     }
 
 
-    // ==================================================
+    // ======================================================
     // UBICACIÓN
-    // ==================================================
+    // ======================================================
 
-    if (
-        ubicacion
-    ) {
+    if (ubicacion) {
 
         if (
             alojamiento.ubicacion
@@ -2056,13 +2134,11 @@ function abrirModalAlojamiento(
     }
 
 
-    // ==================================================
+    // ======================================================
     // PRECIO
-    // ==================================================
+    // ======================================================
 
-    if (
-        precio
-    ) {
+    if (precio) {
 
         precio.textContent =
             "Q" +
@@ -2072,21 +2148,28 @@ function abrirModalAlojamiento(
     }
 
 
-    // ==================================================
+    // ======================================================
     // MOSTRAR MODAL
-    // ==================================================
+    // ======================================================
 
     actualizarFotoModalAlojamiento();
 
-    modalAlojamiento.classList.add(
-        "modal-alojamiento-visible"
-    );
+    if (modalAlojamiento) {
+
+        modalAlojamiento.classList.add(
+            "modal-alojamiento-visible"
+        );
+    }
 
     document.body.classList.add(
         "sin-scroll"
     );
 }
 
+
+// ==========================================================
+// CAMBIAR FOTOGRAFÍA DEL MODAL
+// ==========================================================
 
 function cambiarFotoModalAlojamiento(
     nuevoIndice
@@ -2123,6 +2206,10 @@ function cambiarFotoModalAlojamiento(
 }
 
 
+// ==========================================================
+// ACTUALIZAR FOTOGRAFÍA DEL MODAL
+// ==========================================================
+
 function actualizarFotoModalAlojamiento() {
 
     if (
@@ -2146,7 +2233,13 @@ function actualizarFotoModalAlojamiento() {
             "modalAlojamientoIndicadores"
         );
 
+
+    // ======================================================
+    // SIN FOTOGRAFÍAS
+    // ======================================================
+
     if (
+        !modalAlojamientoFotos ||
         modalAlojamientoFotos.length === 0
     ) {
 
@@ -2161,25 +2254,19 @@ function actualizarFotoModalAlojamiento() {
                 "Sin fotografías";
         }
 
-        if (
-            flechaAnterior
-        ) {
+        if (flechaAnterior) {
 
             flechaAnterior.style.display =
                 "none";
         }
 
-        if (
-            flechaSiguiente
-        ) {
+        if (flechaSiguiente) {
 
             flechaSiguiente.style.display =
                 "none";
         }
 
-        if (
-            indicadores
-        ) {
+        if (indicadores) {
 
             indicadores.innerHTML =
                 "";
@@ -2187,6 +2274,11 @@ function actualizarFotoModalAlojamiento() {
 
         return;
     }
+
+
+    // ======================================================
+    // MOSTRAR FOTOGRAFÍA
+    // ======================================================
 
     modalAlojamientoFoto.style.display =
         "block";
@@ -2202,6 +2294,11 @@ function actualizarFotoModalAlojamiento() {
             ? alojamientoActual.nombre
             : "Alojamiento";
 
+
+    // ======================================================
+    // CONTADOR
+    // ======================================================
+
     if (
         modalAlojamientoContador
     ) {
@@ -2214,9 +2311,12 @@ function actualizarFotoModalAlojamiento() {
             modalAlojamientoFotos.length;
     }
 
-    if (
-        flechaAnterior
-    ) {
+
+    // ======================================================
+    // FLECHAS
+    // ======================================================
+
+    if (flechaAnterior) {
 
         flechaAnterior.style.display =
             modalAlojamientoFotos.length > 1
@@ -2224,9 +2324,7 @@ function actualizarFotoModalAlojamiento() {
                 : "none";
     }
 
-    if (
-        flechaSiguiente
-    ) {
+    if (flechaSiguiente) {
 
         flechaSiguiente.style.display =
             modalAlojamientoFotos.length > 1
@@ -2234,9 +2332,12 @@ function actualizarFotoModalAlojamiento() {
                 : "none";
     }
 
-    if (
-        indicadores
-    ) {
+
+    // ======================================================
+    // INDICADORES
+    // ======================================================
+
+    if (indicadores) {
 
         indicadores.innerHTML =
             "";
