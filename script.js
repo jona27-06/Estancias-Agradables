@@ -1962,6 +1962,334 @@ function crearModalAlojamiento() {
     }
 }
 
+// ==========================================================
+// MOSTRAR AMENIDADES DEL ALOJAMIENTO
+// ==========================================================
+
+function mostrarAmenidadesAlojamiento(alojamiento) {
+
+    const descripcion =
+        document.getElementById(
+            "modalAlojamientoDescripcion"
+        );
+
+    if (!descripcion) {
+        return;
+    }
+
+    // Eliminar una sección anterior si existiera
+    const anterior =
+        descripcion.querySelector(
+            ".modal-amenidades"
+        );
+
+    if (anterior) {
+        anterior.remove();
+    }
+
+
+    let amenidades =
+        alojamiento.amenidades;
+
+    // Si por alguna razón llega como texto,
+    // intentamos convertirlo a JSON.
+    if (typeof amenidades === "string") {
+
+        try {
+
+            amenidades =
+                JSON.parse(amenidades);
+
+        } catch (error) {
+
+            console.warn(
+                "No se pudieron interpretar las amenidades:",
+                error
+            );
+
+            return;
+        }
+    }
+
+
+    // Si es NULL o está vacío, no mostramos nada.
+    if (
+        !amenidades ||
+        typeof amenidades !== "object" ||
+        Array.isArray(amenidades) ||
+        Object.keys(amenidades).length === 0
+    ) {
+        return;
+    }
+
+
+    const configuracion = {
+
+        bano: {
+            icono: "🚿",
+            titulo: "Baño"
+        },
+
+        cocina: {
+            icono: "🍳",
+            titulo: "Cocina"
+        },
+
+        internet: {
+            icono: "📶",
+            titulo: "Internet"
+        },
+
+        seguridad: {
+            icono: "🔐",
+            titulo: "Seguridad"
+        },
+
+        habitacion: {
+            icono: "🛏️",
+            titulo: "Habitación"
+        },
+
+        climatizacion: {
+            icono: "❄️",
+            titulo: "Climatización"
+        },
+
+        entretenimiento: {
+            icono: "📺",
+            titulo: "Entretenimiento"
+        },
+
+        estacionamiento: {
+            icono: "🚗",
+            titulo: "Estacionamiento"
+        },
+
+        piscina: {
+            icono: "🏊",
+            titulo: "Piscina"
+        },
+
+        exterior: {
+            icono: "🌿",
+            titulo: "Exterior"
+        },
+
+        mascotas: {
+            icono: "🐾",
+            titulo: "Mascotas"
+        },
+
+        trabajo: {
+            icono: "💻",
+            titulo: "Área de trabajo"
+        }
+
+    };
+
+
+    const contenedor =
+        document.createElement(
+            "div"
+        );
+
+    contenedor.className =
+        "modal-amenidades";
+
+
+    const encabezado =
+        document.createElement(
+            "div"
+        );
+
+    encabezado.className =
+        "modal-amenidades-encabezado";
+
+    encabezado.innerHTML = `
+        <h3>✨ Lo que ofrece este alojamiento</h3>
+    `;
+
+    contenedor.appendChild(
+        encabezado
+    );
+
+
+    const grid =
+        document.createElement(
+            "div"
+        );
+
+    grid.className =
+        "modal-amenidades-grid";
+
+
+    let cantidadAmenidades = 0;
+
+
+    Object.entries(amenidades).forEach(
+        function([categoria, elementos]) {
+
+            if (
+                !Array.isArray(elementos) ||
+                elementos.length === 0
+            ) {
+                return;
+            }
+
+
+            const info =
+                configuracion[categoria] || {
+                    icono: "✓",
+                    titulo: categoria
+                        .replace(/_/g, " ")
+                        .replace(
+                            /\b\w/g,
+                            function(letra) {
+                                return letra.toUpperCase();
+                            }
+                        )
+                };
+
+
+            const tarjeta =
+                document.createElement(
+                    "div"
+                );
+
+            tarjeta.className =
+                "modal-amenidad-categoria";
+
+
+            const titulo =
+                document.createElement(
+                    "div"
+                );
+
+            titulo.className =
+                "modal-amenidad-titulo";
+
+            titulo.innerHTML = `
+                <span class="modal-amenidad-icono">
+                    ${info.icono}
+                </span>
+
+                <span>
+                    ${info.titulo}
+                </span>
+            `;
+
+
+            const lista =
+                document.createElement(
+                    "div"
+                );
+
+            lista.className =
+                "modal-amenidad-lista";
+
+
+            elementos.forEach(
+                function(elemento) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "modal-amenidad-item";
+
+                    item.textContent =
+                        elemento;
+
+                    lista.appendChild(
+                        item
+                    );
+
+                    cantidadAmenidades++;
+                }
+            );
+
+
+            tarjeta.appendChild(
+                titulo
+            );
+
+            tarjeta.appendChild(
+                lista
+            );
+
+            grid.appendChild(
+                tarjeta
+            );
+        }
+    );
+
+
+    if (cantidadAmenidades === 0) {
+        return;
+    }
+
+
+    contenedor.appendChild(
+        grid
+    );
+
+
+    // Si hay muchas amenidades, inicialmente
+    // mostramos la sección de forma resumida.
+    if (cantidadAmenidades > 6) {
+
+        contenedor.classList.add(
+            "modal-amenidades-contraidas"
+        );
+
+
+        const boton =
+            document.createElement(
+                "button"
+            );
+
+        boton.type =
+            "button";
+
+        boton.className =
+            "modal-amenidades-ver-mas";
+
+        boton.textContent =
+            "Mostrar todas las amenidades";
+
+
+        boton.addEventListener(
+            "click",
+            function(evento) {
+
+                evento.preventDefault();
+                evento.stopPropagation();
+
+                const contraido =
+                    contenedor.classList.toggle(
+                        "modal-amenidades-contraidas"
+                    );
+
+                boton.textContent =
+                    contraido
+                        ? "Mostrar todas las amenidades"
+                        : "Mostrar menos";
+            }
+        );
+
+
+        contenedor.appendChild(
+            boton
+        );
+    }
+
+
+    descripcion.appendChild(
+        contenedor
+    );
+}
 
 // ==========================================================
 // ABRIR MODAL DEL ALOJAMIENTO
