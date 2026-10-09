@@ -4882,19 +4882,27 @@ function procesarCantidadPersonas() {
         return;
     }
 
-    let cantidad =
-        parseInt(campoPersonas.value, 10);
+ let cantidad = Number(campoPersonas.value);
 
-    if (
-        !Number.isFinite(cantidad) ||
-        cantidad < 1
-    ) {
-        cantidad = 1;
-        campoPersonas.value = 1;
-    }
+if (!Number.isInteger(cantidad)) {
+    campoPersonas.setCustomValidity(
+        "Ingrese una cantidad entera de huéspedes."
+    );
 
-    const capacidad =
-        Number(alojamientoActual.maxHuespedes) || 1;
+    actualizarAvisoCapacidad(false);
+    calcularPrecio();
+    return;
+}
+
+campoPersonas.setCustomValidity("");
+
+if (cantidad < 1) {
+    cantidad = 1;
+    campoPersonas.value = 1;
+}
+
+const capacidad =
+    Number(alojamientoActual.maxHuespedes) || 1;
 
     // IMPORTANTE:
     // NO modificar el número escrito por el huésped.
@@ -6038,3 +6046,121 @@ window.enviarWhatsApp =
 
 window.abrirReserva =
     abrirReserva;
+
+    // ==========================================================
+// MEJORAS DEL RESUMEN DE COTIZACIÓN
+// ==========================================================
+
+function actualizarDesgloseReserva() {
+
+    const resumen = document.querySelector(
+        "#ventanaReserva .resumen"
+    );
+
+    if (!resumen || !alojamientoActual) {
+        return;
+    }
+
+    let desglose = document.getElementById(
+        "desgloseReserva"
+    );
+
+    if (!desglose) {
+        desglose = document.createElement("div");
+        desglose.id = "desgloseReserva";
+        resumen.insertBefore(
+            desglose,
+            resumen.firstChild
+        );
+    }
+
+    const ingreso = document.getElementById(
+        "fechaIngreso"
+    )?.value.trim();
+
+    const salida = document.getElementById(
+        "fechaSalida"
+    )?.value.trim();
+
+    const valorPersonas = Number(
+        document.getElementById("personas")?.value
+    );
+
+    if (
+        !ingreso ||
+        !salida ||
+        !Number.isInteger(valorPersonas) ||
+        valorPersonas < 1 ||
+        valorPersonas > 50
+    ) {
+        desglose.innerHTML = "";
+        return;
+    }
+
+    const noches = diferenciaDias(ingreso, salida);
+
+    if (!Number.isFinite(noches) || noches <= 0) {
+        desglose.innerHTML = "";
+        return;
+    }
+
+    const incluidas = Number(
+        alojamientoActual.personasIncluidas
+    ) || 0;
+
+    const precioBase = Number(
+        alojamientoActual.precioBase
+    ) || 0;
+
+    const precioAdicional = Number(
+        alojamientoActual.precioPersona
+    ) || 0;
+
+    const adicionales = Math.max(
+        valorPersonas - incluidas,
+        0
+    );
+
+    const costoAdicional = adicionales * precioAdicional;
+
+    const precioPorNoche = precioBase + costoAdicional;
+
+    const formato = valor =>
+        "Q" + valor.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+    desglose.innerHTML = `
+        <div class="desglose-fila">
+            <span>Tarifa base (incluye ${incluidas} personas)</span>
+            <strong>${formato(precioBase)}</strong>
+        </div>
+
+        <div class="desglose-fila">
+            <span>
+                Adicionales (${adicionales} ×
+                ${formato(precioAdicional)})
+            </span>
+            <strong>${formato(costoAdicional)}</strong>
+        </div>
+
+        <div class="desglose-fila">
+            <span>Precio por noche</span>
+            <strong>${formato(precioPorNoche)}</strong>
+        </div>
+
+        <div class="desglose-fila">
+            <span>Noches seleccionadas en calendario</span>
+            <strong>${noches}</strong>
+        </div>
+    `;
+}
+
+// Complementa el cálculo existente sin modificarlo.
+const calcularPrecioOriginal = calcularPrecio;
+
+calcularPrecio = function() {
+    calcularPrecioOriginal();
+    actualizarDesgloseReserva();
+};
