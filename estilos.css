@@ -2278,3 +2278,121 @@ footer {
         display: none;
     }
 }
+
+/* RESUMEN DE COTIZACIÓN */
+
+#desgloseReserva {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.desglose-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.desglose-fila span {
+    color: #666;
+    flex: 1;
+}
+
+.desglose-fila strong {
+    color: #222;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   MEJORA VISUAL DEL RESUMEN DE RESERVA
+   ========================================== */
+
+#ventanaReserva .resumen {
+    background: #f8f9fa;
+    border: 1px solid #ededed;
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 24px;
+}
+
+#desgloseReserva {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+#desgloseReserva .desglose-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#desgloseReserva .desglose-fila span {
+    flex: 1;
+    color: #555;
+}
+
+#desgloseReserva .desglose-fila strong {
+    flex-shrink: 0;
+    color: #222;
+    font-weight: 700;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Total destacado */
+
+#ventanaReserva .resumen > p:last-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid #dedede;
+    margin-top: 18px;
+    padding-top: 18px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+#precioTotal {
+    font-size: 22px;
+    font-weight: 800;
+    color: #222;
+    white-space: nowrap;
+}
+
+/* Adaptación móvil */
+
+@media (max-width: 600px) {
+
+    #ventanaReserva .resumen {
+        padding: 15px;
+    }
+
+    #desgloseReserva .desglose-fila {
+        font-size: 13px;
+        gap: 10px;
+    }
+
+    #precioTotal {
+        font-size: 19px;
+    }
+}
+
+/* Ocultar noches duplicadas.
+   El desglose ya muestra las noches del calendario. */
+
+#ventanaReserva .resumen > p:has(#cantidadNoches) {
+    display: none;
+}
