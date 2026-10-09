@@ -4095,33 +4095,27 @@ function renderizarCalendario() {
         );
     }
 
+if (mensaje) {
+
     if (
-        mensaje
+        fechaIngresoSeleccionada &&
+        fechaSalidaSeleccionada
     ) {
 
-        if (
-            modoCalendario ===
-            "ingreso"
-        ) {
+        mensaje.textContent =
+            "✓ Fechas seleccionadas correctamente. Revise los huéspedes y el total de su estadía.";
 
-            mensaje.textContent =
-                "Seleccione su fecha de ingreso.";
+    } else if (
+        fechaIngresoSeleccionada
+    ) {
 
-        } else {
+        mensaje.textContent =
+            "Ahora seleccione la fecha de salida.";
 
-            if (
-                fechaIngresoSeleccionada
-            ) {
+    } else {
 
-                mensaje.textContent =
-                    "Ahora seleccione la fecha de salida.";
-
-            } else {
-
-                mensaje.textContent =
-                    "Primero seleccione la fecha de ingreso.";
-            }
-        }
+        mensaje.textContent =
+            "Seleccione su fecha de ingreso.";
     }
 }
 
@@ -6153,3 +6147,5 @@ calcularPrecio = function() {
     calcularPrecioOriginal();
     actualizarDesgloseReserva();
 };
+
+}
