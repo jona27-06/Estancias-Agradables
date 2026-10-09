@@ -4946,49 +4946,38 @@ document.addEventListener(
 function cambiarCantidadPersonas(cambio) {
 
     const campoPersonas =
-        document.getElementById(
-            "personas"
-        );
+        document.getElementById("personas");
 
     if (!campoPersonas) {
         return;
     }
 
     let cantidad =
-        parseInt(
-            campoPersonas.value,
-            10
-        );
+        Number(campoPersonas.value);
 
-    if (
-        !Number.isFinite(cantidad)
-    ) {
+    // Validar que sea un número entero
+    if (!Number.isInteger(cantidad)) {
         cantidad = 1;
     }
 
-    cantidad =
-        cantidad + cambio;
+    // Aumentar o disminuir
+    cantidad = cantidad + cambio;
 
     // Nunca bajar de 1
-    if (
-        cantidad < 1
-    ) {
+    if (cantidad < 1) {
         cantidad = 1;
     }
 
     // Máximo técnico
-    if (
-        cantidad > 50
-    ) {
+    if (cantidad > 50) {
         cantidad = 50;
     }
 
-    campoPersonas.value =
-        cantidad;
+    campoPersonas.value = cantidad;
 
+    // Actualizar precio y aviso de capacidad
     procesarCantidadPersonas();
 }
-
 
 // ==========================================================
 // BOTONES + Y - DE CANTIDAD DE PERSONAS
