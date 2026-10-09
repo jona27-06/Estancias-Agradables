@@ -5979,9 +5979,9 @@ async function iniciarSitio() {
 
         configurarEventosGenerales();
 
-        await cargarPortada();
+await cargarAlojamientos();
 
-        await cargarAlojamientos();
+await cargarPortada();
 
         console.log(
             "Estancias Agradables iniciado correctamente."
