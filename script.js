@@ -4118,6 +4118,7 @@ if (mensaje) {
             "Seleccione su fecha de ingreso.";
     }
 }
+}
 
 function seleccionarFechaCalendario(fechaISO) {
 
@@ -6147,5 +6148,3 @@ calcularPrecio = function() {
     calcularPrecioOriginal();
     actualizarDesgloseReserva();
 };
-
-}
