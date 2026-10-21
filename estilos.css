@@ -2494,3 +2494,53 @@ footer {
         font-size: 16px;
     }
 }
+
+
+/* DESCRIPCIÓN MÁS ESPACIADA */
+
+.modal-descripcion {
+    line-height: 1.75;
+}
+
+.ficha-seccion-titulo {
+    font-size: 17px;
+    font-weight: 700;
+    color: #252525;
+    margin: 28px 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.ficha-descripcion-texto {
+    font-size: 14px;
+    line-height: 1.85;
+    color: #555;
+    margin: 0 0 16px;
+}
+
+/* CARACTERÍSTICAS EN LISTAS */
+
+.ficha-lista-caracteristicas {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 24px;
+    display: grid;
+    gap: 10px;
+}
+
+.ficha-lista-caracteristicas li {
+    background: #f7f8fa;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+    overflow-wrap: anywhere;
+}
+
+/* ESPACIO ENTRE SECCIONES */
+
+.modal-descripcion > p,
+.modal-descripcion > ul {
+    margin-bottom: 18px;
+}
