@@ -2349,95 +2349,40 @@ function abrirModalAlojamiento(
             "Alojamiento";
     }
 
-
-
     // ======================================================
-    // DESCRIPCIÓN
+    // DESCRIPCIÓN PRINCIPAL DEL ALOJAMIENTO
     // ======================================================
 
     if (descripcion) {
 
         const textoDescripcion =
             alojamiento.descripcion ||
-            "Disfrute de una estancia agradable.";
+            "Disfruta de una estancia agradable.";
 
-        // Dividir la descripción en secciones
-        const partesDescripcion =
-            textoDescripcion
-                .split("*")
-                .map(function(parte) {
-                    return parte.trim();
-                })
-                .filter(function(parte) {
-                    return parte !== "";
-                });
-
-        // Limpiar contenido anterior
+        // Limpiar descripción anterior
         descripcion.innerHTML = "";
 
-        // Identificar los títulos de las secciones
-        const titulosSecciones = [
-            "ubicación",
-            "características del alojamiento",
-            "distribución de habitación",
-            "distribución de habitaciones",
-            "amenidades",
-            "servicios",
-            "reglas de la casa"
-        ];
+        // Crear párrafo de presentación
+        const parrafo = document.createElement("p");
 
-        partesDescripcion.forEach(
-            function(parte, indice) {
+        parrafo.className =
+            "ficha-descripcion-principal";
 
-                const texto = parte.trim();
+        parrafo.textContent =
+            textoDescripcion.trim();
 
-                const esTitulo =
-                    titulosSecciones.some(
-                        function(titulo) {
-                            return texto
-                                .toLowerCase()
-                                .replace(/:$/, "") === titulo;
-                        }
-                    );
-
-                const elemento =
-                    document.createElement(
-                        esTitulo ? "h3" : "p"
-                    );
-
-                if (esTitulo) {
-
-                    elemento.className =
-                        "ficha-seccion-titulo";
-
-                } else if (indice === 0) {
-
-                    elemento.className =
-                        "ficha-descripcion-principal";
-
-                } else {
-
-                    elemento.className =
-                        "ficha-descripcion-texto";
-                }
-
-                // Mantener el texto original
-                elemento.textContent = texto;
-
-                // Agregar elemento a la descripción
-                descripcion.appendChild(elemento);
-            }
-        );
+        descripcion.appendChild(parrafo);
     }
 
 
-    // ==================================================
+    // ======================================================
     // AMENIDADES
-    // ==================================================
+    // ======================================================
 
     mostrarAmenidadesAlojamiento(
         alojamiento
     );
+
     
     // ======================================================
     // DATOS DEL ALOJAMIENTO
