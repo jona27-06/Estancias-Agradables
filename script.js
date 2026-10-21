@@ -5980,9 +5980,12 @@ async function iniciarSitio() {
 
         configurarEventosGenerales();
 
-        await cargarAlojamientos();
+        // La portada se inicia primero y no espera a los alojamientos.
+        // Ambas consultas se ejecutan independientemente.
+        const cargaPortada = cargarPortada();
+        const cargaAlojamientos = cargarAlojamientos();
 
-        await cargarPortada();
+        await Promise.allSettled([cargaPortada, cargaAlojamientos]);
 
         console.log(
             "Estancias Agradables iniciado correctamente."
