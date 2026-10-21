@@ -1671,6 +1671,18 @@ async function guardarAlojamiento() {
         );
 
 
+    // Nuevos detalles personalizados del alojamiento
+
+    const caracteristicas =
+        obtenerCamposDetalle("listaCaracteristicasNueva");
+
+    const distribucionHabitaciones =
+        obtenerCamposDetalle("listaDistribucionNueva");
+
+    const amenidadesPersonalizadas =
+        obtenerCamposDetalle("listaAmenidadesNueva");
+
+
     // ========================================================
     // VALIDACIONES
     // ========================================================
@@ -1777,6 +1789,15 @@ async function guardarAlojamiento() {
 
             amenidades:
                 amenidades,
+
+            caracteristicas:
+                caracteristicas,
+
+            distribucion_habitaciones:
+                distribucionHabitaciones,
+
+            amenidades_personalizadas:
+                amenidadesPersonalizadas,
 
             ubicacion:
                 ubicacion,
