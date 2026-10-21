@@ -24,14 +24,14 @@ const ADMIN_ID =
 
 
 // ============================================================
-// FOTOGRAFÍAS SELECCIONADAS
+// FOTOGRAFÍAS
 // ============================================================
 
 const fotosSeleccionadas = {};
 
 
 // ============================================================
-// ALOJAMIENTO QUE SE ESTÁ EDITANDO
+// ALOJAMIENTO EN EDICIÓN
 // ============================================================
 
 let alojamientoEditandoId = null;
@@ -79,9 +79,7 @@ async function iniciarSesion() {
 
         if (resultado.error) {
 
-            console.error(
-                resultado.error
-            );
+            console.error(resultado.error);
 
             mensaje.textContent =
                 "Correo o contraseña incorrectos.";
@@ -193,16 +191,14 @@ function mostrarPanel() {
 
     if (login) {
 
-        login.style.display =
-            "none";
+        login.style.display = "none";
 
     }
 
 
     if (panel) {
 
-        panel.style.display =
-            "block";
+        panel.style.display = "block";
 
     }
 
@@ -237,8 +233,7 @@ function mostrarFormulario() {
     }
 
 
-    formulario.style.display =
-        "block";
+    formulario.style.display = "block";
 
 
     limpiarFormulario();
@@ -268,8 +263,7 @@ function cancelarFormulario() {
 
     if (formulario) {
 
-        formulario.style.display =
-            "none";
+        formulario.style.display = "none";
 
     }
 
@@ -371,9 +365,7 @@ async function cargarAlojamientosAdmin() {
             function(alojamiento) {
 
                 const tarjeta =
-                    document.createElement(
-                        "article"
-                    );
+                    document.createElement("article");
 
 
                 tarjeta.className =
@@ -491,7 +483,6 @@ async function cargarAlojamientosAdmin() {
                             type="button"
                             class="boton boton-publicar"
                             data-id="${alojamiento.id}"
-                            data-publicado="${alojamiento.publicado}"
                         >
                             ${alojamiento.publicado
                                 ? "👁️ Ocultar"
@@ -575,14 +566,8 @@ async function cargarAlojamientosAdmin() {
                 `;
 
 
-                contenedor.appendChild(
-                    tarjeta
-                );
+                contenedor.appendChild(tarjeta);
 
-
-                // --------------------------------------------
-                // BOTÓN EDITAR
-                // --------------------------------------------
 
                 const botonEditar =
                     tarjeta.querySelector(
@@ -602,10 +587,6 @@ async function cargarAlojamientosAdmin() {
                 );
 
 
-                // --------------------------------------------
-                // BOTÓN PUBLICAR / OCULTAR
-                // --------------------------------------------
-
                 const botonPublicar =
                     tarjeta.querySelector(
                         ".boton-publicar"
@@ -617,20 +598,13 @@ async function cargarAlojamientosAdmin() {
                     function() {
 
                         cambiarEstadoAlojamiento(
-
                             alojamiento.id,
-
                             !alojamiento.publicado
-
                         );
 
                     }
                 );
 
-
-                // --------------------------------------------
-                // INPUT DE FOTOS
-                // --------------------------------------------
 
                 const inputFotos =
                     document.getElementById(
@@ -654,10 +628,6 @@ async function cargarAlojamientosAdmin() {
 
                 }
 
-
-                // --------------------------------------------
-                // BOTÓN SUBIR FOTOS
-                // --------------------------------------------
 
                 const botonSubir =
                     document.getElementById(
@@ -725,11 +695,9 @@ async function cambiarEstadoAlojamiento(
 
     const confirmar =
         confirm(
-
             nuevoEstado
                 ? "¿Desea publicar este alojamiento?"
                 : "¿Desea ocultar este alojamiento?"
-
         );
 
 
@@ -745,10 +713,7 @@ async function cambiarEstadoAlojamiento(
             await clienteSupabase
                 .from("alojamientos")
                 .update({
-
-                    publicado:
-                        nuevoEstado
-
+                    publicado: nuevoEstado
                 })
                 .eq(
                     "id",
@@ -776,10 +741,7 @@ async function cambiarEstadoAlojamiento(
 
     } catch (error) {
 
-        console.error(
-            error
-        );
-
+        console.error(error);
 
         alert(
             "Ocurrió un error."
@@ -791,18 +753,129 @@ async function cambiarEstadoAlojamiento(
 
 
 // ============================================================
+// OBTENER AMENIDADES
+// ============================================================
+
+function obtenerAmenidades(selector) {
+
+    const amenidades = {};
+
+
+    const elementos =
+        document.querySelectorAll(selector);
+
+
+    elementos.forEach(
+        function(elemento) {
+
+            if (!elemento.checked) {
+
+                return;
+            }
+
+
+            const categoria =
+                elemento.dataset.categoria;
+
+            const nombre =
+                elemento.dataset.nombre;
+
+
+            if (!categoria || !nombre) {
+
+                return;
+            }
+
+
+            if (!amenidades[categoria]) {
+
+                amenidades[categoria] = [];
+
+            }
+
+
+            amenidades[categoria].push(
+                nombre
+            );
+
+        }
+    );
+
+
+    return amenidades;
+
+}
+
+
+// ============================================================
+// COLOCAR AMENIDADES
+// ============================================================
+
+function colocarAmenidades(
+    amenidades,
+    selector
+) {
+
+    const elementos =
+        document.querySelectorAll(selector);
+
+
+    elementos.forEach(
+        function(elemento) {
+
+            elemento.checked = false;
+
+        }
+    );
+
+
+    if (
+        !amenidades ||
+        typeof amenidades !== "object"
+    ) {
+
+        return;
+
+    }
+
+
+    elementos.forEach(
+        function(elemento) {
+
+            const categoria =
+                elemento.dataset.categoria;
+
+            const nombre =
+                elemento.dataset.nombre;
+
+
+            if (
+                amenidades[categoria] &&
+                Array.isArray(
+                    amenidades[categoria]
+                )
+            ) {
+
+                elemento.checked =
+                    amenidades[categoria].includes(
+                        nombre
+                    );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
 // EDITAR ALOJAMIENTO
 // ============================================================
 
 async function editarAlojamiento(
     alojamientoId
 ) {
-
-    console.log(
-        "Botón Editar presionado:",
-        alojamientoId
-    );
-
 
     const formulario =
         document.getElementById(
@@ -816,16 +889,10 @@ async function editarAlojamiento(
         );
 
 
-    // Comprobación importante
-
     if (!formulario) {
 
         alert(
-            "No se encontró el formulario de edición. Verifica que admin.html tenga el formularioEdicion."
-        );
-
-        console.error(
-            "Falta el elemento #formularioEdicion"
+            "No se encontró el formulario de edición."
         );
 
         return;
@@ -885,7 +952,6 @@ async function editarAlojamiento(
             formulario.style.display =
                 "none";
 
-
             alert(
                 "No se encontró el alojamiento."
             );
@@ -894,15 +960,9 @@ async function editarAlojamiento(
         }
 
 
-        // Guardar ID actual
-
         alojamientoEditandoId =
             alojamiento.id;
 
-
-        // ================================================
-        // CARGAR DATOS
-        // ================================================
 
         document.getElementById(
             "editarNombre"
@@ -920,6 +980,12 @@ async function editarAlojamiento(
             "editarUbicacion"
         ).value =
             alojamiento.ubicacion || "";
+
+
+        document.getElementById(
+            "editarAirbnbCalendarUrl"
+        ).value =
+            alojamiento.airbnb_calendar_url || "";
 
 
         document.getElementById(
@@ -959,15 +1025,37 @@ async function editarAlojamiento(
 
 
         document.getElementById(
+            "editarCamas"
+        ).value =
+            alojamiento.camas ?? 0;
+
+
+        document.getElementById(
+            "editarSofasCama"
+        ).value =
+            alojamiento.sofas_cama ?? 0;
+
+
+        document.getElementById(
+            "editarTamanoCamas"
+        ).value =
+            alojamiento.tamano_camas || "";
+
+
+        document.getElementById(
             "editarPublicado"
         ).checked =
             alojamiento.publicado === true;
 
 
+        colocarAmenidades(
+            alojamiento.amenidades,
+            ".amenidad-edicion"
+        );
+
+
         mensaje.textContent = "";
 
-
-        // Ocultar nuevo alojamiento
 
         const formularioNuevo =
             document.getElementById(
@@ -983,13 +1071,9 @@ async function editarAlojamiento(
         }
 
 
-        // Mostrar edición
-
         formulario.style.display =
             "block";
 
-
-        // Llevar al formulario
 
         setTimeout(
             function() {
@@ -1070,6 +1154,12 @@ async function guardarEdicion() {
         ).value.trim();
 
 
+    const airbnbCalendarUrl =
+        document.getElementById(
+            "editarAirbnbCalendarUrl"
+        ).value.trim();
+
+
     const precioBase =
         Number(
             document.getElementById(
@@ -1118,10 +1208,38 @@ async function guardarEdicion() {
         );
 
 
+    const camas =
+        Number(
+            document.getElementById(
+                "editarCamas"
+            ).value
+        );
+
+
+    const sofasCama =
+        Number(
+            document.getElementById(
+                "editarSofasCama"
+            ).value
+        );
+
+
+    const tamanoCamas =
+        document.getElementById(
+            "editarTamanoCamas"
+        ).value.trim();
+
+
     const publicado =
         document.getElementById(
             "editarPublicado"
         ).checked;
+
+
+    const amenidades =
+        obtenerAmenidades(
+            ".amenidad-edicion"
+        );
 
 
     // ========================================================
@@ -1230,48 +1348,117 @@ async function guardarEdicion() {
     }
 
 
+    if (
+        !Number.isInteger(camas) ||
+        camas < 0
+    ) {
+
+        mensaje.textContent =
+            "Ingrese una cantidad válida de camas.";
+
+        return;
+    }
+
+
+    if (
+        !Number.isInteger(sofasCama) ||
+        sofasCama < 0
+    ) {
+
+        mensaje.textContent =
+            "Ingrese una cantidad válida de sofás cama.";
+
+        return;
+    }
+
+
+    if (airbnbCalendarUrl) {
+
+        try {
+
+            new URL(
+                airbnbCalendarUrl
+            );
+
+        } catch (error) {
+
+            mensaje.textContent =
+                "El enlace del calendario de Airbnb no tiene un formato válido.";
+
+            return;
+        }
+
+    }
+
+
     mensaje.textContent =
         "Guardando cambios...";
 
 
     try {
 
+        const datosActualizacion = {
+
+            nombre:
+                nombre,
+
+            descripcion:
+                descripcion,
+
+            precio_base:
+                precioBase,
+
+            precio_persona:
+                precioPersona,
+
+            personas_incluidas:
+                personasIncluidas,
+
+            max_huespedes:
+                maxHuespedes,
+
+            habitaciones:
+                habitaciones,
+
+            banos:
+                banos,
+
+            camas:
+                camas,
+
+            sofas_cama:
+                sofasCama,
+
+            tamano_camas:
+                tamanoCamas || null,
+
+            amenidades:
+                amenidades,
+
+            ubicacion:
+                ubicacion,
+
+            airbnb_calendar_url:
+                airbnbCalendarUrl || null,
+
+            publicado:
+                publicado
+
+        };
+
+
+        console.log(
+            "Datos que se enviarán a Supabase:",
+            datosActualizacion
+        );
+
+
         const resultado =
             await clienteSupabase
                 .from("alojamientos")
-                .update({
-
-                    nombre:
-                        nombre,
-
-                    descripcion:
-                        descripcion,
-
-                    precio_base:
-                        precioBase,
-
-                    precio_persona:
-                        precioPersona,
-
-                    personas_incluidas:
-                        personasIncluidas,
-
-                    max_huespedes:
-                        maxHuespedes,
-
-                    habitaciones:
-                        habitaciones,
-
-                    banos:
-                        banos,
-
-                    ubicacion:
-                        ubicacion,
-
-                    publicado:
-                        publicado
-
-                })
+                .update(
+                    datosActualizacion
+                )
                 .eq(
                     "id",
                     alojamientoEditandoId
@@ -1281,13 +1468,14 @@ async function guardarEdicion() {
         if (resultado.error) {
 
             console.error(
-                "Error actualizando:",
+                "ERROR SUPABASE:",
                 resultado.error
             );
 
 
             mensaje.textContent =
-                "No se pudieron guardar los cambios.";
+                "No se pudieron guardar los cambios: " +
+                resultado.error.message;
 
             return;
         }
@@ -1306,7 +1494,7 @@ async function guardarEdicion() {
                 cancelarEdicion();
 
             },
-            800
+            1000
         );
 
 
@@ -1359,6 +1547,462 @@ function cancelarEdicion() {
     if (mensaje) {
 
         mensaje.textContent = "";
+
+    }
+
+}
+
+
+// ============================================================
+// GUARDAR NUEVO ALOJAMIENTO
+// ============================================================
+
+async function guardarAlojamiento() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeFormulario"
+        );
+
+
+    const nombre =
+        document.getElementById(
+            "nombreAlojamiento"
+        ).value.trim();
+
+
+    const descripcion =
+        document.getElementById(
+            "descripcionAlojamiento"
+        ).value.trim();
+
+
+    const precioBase =
+        Number(
+            document.getElementById(
+                "precioBase"
+            ).value
+        );
+
+
+    const personasIncluidas =
+        Number(
+            document.getElementById(
+                "personasIncluidas"
+            ).value
+        );
+
+
+    const precioPersona =
+        Number(
+            document.getElementById(
+                "precioPersona"
+            ).value
+        );
+
+
+    const maxHuespedes =
+        Number(
+            document.getElementById(
+                "maxHuespedes"
+            ).value
+        );
+
+
+    const habitaciones =
+        Number(
+            document.getElementById(
+                "habitaciones"
+            ).value
+        );
+
+
+    const banos =
+        Number(
+            document.getElementById(
+                "banos"
+            ).value
+        );
+
+
+    const camas =
+        Number(
+            document.getElementById(
+                "camas"
+            ).value
+        );
+
+
+    const sofasCama =
+        Number(
+            document.getElementById(
+                "sofasCama"
+            ).value
+        );
+
+
+    const tamanoCamas =
+        document.getElementById(
+            "tamanoCamas"
+        ).value.trim();
+
+
+    const ubicacion =
+        document.getElementById(
+            "ubicacion"
+        ).value.trim();
+
+
+    const airbnbCalendarUrl =
+        document.getElementById(
+            "airbnbCalendarUrl"
+        ).value.trim();
+
+
+    const publicado =
+        document.getElementById(
+            "publicado"
+        ).checked;
+
+
+    const amenidades =
+        obtenerAmenidades(
+            ".amenidad-nueva"
+        );
+
+
+    // ========================================================
+    // VALIDACIONES
+    // ========================================================
+
+    if (
+        !nombre ||
+        !descripcion ||
+        !Number.isFinite(precioBase) ||
+        precioBase <= 0 ||
+        !Number.isFinite(precioPersona) ||
+        precioPersona < 0 ||
+        !Number.isInteger(personasIncluidas) ||
+        personasIncluidas <= 0 ||
+        !Number.isInteger(maxHuespedes) ||
+        maxHuespedes <= 0 ||
+        !Number.isInteger(habitaciones) ||
+        habitaciones <= 0 ||
+        !Number.isInteger(banos) ||
+        banos <= 0 ||
+        !Number.isInteger(camas) ||
+        camas < 0 ||
+        !Number.isInteger(sofasCama) ||
+        sofasCama < 0
+    ) {
+
+        mensaje.textContent =
+            "Complete correctamente todos los campos obligatorios.";
+
+        return;
+    }
+
+
+    if (
+        personasIncluidas >
+        maxHuespedes
+    ) {
+
+        mensaje.textContent =
+            "Las personas incluidas no pueden superar el máximo de huéspedes.";
+
+        return;
+    }
+
+
+    if (airbnbCalendarUrl) {
+
+        try {
+
+            new URL(
+                airbnbCalendarUrl
+            );
+
+        } catch (error) {
+
+            mensaje.textContent =
+                "El enlace del calendario de Airbnb no tiene un formato válido.";
+
+            return;
+        }
+
+    }
+
+
+    mensaje.textContent =
+        "Guardando alojamiento...";
+
+
+    try {
+
+        const datosNuevoAlojamiento = {
+
+            nombre:
+                nombre,
+
+            descripcion:
+                descripcion,
+
+            precio_base:
+                precioBase,
+
+            precio_persona:
+                precioPersona,
+
+            personas_incluidas:
+                personasIncluidas,
+
+            max_huespedes:
+                maxHuespedes,
+
+            habitaciones:
+                habitaciones,
+
+            banos:
+                banos,
+
+            camas:
+                camas,
+
+            sofas_cama:
+                sofasCama,
+
+            tamano_camas:
+                tamanoCamas || null,
+
+            amenidades:
+                amenidades,
+
+            ubicacion:
+                ubicacion,
+
+            airbnb_calendar_url:
+                airbnbCalendarUrl || null,
+
+            publicado:
+                publicado
+
+        };
+
+
+        console.log(
+            "Datos que se enviarán:",
+            datosNuevoAlojamiento
+        );
+
+
+        const resultado =
+            await clienteSupabase
+                .from("alojamientos")
+                .insert(
+                    datosNuevoAlojamiento
+                );
+
+
+        if (resultado.error) {
+
+            console.error(
+                "ERROR SUPABASE:",
+                resultado.error
+            );
+
+
+            mensaje.textContent =
+                "No se pudo guardar el alojamiento: " +
+                resultado.error.message;
+
+            return;
+        }
+
+
+        mensaje.textContent =
+            "Alojamiento guardado correctamente.";
+
+
+        limpiarFormulario();
+
+
+        await cargarAlojamientosAdmin();
+
+
+        setTimeout(
+            function() {
+
+                cancelarFormulario();
+
+            },
+            1000
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error guardando alojamiento:",
+            error
+        );
+
+
+        mensaje.textContent =
+            "Ocurrió un error al guardar el alojamiento.";
+
+    }
+
+}
+
+
+// ============================================================
+// LIMPIAR FORMULARIO
+// ============================================================
+
+function limpiarFormulario() {
+
+    const ids = [
+
+        "nombreAlojamiento",
+        "descripcionAlojamiento",
+        "precioBase",
+        "precioPersona",
+        "maxHuespedes",
+        "tamanoCamas",
+        "ubicacion",
+        "airbnbCalendarUrl"
+
+    ];
+
+
+    ids.forEach(
+        function(id) {
+
+            const elemento =
+                document.getElementById(id);
+
+
+            if (elemento) {
+
+                elemento.value = "";
+
+            }
+
+        }
+    );
+
+
+    const personasIncluidas =
+        document.getElementById(
+            "personasIncluidas"
+        );
+
+
+    if (personasIncluidas) {
+
+        personasIncluidas.value =
+            "2";
+
+    }
+
+
+    const habitaciones =
+        document.getElementById(
+            "habitaciones"
+        );
+
+
+    if (habitaciones) {
+
+        habitaciones.value =
+            "1";
+
+    }
+
+
+    const banos =
+        document.getElementById(
+            "banos"
+        );
+
+
+    if (banos) {
+
+        banos.value =
+            "1";
+
+    }
+
+
+    const camas =
+        document.getElementById(
+            "camas"
+        );
+
+
+    if (camas) {
+
+        camas.value =
+            "1";
+
+    }
+
+
+    const sofasCama =
+        document.getElementById(
+            "sofasCama"
+        );
+
+
+    if (sofasCama) {
+
+        sofasCama.value =
+            "0";
+
+    }
+
+
+    const publicado =
+        document.getElementById(
+            "publicado"
+        );
+
+
+    if (publicado) {
+
+        publicado.checked =
+            false;
+
+    }
+
+
+    const amenidades =
+        document.querySelectorAll(
+            ".amenidad-nueva"
+        );
+
+
+    amenidades.forEach(
+        function(elemento) {
+
+            elemento.checked =
+                false;
+
+        }
+    );
+
+
+    const mensaje =
+        document.getElementById(
+            "mensajeFormulario"
+        );
+
+
+    if (mensaje) {
+
+        mensaje.textContent =
+            "";
 
     }
 
@@ -2080,328 +2724,6 @@ async function eliminarFoto(
 
 
 // ============================================================
-// GUARDAR NUEVO ALOJAMIENTO
-// ============================================================
-
-async function guardarAlojamiento() {
-
-    const mensaje =
-        document.getElementById(
-            "mensajeFormulario"
-        );
-
-
-    const nombre =
-        document.getElementById(
-            "nombreAlojamiento"
-        ).value.trim();
-
-
-    const descripcion =
-        document.getElementById(
-            "descripcionAlojamiento"
-        ).value.trim();
-
-
-    const precioBase =
-        Number(
-            document.getElementById(
-                "precioBase"
-            ).value
-        );
-
-
-    const personasIncluidas =
-        Number(
-            document.getElementById(
-                "personasIncluidas"
-            ).value
-        );
-
-
-    const precioPersona =
-        Number(
-            document.getElementById(
-                "precioPersona"
-            ).value
-        );
-
-
-    const maxHuespedes =
-        Number(
-            document.getElementById(
-                "maxHuespedes"
-            ).value
-        );
-
-
-    const habitaciones =
-        Number(
-            document.getElementById(
-                "habitaciones"
-            ).value
-        );
-
-
-    const banos =
-        Number(
-            document.getElementById(
-                "banos"
-            ).value
-        );
-
-
-    const ubicacion =
-        document.getElementById(
-            "ubicacion"
-        ).value.trim();
-
-
-    const publicado =
-        document.getElementById(
-            "publicado"
-        ).checked;
-
-
-    if (
-        !nombre ||
-        !descripcion ||
-        !Number.isFinite(precioBase) ||
-        precioBase <= 0 ||
-        !Number.isFinite(precioPersona) ||
-        precioPersona < 0 ||
-        !Number.isInteger(personasIncluidas) ||
-        personasIncluidas <= 0 ||
-        !Number.isInteger(maxHuespedes) ||
-        maxHuespedes <= 0 ||
-        !Number.isInteger(habitaciones) ||
-        habitaciones <= 0 ||
-        !Number.isInteger(banos) ||
-        banos <= 0
-    ) {
-
-        mensaje.textContent =
-            "Complete correctamente todos los campos obligatorios.";
-
-        return;
-    }
-
-
-    if (
-        personasIncluidas >
-        maxHuespedes
-    ) {
-
-        mensaje.textContent =
-            "Las personas incluidas no pueden superar el máximo de huéspedes.";
-
-        return;
-    }
-
-
-    mensaje.textContent =
-        "Guardando alojamiento...";
-
-
-    try {
-
-        const resultado =
-            await clienteSupabase
-                .from("alojamientos")
-                .insert({
-
-                    nombre:
-                        nombre,
-
-                    descripcion:
-                        descripcion,
-
-                    precio_base:
-                        precioBase,
-
-                    precio_persona:
-                        precioPersona,
-
-                    personas_incluidas:
-                        personasIncluidas,
-
-                    max_huespedes:
-                        maxHuespedes,
-
-                    habitaciones:
-                        habitaciones,
-
-                    banos:
-                        banos,
-
-                    ubicacion:
-                        ubicacion,
-
-                    publicado:
-                        publicado
-
-                });
-
-
-        if (resultado.error) {
-
-            console.error(
-                resultado.error
-            );
-
-
-            mensaje.textContent =
-                "No se pudo guardar el alojamiento.";
-
-            return;
-        }
-
-
-        mensaje.textContent =
-            "Alojamiento guardado correctamente.";
-
-
-        limpiarFormulario();
-
-
-        await cargarAlojamientosAdmin();
-
-
-        setTimeout(
-            function() {
-
-                cancelarFormulario();
-
-            },
-            700
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Error guardando alojamiento:",
-            error
-        );
-
-
-        mensaje.textContent =
-            "Ocurrió un error al guardar el alojamiento.";
-
-    }
-
-}
-
-
-// ============================================================
-// LIMPIAR FORMULARIO
-// ============================================================
-
-function limpiarFormulario() {
-
-    const nombre =
-        document.getElementById(
-            "nombreAlojamiento"
-        );
-
-
-    const descripcion =
-        document.getElementById(
-            "descripcionAlojamiento"
-        );
-
-
-    const precioBase =
-        document.getElementById(
-            "precioBase"
-        );
-
-
-    const personasIncluidas =
-        document.getElementById(
-            "personasIncluidas"
-        );
-
-
-    const precioPersona =
-        document.getElementById(
-            "precioPersona"
-        );
-
-
-    const maxHuespedes =
-        document.getElementById(
-            "maxHuespedes"
-        );
-
-
-    const habitaciones =
-        document.getElementById(
-            "habitaciones"
-        );
-
-
-    const banos =
-        document.getElementById(
-            "banos"
-        );
-
-
-    const ubicacion =
-        document.getElementById(
-            "ubicacion"
-        );
-
-
-    const publicado =
-        document.getElementById(
-            "publicado"
-        );
-
-
-    if (nombre)
-        nombre.value = "";
-
-
-    if (descripcion)
-        descripcion.value = "";
-
-
-    if (precioBase)
-        precioBase.value = "";
-
-
-    if (personasIncluidas)
-        personasIncluidas.value = "2";
-
-
-    if (precioPersona)
-        precioPersona.value = "";
-
-
-    if (maxHuespedes)
-        maxHuespedes.value = "";
-
-
-    if (habitaciones)
-        habitaciones.value = "1";
-
-
-    if (banos)
-        banos.value = "1";
-
-
-    if (ubicacion)
-        ubicacion.value = "";
-
-
-    if (publicado)
-        publicado.checked = false;
-
-}
-
-
-// ============================================================
 // ESCAPAR HTML
 // ============================================================
 
@@ -2461,3 +2783,94 @@ document.addEventListener(
 
     }
 );
+
+
+
+/* ==========================================================
+   CAMPOS DINÁMICOS DE ALOJAMIENTOS
+   ========================================================== */
+
+// Agregar un campo nuevo
+function agregarCampoDetalle(idContenedor, valor = "") {
+
+    const contenedor = document.getElementById(idContenedor);
+
+    if (!contenedor) {
+        console.error("No se encontró:", idContenedor);
+        return;
+    }
+
+    const fila = document.createElement("div");
+    fila.className = "fila-detalle-personalizado";
+
+    fila.style.display = "flex";
+    fila.style.gap = "10px";
+    fila.style.marginBottom = "10px";
+    fila.style.alignItems = "center";
+
+    const campo = document.createElement("input");
+    campo.type = "text";
+    campo.className = "campo-detalle-personalizado";
+    campo.placeholder = "Escribe aquí...";
+    campo.value = valor;
+    campo.style.flex = "1";
+    campo.style.minWidth = "0";
+
+    const botonEliminar = document.createElement("button");
+    botonEliminar.type = "button";
+    botonEliminar.textContent = "Eliminar";
+    botonEliminar.className = "boton boton-secundario";
+
+    botonEliminar.addEventListener("click", function () {
+        fila.remove();
+    });
+
+    fila.appendChild(campo);
+    fila.appendChild(botonEliminar);
+
+    contenedor.appendChild(fila);
+
+    if (!valor) {
+        campo.focus();
+    }
+}
+
+// Obtener los valores escritos
+function obtenerCamposDetalle(idContenedor) {
+
+    const contenedor = document.getElementById(idContenedor);
+
+    if (!contenedor) {
+        return [];
+    }
+
+    return Array.from(
+        contenedor.querySelectorAll(".campo-detalle-personalizado")
+    )
+    .map(function (campo) {
+        return campo.value.trim();
+    })
+    .filter(function (valor) {
+        return valor.length > 0;
+    });
+}
+
+// Mostrar los valores guardados para editarlos
+function colocarCamposDetalle(idContenedor, valores) {
+
+    const contenedor = document.getElementById(idContenedor);
+
+    if (!contenedor) {
+        return;
+    }
+
+    contenedor.innerHTML = "";
+
+    if (!Array.isArray(valores)) {
+        return;
+    }
+
+    valores.forEach(function (valor) {
+        agregarCampoDetalle(idContenedor, valor);
+    });
+}
