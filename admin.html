@@ -879,85 +879,6 @@
             class="formulario-card"
             style="display: none;"
         >
-<!-- DETALLES PERSONALIZADOS - EDICIÓN -->
-<div class="formulario-seccion">
-
-    <div class="seccion-formulario-titulo">
-        <div>
-            <h3>Información detallada del alojamiento</h3>
-            <p>Modifica las características y servicios del alojamiento.</p>
-        </div>
-    </div>
-
-    <div class="campo campo-completo">
-        <h4>Características del alojamiento</h4>
-        <p>Ejemplo: Estacionamiento privado, piscina, vista al mar.</p>
-
-        <div id="listaCaracteristicasEdicion"></div>
-
-        <button type="button"
-                class="boton boton-secundario"
-                onclick="agregarCampoDetalle('listaCaracteristicasEdicion')">
-            + Agregar característica
-        </button>
-    </div>
-
-    <div class="campo campo-completo">
-        <h4>Distribución de habitaciones</h4>
-        <p>Ejemplo: Habitación 1: 1 cama matrimonial.</p>
-
-        <div id="listaDistribucionEdicion"></div>
-
-        <button type="button"
-                class="boton boton-secundario"
-                onclick="agregarCampoDetalle('listaDistribucionEdicion')">
-            + Agregar habitación
-        </button>
-    </div>
-
-    <div class="campo campo-completo">
-        <h4>Amenidades personalizadas</h4>
-        <p>Ejemplo: Wi-Fi, aire acondicionado, televisión.</p>
-
-        <div id="listaAmenidadesEdicion"></div>
-
-        <button type="button"
-                class="boton boton-secundario"
-                onclick="agregarCampoDetalle('listaAmenidadesEdicion')">
-            + Agregar amenidad
-        </button>
-    </div>
-
-</div>
-
-            <div class="formulario-cabecera">
-
-                <div>
-
-                    <p class="admin-etiqueta">
-                        EDITAR ALOJAMIENTO
-                    </p>
-
-                    <h2>
-                        Modificar alojamiento
-                    </h2>
-
-                    <p>
-                        Cambia la información, precios, capacidad o estado del alojamiento.
-                    </p>
-
-                </div>
-
-                <button
-                    class="boton-cerrar"
-                    onclick="cancelarEdicion()"
-                    aria-label="Cerrar"
-                    type="button"
-                >
-                    ×
-                </button>
-
-            </div>
 
 
             <!-- INFORMACIÓN BÁSICA -->
@@ -1259,6 +1180,86 @@
                     </div>
 
                 </div>
+
+            </div>
+
+<!-- DETALLES PERSONALIZADOS - EDICIÓN -->
+<div class="formulario-seccion">
+
+    <div class="seccion-formulario-titulo">
+        <div>
+            <h3>Información detallada del alojamiento</h3>
+            <p>Modifica las características y servicios del alojamiento.</p>
+        </div>
+    </div>
+
+    <div class="campo campo-completo">
+        <h4>Características del alojamiento</h4>
+        <p>Ejemplo: Estacionamiento privado, piscina, vista al mar.</p>
+
+        <div id="listaCaracteristicasEdicion"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaCaracteristicasEdicion')">
+            + Agregar característica
+        </button>
+    </div>
+
+    <div class="campo campo-completo">
+        <h4>Distribución de habitaciones</h4>
+        <p>Ejemplo: Habitación 1: 1 cama matrimonial.</p>
+
+        <div id="listaDistribucionEdicion"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaDistribucionEdicion')">
+            + Agregar habitación
+        </button>
+    </div>
+
+    <div class="campo campo-completo">
+        <h4>Amenidades personalizadas</h4>
+        <p>Ejemplo: Wi-Fi, aire acondicionado, televisión.</p>
+
+        <div id="listaAmenidadesEdicion"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaAmenidadesEdicion')">
+            + Agregar amenidad
+        </button>
+    </div>
+
+</div>
+
+            <div class="formulario-cabecera">
+
+                <div>
+
+                    <p class="admin-etiqueta">
+                        EDITAR ALOJAMIENTO
+                    </p>
+
+                    <h2>
+                        Modificar alojamiento
+                    </h2>
+
+                    <p>
+                        Cambia la información, precios, capacidad o estado del alojamiento.
+                    </p>
+
+                </div>
+
+                <button
+                    class="boton-cerrar"
+                    onclick="cancelarEdicion()"
+                    aria-label="Cerrar"
+                    type="button"
+                >
+                    ×
+                </button>
 
             </div>
 
