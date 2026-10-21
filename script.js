@@ -2456,6 +2456,55 @@ function abrirModalAlojamiento(
         });
     }
 
+    
+    // ======================================================
+    // DETALLES PERSONALIZADOS DEL ALOJAMIENTO
+    // ======================================================
+
+    if (descripcion) {
+
+        function agregarSeccionPersonalizada(titulo, elementos) {
+
+            if (!Array.isArray(elementos) || elementos.length === 0) {
+                return;
+            }
+
+            const encabezado = document.createElement("h3");
+            encabezado.className = "ficha-seccion-titulo";
+            encabezado.textContent = titulo;
+
+            const lista = document.createElement("ul");
+            lista.className = "ficha-lista-caracteristicas";
+
+            elementos.forEach(function(texto) {
+
+                if (typeof texto !== "string" || !texto.trim()) {
+                    return;
+                }
+
+                const elemento = document.createElement("li");
+                elemento.textContent = texto.trim();
+                lista.appendChild(elemento);
+
+            });
+
+            if (lista.children.length > 0) {
+                descripcion.appendChild(encabezado);
+                descripcion.appendChild(lista);
+            }
+        }
+
+        agregarSeccionPersonalizada(
+            "Características del alojamiento",
+            alojamiento.caracteristicas
+        );
+
+        agregarSeccionPersonalizada(
+            "Distribución de habitaciones",
+            alojamiento.distribucion_habitaciones
+        );
+    }
+
 
     // ======================================================
     // AMENIDADES
