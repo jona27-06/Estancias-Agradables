@@ -102,6 +102,7 @@
         <button
             class="boton boton-principal boton-ancho"
             onclick="iniciarSesion()"
+            type="button"
         >
             Iniciar sesión
         </button>
@@ -144,6 +145,7 @@
             <button
                 class="boton boton-principal"
                 onclick="mostrarFormulario()"
+                type="button"
             >
                 <span class="boton-icono">+</span>
                 Nuevo alojamiento
@@ -163,7 +165,9 @@
         </div>
 
 
+        <!-- ===================================================== -->
         <!-- FORMULARIO NUEVO -->
+        <!-- ===================================================== -->
 
         <section
             id="formularioAlojamiento"
@@ -193,6 +197,7 @@
                     class="boton-cerrar"
                     onclick="cancelarFormulario()"
                     aria-label="Cerrar"
+                    type="button"
                 >
                     ×
                 </button>
@@ -250,7 +255,7 @@
 
                         <textarea
                             id="descripcionAlojamiento"
-                            placeholder="Describe el alojamiento, sus comodidades y características..."
+                            placeholder="Describe el alojamiento..."
                             rows="5"
                         ></textarea>
 
@@ -268,6 +273,26 @@
                             id="ubicacion"
                             placeholder="Ej. Puerto Barrios, Izabal"
                         >
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <label for="airbnbCalendarUrl">
+                            Calendario de Airbnb
+                        </label>
+
+                        <input
+                            type="url"
+                            id="airbnbCalendarUrl"
+                            placeholder="Pega aquí el enlace iCal (.ics) de Airbnb"
+                            autocomplete="off"
+                        >
+
+                        <small>
+                            Pega aquí el enlace del calendario iCal de este alojamiento.
+                        </small>
 
                     </div>
 
@@ -311,9 +336,7 @@
 
                         <div class="input-prefijo">
 
-                            <span>
-                                Q
-                            </span>
+                            <span>Q</span>
 
                             <input
                                 type="number"
@@ -352,9 +375,7 @@
 
                         <div class="input-prefijo">
 
-                            <span>
-                                Q
-                            </span>
+                            <span>Q</span>
 
                             <input
                                 type="number"
@@ -386,7 +407,7 @@
                     <div>
 
                         <h3>
-                            Capacidad
+                            Capacidad y distribución
                         </h3>
 
                         <p>
@@ -398,7 +419,7 @@
                 </div>
 
 
-                <div class="grid-formulario grid-tres">
+                <div class="grid-formulario">
 
                     <div class="campo">
 
@@ -447,6 +468,320 @@
 
                     </div>
 
+
+                    <div class="campo">
+
+                        <label for="camas">
+                            Camas
+                        </label>
+
+                        <input
+                            type="number"
+                            id="camas"
+                            min="0"
+                            value="1"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="sofasCama">
+                            Sofás cama
+                        </label>
+
+                        <input
+                            type="number"
+                            id="sofasCama"
+                            min="0"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="tamanoCamas">
+                            Tamaño de las camas
+                        </label>
+
+                        <input
+                            type="text"
+                            id="tamanoCamas"
+                            placeholder="Ej. 1 matrimonial y 2 individuales"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+<!-- INFORMACIÓN DETALLADA DEL ALOJAMIENTO -->
+<div class="formulario-seccion">
+
+    <div class="seccion-formulario-titulo">
+        <div>
+            <h3>Información detallada del alojamiento</h3>
+            <p>Agrega los detalles que verán los huéspedes.</p>
+        </div>
+    </div>
+
+    <!-- CARACTERÍSTICAS -->
+    <div class="campo campo-completo">
+        <h4>Características del alojamiento</h4>
+        <p>Ejemplo: Estacionamiento privado, piscina, vista al mar.</p>
+
+        <div id="listaCaracteristicasNueva"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaCaracteristicasNueva')">
+            + Agregar característica
+        </button>
+    </div>
+
+    <!-- DISTRIBUCIÓN -->
+    <div class="campo campo-completo">
+        <h4>Distribución de habitaciones</h4>
+        <p>Ejemplo: Habitación 1: 1 cama matrimonial y 1 sofá cama.</p>
+
+        <div id="listaDistribucionNueva"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaDistribucionNueva')">
+            + Agregar habitación
+        </button>
+    </div>
+
+    <!-- AMENIDADES PERSONALIZADAS -->
+    <div class="campo campo-completo">
+        <h4>Amenidades personalizadas</h4>
+        <p>Ejemplo: Wi-Fi, aire acondicionado, televisión.</p>
+
+        <div id="listaAmenidadesNueva"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaAmenidadesNueva')">
+            + Agregar amenidad
+        </button>
+    </div>
+
+</div>
+
+
+            <!-- AMENIDADES -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        4
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Lo que ofrece este lugar
+                        </h3>
+
+                        <p>
+                            Selecciona las características y servicios disponibles.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-formulario">
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Baño
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="bano" data-nombre="Bidé">
+                            Bidé
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Habitación y lavandería
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="habitacion" data-nombre="Plancha">
+                            Plancha
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="habitacion" data-nombre="Espacio para guardar ropa">
+                            Espacio para guardar ropa
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="habitacion" data-nombre="Lavadora">
+                            Lavadora
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="habitacion" data-nombre="Secadora">
+                            Secadora
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Entretenimiento
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="entretenimiento" data-nombre="Televisión">
+                            Televisión
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Calefacción y refrigeración
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="climatizacion" data-nombre="Aire acondicionado">
+                            Aire acondicionado
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="climatizacion" data-nombre="Calefacción">
+                            Calefacción
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Privacidad y seguridad
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="seguridad" data-nombre="Cerradura en la puerta de la habitación">
+                            Cerradura en la puerta de la habitación
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="seguridad" data-nombre="Cámaras de seguridad exteriores en la propiedad">
+                            Cámaras de seguridad exteriores en la propiedad
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Internet y oficina
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="internet" data-nombre="Wifi">
+                            Wifi
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="internet" data-nombre="Área para trabajar">
+                            Área para trabajar
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Cocina y comedor
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="cocina" data-nombre="Cocina">
+                            Cocina
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="cocina" data-nombre="Cafetera">
+                            Cafetera
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="cocina" data-nombre="Café">
+                            Café
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Estacionamiento e instalaciones
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="estacionamiento" data-nombre="Estacionamiento gratuito en las instalaciones">
+                            Estacionamiento gratuito en las instalaciones
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>
+                            Servicios básicos
+                        </h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="servicios" data-nombre="Servicios básicos">
+                            Servicios básicos
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="servicios" data-nombre="Agua caliente">
+                            Agua caliente
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="servicios" data-nombre="Detector de humo">
+                            Detector de humo
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-nueva" data-categoria="servicios" data-nombre="Detector de monóxido de carbono">
+                            Detector de monóxido de carbono
+                        </label>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -459,7 +794,7 @@
                 <div class="seccion-formulario-titulo">
 
                     <span class="numero-seccion">
-                        4
+                        5
                     </span>
 
                     <div>
@@ -514,6 +849,7 @@
                 <button
                     class="boton boton-secundario"
                     onclick="cancelarFormulario()"
+                    type="button"
                 >
                     Cancelar
                 </button>
@@ -521,6 +857,7 @@
                 <button
                     class="boton boton-principal"
                     onclick="guardarAlojamiento()"
+                    type="button"
                 >
                     Guardar alojamiento
                 </button>
@@ -562,6 +899,7 @@
                     class="boton-cerrar"
                     onclick="cancelarEdicion()"
                     aria-label="Cerrar"
+                    type="button"
                 >
                     ×
                 </button>
@@ -640,6 +978,22 @@
 
                     </div>
 
+
+                    <div class="campo campo-completo">
+
+                        <label for="editarAirbnbCalendarUrl">
+                            Calendario de Airbnb
+                        </label>
+
+                        <input
+                            type="url"
+                            id="editarAirbnbCalendarUrl"
+                            placeholder="Pega aquí el enlace iCal (.ics) de Airbnb"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
                 </div>
 
             </div>
@@ -680,9 +1034,7 @@
 
                         <div class="input-prefijo">
 
-                            <span>
-                                Q
-                            </span>
+                            <span>Q</span>
 
                             <input
                                 type="number"
@@ -719,9 +1071,7 @@
 
                         <div class="input-prefijo">
 
-                            <span>
-                                Q
-                            </span>
+                            <span>Q</span>
 
                             <input
                                 type="number"
@@ -752,7 +1102,7 @@
                     <div>
 
                         <h3>
-                            Capacidad
+                            Capacidad y distribución
                         </h3>
 
                         <p>
@@ -764,7 +1114,7 @@
                 </div>
 
 
-                <div class="grid-formulario grid-tres">
+                <div class="grid-formulario">
 
                     <div class="campo">
 
@@ -810,6 +1160,245 @@
 
                     </div>
 
+
+                    <div class="campo">
+
+                        <label for="editarCamas">
+                            Camas
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editarCamas"
+                            min="0"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="editarSofasCama">
+                            Sofás cama
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editarSofasCama"
+                            min="0"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="editarTamanoCamas">
+                            Tamaño de las camas
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editarTamanoCamas"
+                            placeholder="Ej. 1 matrimonial y 2 individuales"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AMENIDADES EDICIÓN -->
+
+            <div class="formulario-seccion">
+
+                <div class="seccion-formulario-titulo">
+
+                    <span class="numero-seccion">
+                        4
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Lo que ofrece este lugar
+                        </h3>
+
+                        <p>
+                            Selecciona las características y servicios disponibles.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-formulario">
+
+                    <div class="campo campo-completo">
+
+                        <h4>Baño</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="bano" data-nombre="Bidé">
+                            Bidé
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Habitación y lavandería</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="habitacion" data-nombre="Plancha">
+                            Plancha
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="habitacion" data-nombre="Espacio para guardar ropa">
+                            Espacio para guardar ropa
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="habitacion" data-nombre="Lavadora">
+                            Lavadora
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="habitacion" data-nombre="Secadora">
+                            Secadora
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Entretenimiento</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="entretenimiento" data-nombre="Televisión">
+                            Televisión
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Calefacción y refrigeración</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="climatizacion" data-nombre="Aire acondicionado">
+                            Aire acondicionado
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="climatizacion" data-nombre="Calefacción">
+                            Calefacción
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Privacidad y seguridad</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="seguridad" data-nombre="Cerradura en la puerta de la habitación">
+                            Cerradura en la puerta de la habitación
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="seguridad" data-nombre="Cámaras de seguridad exteriores en la propiedad">
+                            Cámaras de seguridad exteriores en la propiedad
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Internet y oficina</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="internet" data-nombre="Wifi">
+                            Wifi
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="internet" data-nombre="Área para trabajar">
+                            Área para trabajar
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Cocina y comedor</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="cocina" data-nombre="Cocina">
+                            Cocina
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="cocina" data-nombre="Cafetera">
+                            Cafetera
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="cocina" data-nombre="Café">
+                            Café
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Estacionamiento e instalaciones</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="estacionamiento" data-nombre="Estacionamiento gratuito en las instalaciones">
+                            Estacionamiento gratuito en las instalaciones
+                        </label>
+
+                    </div>
+
+
+                    <div class="campo campo-completo">
+
+                        <h4>Servicios básicos</h4>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="servicios" data-nombre="Servicios básicos">
+                            Servicios básicos
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="servicios" data-nombre="Agua caliente">
+                            Agua caliente
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="servicios" data-nombre="Detector de humo">
+                            Detector de humo
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="amenidad-edicion" data-categoria="servicios" data-nombre="Detector de monóxido de carbono">
+                            Detector de monóxido de carbono
+                        </label>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -822,7 +1411,7 @@
                 <div class="seccion-formulario-titulo">
 
                     <span class="numero-seccion">
-                        4
+                        5
                     </span>
 
                     <div>
@@ -877,6 +1466,7 @@
                 <button
                     class="boton boton-secundario"
                     onclick="cancelarEdicion()"
+                    type="button"
                 >
                     Cancelar
                 </button>
@@ -884,6 +1474,7 @@
                 <button
                     class="boton boton-principal"
                     onclick="guardarEdicion()"
+                    type="button"
                 >
                     Guardar cambios
                 </button>
