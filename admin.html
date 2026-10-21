@@ -871,6 +871,59 @@
         <!-- FORMULARIO DE EDICIÓN -->
         <!-- ===================================================== -->
 
+
+<!-- DETALLES PERSONALIZADOS - EDICIÓN -->
+<div class="formulario-seccion">
+
+    <div class="seccion-formulario-titulo">
+        <div>
+            <h3>Información detallada del alojamiento</h3>
+            <p>Modifica las características y servicios del alojamiento.</p>
+        </div>
+    </div>
+
+    <div class="campo campo-completo">
+        <h4>Características del alojamiento</h4>
+        <p>Ejemplo: Estacionamiento privado, piscina, vista al mar.</p>
+
+        <div id="listaCaracteristicasEdicion"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaCaracteristicasEdicion')">
+            + Agregar característica
+        </button>
+    </div>
+
+    <div class="campo campo-completo">
+        <h4>Distribución de habitaciones</h4>
+        <p>Ejemplo: Habitación 1: 1 cama matrimonial.</p>
+
+        <div id="listaDistribucionEdicion"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaDistribucionEdicion')">
+            + Agregar habitación
+        </button>
+    </div>
+
+    <div class="campo campo-completo">
+        <h4>Amenidades personalizadas</h4>
+        <p>Ejemplo: Wi-Fi, aire acondicionado, televisión.</p>
+
+        <div id="listaAmenidadesEdicion"></div>
+
+        <button type="button"
+                class="boton boton-secundario"
+                onclick="agregarCampoDetalle('listaAmenidadesEdicion')">
+            + Agregar amenidad
+        </button>
+    </div>
+
+</div>
+
+
         <section
             id="formularioEdicion"
             class="formulario-card"
