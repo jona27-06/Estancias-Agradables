@@ -2350,6 +2350,7 @@ function abrirModalAlojamiento(
     }
 
 
+
     // ======================================================
     // DESCRIPCIÓN
     // ======================================================
@@ -2360,47 +2361,75 @@ function abrirModalAlojamiento(
             alojamiento.descripcion ||
             "Disfrute de una estancia agradable.";
 
+        // Dividir la descripción en secciones
         const partesDescripcion =
             textoDescripcion
                 .split("*")
-                .map(
-                    function(parte) {
+                .map(function(parte) {
+                    return parte.trim();
+                })
+                .filter(function(parte) {
+                    return parte !== "";
+                });
 
-                        return parte.trim();
-                    }
-                )
-                .filter(
-                    function(parte) {
+        // Limpiar contenido anterior
+        descripcion.innerHTML = "";
 
-                        return parte !== "";
-                    }
-                );
-
-        descripcion.innerHTML =
-            "";
+        // Identificar los títulos de las secciones
+        const titulosSecciones = [
+            "ubicación",
+            "características del alojamiento",
+            "distribución de habitación",
+            "distribución de habitaciones",
+            "amenidades",
+            "servicios",
+            "reglas de la casa"
+        ];
 
         partesDescripcion.forEach(
             function(parte, indice) {
 
-                const linea =
-                    document.createElement(
-                        "div"
+                const texto = parte.trim();
+
+                const esTitulo =
+                    titulosSecciones.some(
+                        function(titulo) {
+                            return texto
+                                .toLowerCase()
+                                .replace(/:$/, "") === titulo;
+                        }
                     );
 
-                linea.className =
-                    indice === 0
-                        ? "modal-descripcion-principal"
-                        : "modal-descripcion-item";
+                const elemento =
+                    document.createElement(
+                        esTitulo ? "h3" : "p"
+                    );
 
-                linea.textContent =
-                    parte;
+                if (esTitulo) {
 
-                descripcion.appendChild(
-                    linea
-                );
+                    elemento.className =
+                        "ficha-seccion-titulo";
+
+                } else if (indice === 0) {
+
+                    elemento.className =
+                        "ficha-descripcion-principal";
+
+                } else {
+
+                    elemento.className =
+                        "ficha-descripcion-texto";
+                }
+
+                // Mantener el texto original
+                elemento.textContent = texto;
+
+                // Agregar elemento a la descripción
+                descripcion.appendChild(elemento);
             }
         );
     }
+
 
     // ==================================================
     // AMENIDADES
