@@ -2353,25 +2353,107 @@ function abrirModalAlojamiento(
     // DESCRIPCIÓN PRINCIPAL DEL ALOJAMIENTO
     // ======================================================
 
+
+    // ======================================================
+    // DESCRIPCIÓN ORGANIZADA DEL ALOJAMIENTO
+    // ======================================================
+
     if (descripcion) {
 
         const textoDescripcion =
             alojamiento.descripcion ||
             "Disfruta de una estancia agradable.";
 
-        // Limpiar descripción anterior
         descripcion.innerHTML = "";
 
-        // Crear párrafo de presentación
-        const parrafo = document.createElement("p");
+        // Reconocer encabezados existentes
+        const encabezados =
+            /(?:^|\n)\s*(Ubicación|Características del alojamiento|Distribución de habitación(?:es)?|Amenidades|Servicios|Reglas de la casa)\s*:/gim;
 
-        parrafo.className =
-            "ficha-descripcion-principal";
+        const textoOrganizado = textoDescripcion
+            .replace(/\r\n/g, "\n")
+            .replace(encabezados, "\n\n$1:\n");
 
-        parrafo.textContent =
-            textoDescripcion.trim();
+        const secciones = textoOrganizado
+            .split(/\n\s*\n/)
+            .map(function(texto) {
+                return texto.trim();
+            })
+            .filter(Boolean);
 
-        descripcion.appendChild(parrafo);
+        secciones.forEach(function(seccion) {
+
+            const lineas = seccion
+                .split("\n")
+                .map(function(linea) {
+                    return linea.trim();
+                })
+                .filter(Boolean);
+
+            lineas.forEach(function(linea) {
+
+                const esTitulo =
+                    /^(Ubicación|Características del alojamiento|Distribución de habitación(?:es)?|Amenidades|Servicios|Reglas de la casa)\s*:\s*$/i.test(linea);
+
+                if (esTitulo) {
+
+                    const titulo =
+                        document.createElement("h3");
+
+                    titulo.className =
+                        "ficha-seccion-titulo";
+
+                    titulo.textContent = linea;
+
+                    descripcion.appendChild(titulo);
+
+                    return;
+                }
+
+                // Separar características escritas con guiones
+                const elementos = linea
+                    .split(/\s+-\s+/)
+                    .map(function(item) {
+                        return item.trim();
+                    })
+                    .filter(Boolean);
+
+                if (elementos.length > 1 ||
+                    linea.startsWith("- ")) {
+
+                    const lista =
+                        document.createElement("ul");
+
+                    lista.className =
+                        "ficha-lista-caracteristicas";
+
+                    elementos.forEach(function(item) {
+
+                        const elemento =
+                            document.createElement("li");
+
+                        elemento.textContent =
+                            item.replace(/^-\s*/, "");
+
+                        lista.appendChild(elemento);
+                    });
+
+                    descripcion.appendChild(lista);
+
+                } else {
+
+                    const parrafo =
+                        document.createElement("p");
+
+                    parrafo.className =
+                        "ficha-descripcion-texto";
+
+                    parrafo.textContent = linea;
+
+                    descripcion.appendChild(parrafo);
+                }
+            });
+        });
     }
 
 
