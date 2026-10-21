@@ -2861,22 +2861,27 @@ async function cargarAlojamientos() {
                 .from(
                     "alojamientos"
                 )
-                .select(
-                    `
-                    id,
-                    nombre,
-                    descripcion,
-                    precio_base,
-                    precio_persona,
-                    personas_incluidas,
-                    max_huespedes,
-                    habitaciones,
-                    banos,
-                    ubicacion,
-                    publicado,
-                    created_at
-                    `
-                )
+
+.select(
+    `
+    id,
+    nombre,
+    descripcion,
+    precio_base,
+    precio_persona,
+    personas_incluidas,
+    max_huespedes,
+    habitaciones,
+    banos,
+    ubicacion,
+    caracteristicas,
+    distribucion_habitaciones,
+    amenidades_personalizadas,
+    publicado,
+    created_at
+    `
+)
+
                 .eq(
                     "publicado",
                     true
