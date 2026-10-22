@@ -1688,24 +1688,25 @@ function crearModalAlojamiento() {
 
             <div class="modal-alojamiento-informacion">
 
+
                 <h2
                     id="modalAlojamientoNombre"
                 ></h2>
 
-                <div
-                    id="modalAlojamientoDescripcion"
-                    class="modal-descripcion"
-                ></div>
+                <p
+                    id="modalAlojamientoUbicacion"
+                    class="modal-ubicacion"
+                ></p>
 
                 <div
                     id="modalAlojamientoDatos"
                     class="modal-datos"
                 ></div>
 
-                <p
-                    id="modalAlojamientoUbicacion"
-                    class="modal-ubicacion"
-                ></p>
+                <div
+                    id="modalAlojamientoDescripcion"
+                    class="modal-descripcion"
+                ></div>
 
                 <div class="modal-precio">
 
@@ -1991,6 +1992,14 @@ function mostrarAmenidadesAlojamiento(alojamiento) {
     let amenidades =
         alojamiento.amenidades;
 
+        
+    // Amenidades personalizadas del alojamiento
+    const amenidadesPersonalizadas =
+        Array.isArray(alojamiento.amenidades_personalizadas)
+            ? alojamiento.amenidades_personalizadas
+            : [];
+
+
     // Si por alguna razón llega como texto,
     // intentamos convertirlo a JSON.
     if (typeof amenidades === "string") {
@@ -2012,15 +2021,42 @@ function mostrarAmenidadesAlojamiento(alojamiento) {
     }
 
 
-    // Si es NULL o está vacío, no mostramos nada.
+
+    // Reunir las amenidades anteriores y las personalizadas
+    const todasLasAmenidades = [];
+
     if (
-        !amenidades ||
-        typeof amenidades !== "object" ||
-        Array.isArray(amenidades) ||
-        Object.keys(amenidades).length === 0
+        amenidades &&
+        typeof amenidades === "object" &&
+        !Array.isArray(amenidades)
     ) {
+        Object.values(amenidades).forEach(function(elementos) {
+            if (Array.isArray(elementos)) {
+                todasLasAmenidades.push(...elementos);
+            }
+        });
+    }
+
+    todasLasAmenidades.push(...amenidadesPersonalizadas);
+
+    // Eliminar elementos vacíos y duplicados
+    const amenidadesUnicas = [
+        ...new Map(
+            todasLasAmenidades
+                .filter(function(item) {
+                    return typeof item === "string" && item.trim();
+                })
+                .map(function(item) {
+                    const limpio = item.trim();
+                    return [limpio.toLowerCase(), limpio];
+                })
+        ).values()
+    ];
+
+    if (amenidadesUnicas.length === 0) {
         return;
     }
+
 
 
     const configuracion = {
@@ -2105,9 +2141,9 @@ function mostrarAmenidadesAlojamiento(alojamiento) {
     encabezado.className =
         "modal-amenidades-encabezado";
 
-    encabezado.innerHTML = `
-        <h3>✨ Lo que ofrece este alojamiento</h3>
-    `;
+encabezado.innerHTML = `
+    <h3>Amenidades</h3>
+`;
 
     contenedor.appendChild(
         encabezado
@@ -2122,113 +2158,30 @@ function mostrarAmenidadesAlojamiento(alojamiento) {
     grid.className =
         "modal-amenidades-grid";
 
+        grid.className = "ficha-lista-caracteristicas";
+
 
     let cantidadAmenidades = 0;
 
+    amenidadesUnicas.forEach(function(amenidad) {
 
-    Object.entries(amenidades).forEach(
-        function([categoria, elementos]) {
+        const tarjeta = document.createElement("div");
 
-            if (
-                !Array.isArray(elementos) ||
-                elementos.length === 0
-            ) {
-                return;
-            }
+        tarjeta.className = "ficha-amenidad-simple";
 
+        tarjeta.style.background = "transparent";
+        tarjeta.style.border = "none";
+        tarjeta.style.boxShadow = "none";
+        tarjeta.style.padding = "0";
+        tarjeta.style.margin = "0 0 8px 0";
 
-            const info =
-                configuracion[categoria] || {
-                    icono: "✓",
-                    titulo: categoria
-                        .replace(/_/g, " ")
-                        .replace(
-                            /\b\w/g,
-                            function(letra) {
-                                return letra.toUpperCase();
-                            }
-                        )
-                };
+        tarjeta.textContent = amenidad;
 
+        grid.appendChild(tarjeta);
 
-            const tarjeta =
-                document.createElement(
-                    "div"
-                );
+        cantidadAmenidades++;
+    });
 
-            tarjeta.className =
-                "modal-amenidad-categoria";
-
-
-            const titulo =
-                document.createElement(
-                    "div"
-                );
-
-            titulo.className =
-                "modal-amenidad-titulo";
-
-            titulo.innerHTML = `
-                <span class="modal-amenidad-icono">
-                    ${info.icono}
-                </span>
-
-                <span>
-                    ${info.titulo}
-                </span>
-            `;
-
-
-            const lista =
-                document.createElement(
-                    "div"
-                );
-
-            lista.className =
-                "modal-amenidad-lista";
-
-
-            elementos.forEach(
-                function(elemento) {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.className =
-                        "modal-amenidad-item";
-
-                    item.textContent =
-                        elemento;
-
-                    lista.appendChild(
-                        item
-                    );
-
-                    cantidadAmenidades++;
-                }
-            );
-
-
-            tarjeta.appendChild(
-                titulo
-            );
-
-            tarjeta.appendChild(
-                lista
-            );
-
-            grid.appendChild(
-                tarjeta
-            );
-        }
-    );
-
-
-    if (cantidadAmenidades === 0) {
-        return;
-    }
 
 
     contenedor.appendChild(
@@ -2503,6 +2456,10 @@ function abrirModalAlojamiento(
             "Distribución de habitaciones",
             alojamiento.distribucion_habitaciones
         );
+
+        
+
+
     }
 
 
@@ -2519,31 +2476,58 @@ function abrirModalAlojamiento(
     // DATOS DEL ALOJAMIENTO
     // ======================================================
 
+
+    
     if (datos) {
 
         datos.innerHTML = `
+            <div class="dato-resumen">
+                <span class="dato-resumen-icono">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="9" cy="8" r="3"></circle>
+                        <path d="M3 20v-2a6 6 0 0 1 12 0v2"></path>
+                        <path d="M17 5a3 3 0 0 1 0 6"></path>
+                        <path d="M18 14a5 5 0 0 1 3 5v1"></path>
+                    </svg>
+                </span>
+                <div class="dato-resumen-texto">
+                    <strong>${alojamiento.max_huespedes || 0}</strong>
+                    <span>Huéspedes</span>
+                </div>
+            </div>
 
-            <span>
-                🛏️
-                ${alojamiento.habitaciones || 0}
-                habitación(es)
-            </span>
+            <div class="dato-resumen">
+                <span class="dato-resumen-icono">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 18V8"></path>
+                        <path d="M21 18V8"></path>
+                        <path d="M3 14h18v4H3z"></path>
+                        <path d="M5 14v-4h14v4"></path>
+                        <path d="M5 18v2M19 18v2"></path>
+                    </svg>
+                </span>
+                <div class="dato-resumen-texto">
+                    <strong>${alojamiento.habitaciones || 0}</strong>
+                    <span>Habitaciones</span>
+                </div>
+            </div>
 
-            <span>
-                🚿
-                ${alojamiento.banos || 0}
-                baño(s)
-            </span>
-
-            <span>
-                👥
-                Hasta
-                ${alojamiento.max_huespedes || 0}
-                personas
-            </span>
-
+            <div class="dato-resumen">
+                <span class="dato-resumen-icono">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 12h18v3a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5v-3z"></path>
+                        <path d="M6 12V6a3 3 0 0 1 6 0"></path>
+                        <path d="M7 20v2M17 20v2"></path>
+                    </svg>
+                </span>
+                <div class="dato-resumen-texto">
+                    <strong>${alojamiento.banos || 0}</strong>
+                    <span>Baños</span>
+                </div>
+            </div>
         `;
     }
+
 
 
     // ======================================================
