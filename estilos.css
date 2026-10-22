@@ -2544,3 +2544,164 @@ footer {
 .modal-descripcion > ul {
     margin-bottom: 18px;
 }
+
+
+/* ==========================================
+   DETALLES DEL ALOJAMIENTO
+   LISTAS SIMPLES SIN TARJETAS
+========================================== */
+
+/* Títulos de las secciones */
+.ficha-seccion-titulo,
+.modal-amenidades-encabezado h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 22px 0 12px;
+    color: #222;
+}
+
+/* Listas de características y habitaciones */
+.ficha-lista-caracteristicas {
+    display: block !important;
+    list-style: disc !important;
+    padding-left: 22px !important;
+    margin: 0 0 18px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.ficha-lista-caracteristicas li {
+    display: list-item !important;
+    margin-bottom: 9px;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #444;
+    line-height: 1.6;
+}
+
+/* Amenidades sin tarjetas */
+.modal-amenidades-grid {
+    display: block !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.modal-amenidad-categoria,
+.ficha-amenidad-simple {
+    display: list-item !important;
+    list-style-type: disc !important;
+    list-style-position: outside !important;
+    margin: 0 0 9px 22px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #444;
+    line-height: 1.6;
+}
+
+/* Eliminar decoración del contenedor */
+.modal-amenidades {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
+/* ==========================================
+   RESUMEN SUPERIOR DEL ALOJAMIENTO
+========================================== */
+
+#modalAlojamientoDatos.modal-datos {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin: 18px 0 22px !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+#modalAlojamientoDatos .dato-resumen {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    min-width: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#modalAlojamientoDatos .dato-resumen-icono {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+#modalAlojamientoDatos .dato-resumen-icono svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #555;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#modalAlojamientoDatos .dato-resumen-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-width: 0;
+}
+
+#modalAlojamientoDatos .dato-resumen-texto strong {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    background: transparent !important;
+}
+
+#modalAlojamientoDatos .dato-resumen-texto span {
+    font-size: 10px;
+    color: #666;
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+@media (max-width: 600px) {
+    #modalAlojamientoDatos.modal-datos {
+        gap: 5px !important;
+    }
+
+    #modalAlojamientoDatos .dato-resumen {
+        gap: 4px !important;
+    }
+
+    #modalAlojamientoDatos .dato-resumen-icono svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    #modalAlojamientoDatos .dato-resumen-texto strong {
+        font-size: 13px;
+    }
+
+    #modalAlojamientoDatos .dato-resumen-texto span {
+        font-size: 9px;
+    }
+}
