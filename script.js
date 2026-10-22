@@ -4167,22 +4167,46 @@ function renderizarCalendario() {
             }
         }
 
-        if (
-            !pasada &&
-            !bloqueada
-        ) {
+// Permitir seleccionar una fecha bloqueada
+// únicamente como salida, si todas las noches
+// anteriores están disponibles.
 
-            boton.addEventListener(
-                "click",
-                function() {
+const salidaPermitida =
+    modoCalendario === "salida" &&
+    fechaIngresoSeleccionada &&
+    fechaISO > fechaIngresoSeleccionada &&
+    rangoDisponible(
+        fechaIngresoSeleccionada,
+        fechaISO
+    );
 
-                    seleccionarFechaCalendario(
-                        fechaISO
-                    );
+if (
+    !pasada &&
+    (!bloqueada || salidaPermitida)
+) {
 
-                }
+    if (salidaPermitida && bloqueada) {
+
+        boton.classList.remove(
+            "no-seleccionable"
+        );
+
+        boton.classList.add(
+            "salida-permitida"
+        );
+    }
+
+    boton.addEventListener(
+        "click",
+        function() {
+
+            seleccionarFechaCalendario(
+                fechaISO
             );
+
         }
+    );
+}
 
         contenedorDias.appendChild(
             boton
