@@ -1,0 +1,1067 @@
+/* REDISEÑO VISUAL V2 — estilos adicionales; no cambia la lógica de JavaScript */
+:root{--petroleo:#195b5c;--profundo:#103e42;--turquesa:#65b5b1;--dorado:#f2bb58;--fondo:#f5f8f7;--tinta:#223c3e}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--fondo);color:var(--tinta)}
+.encabezado{padding:14px clamp(20px,5vw,80px);background:rgba(255,255,255,.97);box-shadow:0 3px 22px #113b3c14;position:relative;min-height:90px;gap:22px}
+.logo-oficial{display:flex;align-items:center;flex-shrink:0;text-decoration:none}.logo-oficial img{width:175px;height:70px;object-fit:contain;object-position:left center}
+.encabezado nav{align-items:center;gap:clamp(14px,2.5vw,38px)}.encabezado nav a{color:var(--profundo);font-weight:650}.encabezado nav a:hover{color:#268987}
+.encabezado nav .nav-contacto{background:var(--petroleo);color:white;padding:13px 20px;border-radius:9px}.encabezado nav .nav-contacto:hover{color:white;background:var(--profundo)}
+.portada{height:560px;min-height:500px;background:var(--profundo);text-align:left;justify-content:flex-start}
+.portada-overlay{background:linear-gradient(90deg,rgba(10,51,54,.84) 0%,rgba(10,51,54,.50) 55%,rgba(10,51,54,.15) 100%)!important}
+.portada-contenido{width:min(1120px,90%);margin:auto;text-align:left;position:relative;z-index:5}
+.portada-contenido h1{font-family:Georgia,serif;font-size:clamp(37px,5vw,67px);line-height:1.1;max-width:750px;margin-bottom:20px;color:#fff}
+.portada-contenido p{font-size:clamp(16px,1.6vw,20px);line-height:1.65;max-width:580px;color:#f2f8f6}
+.boton-principal,.modal-boton-reserva{background:var(--dorado)!important;color:var(--profundo)!important;border:0!important;border-radius:10px!important;font-weight:750!important;box-shadow:0 6px 18px #102c2c28}
+.boton-principal:hover,.modal-boton-reserva:hover{background:#e8a83d!important}
+.beneficios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;max-width:1180px;margin:-34px auto 0;padding:24px 30px;background:#fff;box-shadow:0 12px 40px #153b3b14;border-radius:16px;position:relative;z-index:8}
+.beneficio{display:flex;align-items:center;gap:14px}.beneficio-icono{width:49px;height:49px;flex-shrink:0;border-radius:12px;background:#e4f4f1;color:var(--petroleo);display:grid;place-items:center;font-size:30px}.beneficio strong{display:block;font-size:15px;color:var(--profundo)}.beneficio small{display:block;color:#667777;font-size:12px;margin-top:4px;line-height:1.4}
+.seccion{max-width:1220px;margin:auto;padding:76px 24px}.seccion h2{font-family:Georgia,serif;color:var(--profundo);font-size:clamp(29px,3vw,43px)}.seccion-etiqueta{font-size:12px;font-weight:800;letter-spacing:2px;color:#3c918b}.subtitulo{color:#6b7b7c}
+.alojamientos{gap:24px}.alojamientos>div{border-radius:16px;overflow:hidden}
+.modal-alojamiento-contenido{border-radius:20px!important;overflow:auto;box-shadow:0 24px 80px #102f3050}.modal-alojamiento-informacion h2{color:var(--profundo)!important;font-family:Georgia,serif}.modal-alojamiento-informacion{background:#fff}.modal-alojamiento-foto{object-fit:cover}.modal-precio strong{color:var(--petroleo)!important}
+.modal-contenido{border-radius:20px!important}.modal-contenido h2{color:var(--profundo)}.modal-contenido input{border-radius:9px!important}.modal-contenido input:focus{outline-color:var(--turquesa)}
+.boton-whatsapp{background:var(--petroleo)!important;border-radius:10px!important}.boton-whatsapp:hover{background:var(--profundo)!important}
+.experiencia{background:linear-gradient(105deg,#103f42ed,#1e6967d9),url('assets/logo-oficial.png') center/cover;padding:75px 24px;color:white;text-align:center}.experiencia>div{max-width:700px;margin:auto}.experiencia .seccion-etiqueta{color:#f6c46d}.experiencia h2{font-family:Georgia,serif;font-size:clamp(30px,4vw,48px);margin:15px 0}.experiencia p{line-height:1.7;color:#e6f3f0}.experiencia-cta{display:inline-block;margin-top:14px;padding:14px 24px;background:var(--dorado);border-radius:9px;color:var(--profundo);text-decoration:none;font-weight:750}
+footer{background:#103e42!important;color:#fff!important}footer h3{color:white!important}
+@media(max-width:750px){
+ .encabezado{padding:9px 15px;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:10px}.logo-oficial img{width:118px;height:54px}
+ .encabezado nav{gap:10px;flex-wrap:wrap;justify-content:flex-end}.encabezado nav a{font-size:12px}.encabezado nav a[href="#inicio"],.encabezado nav a[href="#contacto"]{display:none}.encabezado nav .nav-contacto{padding:9px 11px;font-size:12px}
+ .portada{height:440px;min-height:410px;text-align:center;justify-content:center}.portada-overlay{background:linear-gradient(0deg,#0b363ad9,#0b363a55)!important}.portada-contenido{text-align:center;width:90%}.portada-contenido h1{font-size:clamp(31px,8vw,44px)}.portada-contenido p{font-size:15px;line-height:1.5}.boton-principal{display:inline-block}
+ .beneficios{margin:0 15px;padding:16px;grid-template-columns:1fr;gap:14px;border-radius:0 0 16px 16px}.beneficio-icono{width:40px;height:40px;font-size:23px}.beneficio strong{font-size:14px}
+ .seccion{padding:48px 15px}.seccion h2{font-size:31px}.alojamientos{grid-template-columns:1fr!important;gap:18px}
+ .modal-alojamiento{padding:0!important}.modal-alojamiento-contenido{width:100%!important;max-width:100%!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;overflow-y:auto!important}.modal-alojamiento-galeria{min-height:240px}.modal-alojamiento-informacion{padding:20px!important}
+ .modal-contenido{width:min(100%,540px)!important;max-height:92dvh!important;overflow:auto}.modal-contenido input#fechaIngreso,.modal-contenido input#fechaSalida{font-size:14px}
+ .experiencia{padding:55px 18px}
+}
+
+
+/* ESTANCIAS AGRADABLES - PORTADA APROBADA */
+
+:root {
+  --ea-verde: #195b5c;
+  --ea-oscuro: #103e42;
+  --ea-turquesa: #65b5b1;
+  --ea-dorado: #f5c35b;
+  --ea-blanco: #ffffff;
+}
+
+/* Encabezado */
+.encabezado {
+  background: #ffffff;
+  min-height: 84px;
+  padding: 8px 5%;
+  box-shadow: 0 2px 12px rgba(15, 62, 66, .08);
+}
+
+.logo-oficial img {
+  width: 165px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.encabezado nav a {
+  color: var(--ea-oscuro);
+  font-weight: 500;
+}
+
+/* Portada */
+.portada {
+  height: 490px;
+  min-height: 490px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.portada-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,.78) 0%,
+    rgba(255,255,255,.38) 45%,
+    rgba(255,255,255,0) 85%
+  ) !important;
+}
+
+.portada-contenido {
+  width: 87%;
+  max-width: 1200px;
+  text-align: left;
+  margin: auto;
+}
+
+.portada-contenido h1 {
+  color: var(--ea-oscuro);
+  font-family: Georgia, serif;
+  font-size: clamp(38px, 4.5vw, 65px);
+  max-width: 650px;
+  line-height: 1.08;
+}
+
+.portada-contenido p {
+  color: var(--ea-oscuro);
+  max-width: 480px;
+  font-size: 18px;
+}
+
+/* Ajustes para celular */
+@media (max-width: 750px) {
+  .encabezado {
+    min-height: 76px;
+    padding: 8px 14px;
+  }
+
+  .logo-oficial img {
+    width: 125px;
+    height: 58px;
+  }
+
+  .portada {
+    height: 510px;
+    min-height: 510px;
+    align-items: flex-start;
+  }
+
+  .portada-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(255,255,255,.78) 0%,
+      rgba(255,255,255,.32) 65%,
+      rgba(255,255,255,0) 100%
+    ) !important;
+  }
+
+  .portada-contenido {
+    width: 90%;
+    margin: 40px auto 0;
+    text-align: left;
+  }
+
+  .portada-contenido h1 {
+    font-size: clamp(34px, 9vw, 45px);
+    max-width: 360px;
+  }
+
+  .portada-contenido p {
+    font-size: 15px;
+    max-width: 330px;
+  }
+}
+
+
+/* ==========================================
+   ESTANCIAS AGRADABLES
+   REDISEÑO DE TARJETAS DE ALOJAMIENTOS
+   ========================================== */
+
+/* Distribución de los anuncios */
+#listaAlojamientos.alojamientos {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    align-items: stretch;
+}
+
+/* Tarjeta completa */
+#listaAlojamientos .alojamiento {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    background: #ffffff !important;
+    border: 1px solid #e4edeb;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 16px rgba(16, 62, 66, 0.07);
+    cursor: pointer;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* Animación al pasar el cursor */
+#listaAlojamientos .alojamiento:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(16, 62, 66, 0.15);
+}
+
+/* Accesibilidad del teclado */
+#listaAlojamientos .alojamiento:focus-visible {
+    outline: 3px solid #65b5b1;
+    outline-offset: 3px;
+}
+
+/* Fotografía del alojamiento */
+#listaAlojamientos .galeria-alojamiento {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.6 / 1;
+    border-radius: 0 !important;
+    overflow: hidden;
+    background: #edf3f2;
+}
+
+/* Fotografía principal */
+#listaAlojamientos .foto-principal {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0 !important;
+    transition: transform 0.35s ease;
+}
+
+#listaAlojamientos .alojamiento:hover .foto-principal {
+    transform: scale(1.035);
+}
+
+/* Contador de fotografías */
+#listaAlojamientos .contador-fotos {
+    top: 12px;
+    right: 12px;
+    background: rgba(16, 62, 66, 0.85);
+    color: #ffffff;
+    padding: 6px 11px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Nombre del alojamiento */
+#listaAlojamientos .nombre-alojamiento {
+    display: block;
+    padding: 16px 17px 19px;
+    margin: 0;
+    background: #ffffff;
+    color: #103e42;
+    font-family: Georgia, serif;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+/* TABLET */
+@media (min-width: 751px) and (max-width: 1100px) {
+    #listaAlojamientos.alojamientos {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 18px !important;
+    }
+}
+
+/* TELÉFONO */
+@media (max-width: 750px) {
+    #listaAlojamientos.alojamientos {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 20px !important;
+        padding: 0 4px;
+    }
+
+    #listaAlojamientos .alojamiento {
+        border-radius: 20px !important;
+    }
+
+    #listaAlojamientos .galeria-alojamiento {
+        aspect-ratio: 1.8 / 1;
+    }
+
+    #listaAlojamientos .nombre-alojamiento {
+        font-size: 23px;
+        padding: 17px 18px 20px;
+    }
+
+    #listaAlojamientos .contador-fotos {
+        font-size: 12px;
+    }
+}
+
+
+
+/* ==========================================
+   SECCIÓN FINAL - ESTANCIAS AGRADABLES
+   ========================================== */
+
+.seccion-experiencia {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 45px 5%;
+    background: linear-gradient(
+        110deg,
+        #edf7f6 0%,
+        #ffffff 48%,
+        #e4f1f1 100%
+    );
+}
+
+/* Logotipo como fondo */
+.seccion-experiencia::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url("assets/logo-estancias.png");
+    background-position: 8% center;
+    background-repeat: no-repeat;
+    background-size: 400px auto;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.experiencia-contenedor {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    align-items: center;
+    gap: 35px;
+}
+
+.experiencia-intro h2 {
+    font-family: Georgia, serif;
+    font-size: clamp(28px, 2.8vw, 40px);
+    line-height: 1.15;
+    color: #103e42;
+    margin: 0 0 12px;
+}
+
+.experiencia-intro h2 span {
+    display: block;
+    font-style: italic;
+    color: #65b5b1;
+}
+
+.experiencia-intro p {
+    color: #35565c;
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 430px;
+    margin-bottom: 18px;
+}
+
+.experiencia-boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 22px;
+    border-radius: 30px;
+    background: #f5c354;
+    color: #103e42;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.experiencia-boton:hover {
+    background: #e9b33e;
+    transform: translateY(-2px);
+}
+
+.experiencia-beneficios {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.experiencia-tarjeta {
+    min-width: 0;
+    min-height: 155px;
+    padding: 20px 12px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #e3edec;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(16, 62, 66, 0.07);
+}
+
+.experiencia-icono {
+    font-size: 34px;
+    color: #195b5c;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.experiencia-tarjeta h3 {
+    color: #07545a;
+    font-size: 14px;
+    line-height: 1.3;
+    margin: 0 0 8px;
+}
+
+.experiencia-tarjeta p {
+    color: #65777c;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* TABLET */
+@media (max-width: 1100px) {
+    .experiencia-contenedor {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* CELULAR */
+@media (max-width: 600px) {
+    .seccion-experiencia {
+        padding: 38px 18px;
+    }
+
+    .seccion-experiencia::before {
+        background-size: 280px auto;
+        background-position: center 12%;
+        opacity: 0.08;
+    }
+
+    .experiencia-intro {
+        text-align: center;
+    }
+
+    .experiencia-intro p {
+        margin: 0 auto 18px;
+    }
+
+    .experiencia-beneficios {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .experiencia-tarjeta {
+        min-height: 150px;
+        padding: 18px 10px;
+    }
+}
+
+
+.experiencia-icono {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 44px;
+    margin-bottom: 12px;
+    color: #195b5c;
+}
+
+.experiencia-icono svg {
+    display: block;
+    width: 36px;
+    height: 36px;
+    stroke: currentColor;
+    fill: none;
+}
+
+
+/* ==========================================
+   CORRECCIÓN DEL PIE DE PÁGINA
+   ========================================== */
+
+footer#contacto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 35px 20px;
+    box-sizing: border-box;
+    background: #173f42;
+    color: white;
+    text-align: center;
+    clear: both;
+}
+
+/* TARJETAS MÁS PARECIDAS AL DISEÑO ORIGINAL */
+
+.experiencia-tarjeta {
+    min-height: 175px;
+    padding: 24px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.experiencia-icono {
+    height: 48px;
+    margin-bottom: 12px;
+}
+
+.experiencia-icono svg {
+    width: 40px;
+    height: 40px;
+}
+
+
+/* ======================================================
+   ESTANCIAS AGRADABLES
+   TARJETA DE RESERVA Y CALENDARIO FLOTANTE
+   ====================================================== */
+
+/* Tarjeta de reserva */
+#modalAlojamiento .modal-ficha-reserva {
+    position: relative;
+    overflow: visible !important;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+/* Precio */
+#modalAlojamiento .modal-precio {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin-bottom: 8px;
+}
+
+/* Campos Entrada y Salida */
+#modalAlojamiento .reserva-fechas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border: 1px solid #d7dfdf;
+    border-radius: 11px;
+    overflow: hidden;
+    background: #fff;
+    gap: 0;
+}
+
+#modalAlojamiento .reserva-campo-fecha {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+    min-width: 0;
+    width: 100%;
+    padding: 13px 11px;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    color: #223c3e;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+#modalAlojamiento .reserva-campo-fecha:first-child {
+    border-right: 1px solid #d7dfdf;
+}
+
+#modalAlojamiento .reserva-campo-fecha:hover {
+    background: #f3f8f7;
+}
+
+#modalAlojamiento .reserva-etiqueta {
+    display: block;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.5px;
+    color: #103e42;
+}
+
+#modalAlojamiento .reserva-valor {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #687779;
+    overflow-wrap: anywhere;
+}
+
+/* Selector de huéspedes */
+#modalAlojamiento .reserva-huespedes-contenedor {
+    position: relative;
+    width: 100%;
+}
+
+#modalAlojamiento .reserva-huespedes-boton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 13px 12px;
+    background: white;
+    border: 1px solid #d7dfdf;
+    border-radius: 11px;
+    color: #223c3e;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+#modalAlojamiento .reserva-huespedes-boton svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ==========================================
+   CALENDARIO DE RESERVACIÓN
+========================================== */
+
+#modalAlojamiento .calendario-flotante-tarjeta {
+    grid-column: 1 / -1;
+
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    margin: 16px 0 0;
+    padding: 24px;
+
+    transform: none;
+
+    background: #ffffff;
+    border: 1px solid #e6ebea;
+    border-radius: 17px;
+
+    box-shadow: 0 8px 24px rgba(16, 62, 66, 0.10);
+
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+/* Ocultar cuando esté cerrado */
+
+#modalAlojamiento .calendario-flotante-tarjeta[hidden] {
+    display: none !important;
+}
+
+/* Encabezado del calendario */
+#modalAlojamiento .calendario-flotante-encabezado {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+#modalAlojamiento .calendario-flotante-encabezado h3 {
+    margin: 0 0 7px;
+    font-size: 20px;
+    font-weight: 750;
+    color: #103e42;
+}
+
+#modalAlojamiento .calendario-flotante-encabezado p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #778384;
+}
+
+#modalAlojamiento #cerrarCalendarioTarjeta {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: #f1f3f3;
+    color: #243b3d;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* Calendario existente dentro del panel */
+#modalAlojamiento #calendarioTarjetaContenido {
+    width: 100%;
+    min-width: 0;
+}
+
+#modalAlojamiento #calendarioTarjetaContenido #calendarioReserva {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Botones inferiores */
+#modalAlojamiento .calendario-flotante-pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #e9eeee;
+}
+
+#modalAlojamiento #borrarFechasTarjeta {
+    border: 0;
+    background: transparent;
+    color: #103e42;
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#modalAlojamiento #confirmarFechasTarjeta {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 22px;
+    background: #103e42;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+/* Asegurar que la tarjeta no corte el calendario */
+#modalAlojamiento .modal-ficha-columnas {
+    overflow: visible !important;
+}
+
+/* Adaptación a celulares */
+@media (max-width: 750px) {
+
+    #modalAlojamiento .calendario-flotante-tarjeta {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: calc(100vw - 24px);
+        max-height: 88dvh;
+        overflow-y: auto;
+        padding: 16px;
+        z-index: 2000;
+    }
+
+    #modalAlojamiento .calendario-flotante-encabezado h3 {
+        font-size: 18px;
+    }
+
+    #modalAlojamiento .reserva-campo-fecha {
+        padding: 12px 9px;
+    }
+
+    #modalAlojamiento .reserva-valor {
+        font-size: 12px;
+    }
+}
+
+
+/* ==========================================
+   CALENDARIO COMPACTO DE DOS MESES
+   ========================================== */
+
+#modalAlojamiento .calendario-flotante-tarjeta {
+    width: min(570px, calc(100vw - 36px));
+    padding: 18px 20px;
+    top: 105px;
+    right: 0;
+}
+
+/* Dos meses lado a lado */
+#modalAlojamiento .calendario-dos-meses {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+}
+
+/* Ocultar la fila de días original,
+   porque cada mes ahora tiene su propia fila */
+#modalAlojamiento
+#calendarioReserva > .calendario-semana {
+    display: none;
+}
+
+/* Evitar duplicar el título del mes */
+#modalAlojamiento .calendario-cabecera {
+    margin-bottom: 8px;
+}
+
+#modalAlojamiento #calendarioNombreMes {
+    visibility: hidden;
+    font-size: 12px;
+}
+
+/* Encabezados individuales */
+#modalAlojamiento .calendario-titulo-mes {
+    font-size: 14px;
+    font-weight: 650;
+    text-align: center;
+    color: #253d40;
+    margin-bottom: 12px;
+    text-transform: capitalize;
+}
+
+/* Cuadrícula compacta */
+#modalAlojamiento .calendario-dias-mes {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 2px;
+}
+
+#modalAlojamiento .calendario-panel-mes {
+    min-width: 0;
+}
+
+#modalAlojamiento .calendario-panel-mes .calendario-semana {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 2px;
+    margin-bottom: 8px;
+}
+
+#modalAlojamiento .calendario-dia-semana {
+    font-size: 10px;
+    padding: 4px 0;
+    font-weight: 500;
+}
+
+/* Días más pequeños */
+#modalAlojamiento .calendario-dias-mes .calendario-dia {
+    width: 100%;
+    height: 30px;
+    min-height: 0;
+    aspect-ratio: auto;
+    padding: 0;
+    font-size: 11px;
+    line-height: 1;
+    border-radius: 50%;
+}
+
+/* Fechas seleccionadas */
+#modalAlojamiento .calendario-dia.ingreso,
+#modalAlojamiento .calendario-dia.salida {
+    background: #f28c28;
+    color: white;
+    font-weight: 700;
+}
+
+/* Espacio entre secciones */
+#modalAlojamiento .calendario-mensaje {
+    margin-top: 12px;
+    padding: 8px;
+    font-size: 11px;
+}
+
+#modalAlojamiento .calendario-leyenda {
+    margin-top: 10px;
+    gap: 10px;
+    font-size: 10px;
+}
+
+#modalAlojamiento .calendario-flotante-pie {
+    margin-top: 12px;
+    padding-top: 12px;
+}
+
+/* Celulares: mostrar un solo mes */
+@media (max-width: 600px) {
+
+    #modalAlojamiento .calendario-flotante-tarjeta {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: calc(100vw - 24px);
+        max-height: 88dvh;
+        overflow-y: auto;
+        padding: 15px;
+    }
+
+    #modalAlojamiento .calendario-dos-meses {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    #modalAlojamiento .calendario-panel-mes:nth-child(2) {
+        display: none;
+    }
+
+    #modalAlojamiento .calendario-dias-mes .calendario-dia {
+        height: 38px;
+        font-size: 12px;
+    }
+}
+
+/* ==========================================
+   CALENDARIO DE RESERVACIÓN - DISEÑO DE MESES
+   ========================================== */
+
+#modalAlojamiento .calendario-dos-meses {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+#modalAlojamiento .calendario-panel-mes {
+    min-width: 0;
+    width: 100%;
+}
+
+#modalAlojamiento .calendario-titulo-mes {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+    color: #103e42;
+}
+
+#modalAlojamiento .calendario-dia-semana {
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+}
+
+#modalAlojamiento .calendario-dias-mes {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    width: 100%;
+}
+
+#modalAlojamiento .calendario-dias-mes .calendario-dia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+    min-width: 0;
+    min-height: 0;
+
+    margin: 0 auto;
+    padding: 0;
+
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+/* Adaptación a celulares */
+@media (max-width: 750px) {
+    #modalAlojamiento .calendario-dos-meses {
+        grid-template-columns: 1fr;
+    }
+
+    #modalAlojamiento .calendario-panel-mes:nth-child(2) {
+        display: none;
+    }
+}
+
+/* ======================================================
+   FECHAS BLOQUEADAS Y SELECCIONADAS
+   ====================================================== */
+
+/* Fechas pasadas o no disponibles */
+#modalAlojamiento
+.calendario-dias-mes
+.calendario-dia.no-seleccionable {
+    background: transparent !important;
+    color: #b5babb !important;
+    border: none !important;
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Fechas de ingreso y salida */
+#modalAlojamiento
+.calendario-dias-mes
+.calendario-dia.ingreso,
+
+#modalAlojamiento
+.calendario-dias-mes
+.calendario-dia.salida {
+    background: #f28c28 !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    border-radius: 50% !important;
+}
+
+/* Espacios vacíos */
+#modalAlojamiento
+.calendario-dias-mes
+.calendario-dia.vacio {
+    background: transparent !important;
+    border: none !important;
+    pointer-events: none;
+}
+
+/* ======================================================
+   ADAPTACIÓN PARA CELULARES
+   ====================================================== */
+
+@media (max-width: 750px) {
+
+    #modalAlojamiento .calendario-flotante-tarjeta {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+
+        transform: none !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 14px !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+    }
+
+    /* Mostrar un mes en celular */
+    #modalAlojamiento .calendario-dos-meses {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+    }
+
+    #modalAlojamiento
+    .calendario-panel-mes:nth-child(2) {
+        display: none !important;
+    }
+
+    #modalAlojamiento
+    .calendario-dias-mes
+    .calendario-dia {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 12px !important;
+    }
+}
+
+.footer-redes {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.footer-redes a {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #efc04a;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.footer-redes a:hover,
+.footer-redes a:focus-visible {
+    background-color: #efc04a;
+    color: #153b3e;
+}
