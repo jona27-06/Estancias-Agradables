@@ -1065,3 +1065,9 @@ footer#contacto {
     background-color: #efc04a;
     color: #153b3e;
 }
+
+@media (max-width: 767px) {
+    #modalVerTodasFotos {
+        display: none !important;
+    }
+}
