@@ -469,7 +469,8 @@ async function cargarAlojamientosAdmin() {
         return;
     }
 
-
+    document.getElementById("ordenCatalogo")?.remove();
+    
     contenedor.innerHTML = `
         <div class="cargando">
             Cargando alojamientos...
@@ -483,12 +484,9 @@ async function cargarAlojamientosAdmin() {
             await clienteSupabase
                 .from("alojamientos")
                 .select("*")
-                .order(
-                    "created_at",
-                    {
-                        ascending: false
-                    }
-                );
+                .order("orden_catalogo", { ascending: true, nullsFirst: false })
+                .order("created_at", { ascending: false })
+                .order("id", { ascending: true });
 
 
         if (resultado.error) {
@@ -529,7 +527,8 @@ async function cargarAlojamientosAdmin() {
 
         contenedor.innerHTML = "";
 
-
+        mostrarOrdenCatalogo(alojamientos, contenedor);
+        
         alojamientos.forEach(
             function(alojamiento) {
 
@@ -540,6 +539,7 @@ async function cargarAlojamientosAdmin() {
                 tarjeta.className =
                     "alojamiento-admin";
 
+                tarjeta.dataset.ordenId = String(alojamiento.id);
 
                 const estadoClase =
                     alojamiento.publicado
