@@ -12,10 +12,8 @@
 
 <title>Estancias Agradables</title>
 
-<link
-    rel="stylesheet"
-    href="estilos.css"
->
+<link rel="stylesheet" href="estilos.css">
+<link rel="stylesheet" href="redisenio.css">
 
 </head>
 
@@ -27,9 +25,7 @@
 
 <header class="encabezado">
 
-    <div class="logo">
-        <span>Estancias</span> Agradables
-    </div>
+    <a class="logo logo-oficial" href="#inicio" aria-label="Estancias Agradables, inicio"><img src="assets/logo-oficial.png" alt="Estancias Agradables"></a>
 
     <nav>
 
@@ -41,9 +37,8 @@
             Alojamientos
         </a>
 
-        <a href="#contacto">
-            Contacto
-        </a>
+        <a href="#contacto">Contacto</a>
+        <a class="nav-contacto" href="https://wa.me/50254134493" target="_blank" rel="noopener noreferrer">WhatsApp</a>
 
     </nav>
 
@@ -68,19 +63,18 @@
     <div class="portada-contenido">
 
         <h1>
-            Encuentra tu próxima estancia
+            Tu próxima estancia comienza aquí
         </h1>
 
         <p>
-            Alojamientos cómodos para disfrutar
-            de una estancia agradable.
+            Descubre alojamientos cómodos y acogedores en Puerto Barrios y Santo Tomás de Castilla.
         </p>
 
         <a
             href="#alojamientos"
             class="boton-principal"
         >
-            Ver alojamientos
+            Explorar alojamientos
         </a>
 
     </div>
@@ -93,6 +87,11 @@
 </section>
 
 
+<section class="beneficios" aria-label="Por qué elegir Estancias Agradables">
+ <div class="beneficio"><span class="beneficio-icono">⌂</span><div><strong>Estancias cómodas</strong><small>Espacios para sentirte como en casa</small></div></div>
+ <div class="beneficio"><span class="beneficio-icono">♧</span><div><strong>Ubicación conveniente</strong><small>Opciones en Puerto Barrios e Izabal</small></div></div>
+ <div class="beneficio"><span class="beneficio-icono">♡</span><div><strong>Atención cercana</strong><small>Estamos para ayudarte en tu estancia</small></div></div>
+ </section>
 <!-- ==========================================
      ALOJAMIENTOS
      ========================================== -->
@@ -102,12 +101,10 @@
     class="seccion"
 >
 
-    <h2>
-        Nuestros alojamientos
-    </h2>
+    <div class="seccion-cabecera"><span class="seccion-etiqueta">ENCUENTRA TU LUGAR IDEAL</span><h2>Nuestros alojamientos</h2></div>
 
     <p class="subtitulo">
-        Conoce nuestras opciones disponibles.
+        Explora nuestros espacios y elige el ideal para tu próxima visita.
     </p>
 
     <div
@@ -336,24 +333,157 @@
 </div>
 
 
+
+<!-- ==========================================
+     MÁS QUE UN ALOJAMIENTO, UNA EXPERIENCIA
+     ========================================== -->
+
+<section class="seccion-experiencia" id="nosotros">
+
+    <div class="experiencia-contenedor">
+
+        <div class="experiencia-intro">
+
+            <h2>
+                Más que un alojamiento,
+                <span>una experiencia</span>
+            </h2>
+
+            <p>
+                Disfruta la tranquilidad, el confort y la belleza
+                del Caribe en espacios pensados para tu descanso.
+            </p>
+
+            <a href="#contacto" class="experiencia-boton">
+                Conoce más sobre nosotros
+                <span aria-hidden="true">→</span>
+            </a>
+
+        </div>
+
+        
+
+<div class="experiencia-beneficios">
+
+    <!-- ESPACIOS CÓMODOS -->
+    <div class="experiencia-tarjeta">
+        <div class="experiencia-icono">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="10" width="18" height="9" rx="2"/>
+                <path d="M5 10V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/>
+                <path d="M3 15h18M5 19v2M19 19v2"/>
+            </svg>
+        </div>
+        <h3>Espacios cómodos</h3>
+        <p>Para parejas, familias y grupos</p>
+    </div>
+
+    <!-- CERCANÍA AL MAR -->
+    <div class="experiencia-tarjeta">
+        <div class="experiencia-icono">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21V10"/>
+                <path d="M12 11C9 6 5 6 2 9c4-1 7 1 10 2"/>
+                <path d="M12 11c3-5 7-5 10-2-4-1-7 1-10 2"/>
+                <path d="M12 10C10 5 11 3 14 2c0 4-1 6-2 8"/>
+                <path d="M12 10C14 5 17 4 20 5c-3 1-5 3-8 5"/>
+                <path d="M7 21h10"/>
+            </svg>
+        </div>
+        <h3>Cercanía al mar y naturaleza</h3>
+        <p>Vive la esencia del Caribe</p>
+    </div>
+
+    <!-- UBICACIÓN ESTRATÉGICA -->
+    <div class="experiencia-tarjeta">
+        <div class="experiencia-icono">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+            </svg>
+        </div>
+        <h3>Ubicación estratégica</h3>
+        <p>Puerto Barrios y Santo Tomás</p>
+    </div>
+
+    <!-- ATENCIÓN PERSONALIZADA -->
+    <div class="experiencia-tarjeta">
+        <div class="experiencia-icono">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>
+            </svg>
+        </div>
+        <h3>Atención personalizada</h3>
+        <p>Siempre a tu disposición</p>
+    </div>
+
+
+    </div>
+    <!-- Fin de experiencia-beneficios -->
+
+    </div>
+    <!-- Fin de experiencia-contenedor -->
+
+</section>
+<!-- Fin de seccion-experiencia -->
+
+
 <!-- ==========================================
      PIE DE PÁGINA
      ========================================== -->
 
 <footer id="contacto">
+    <h3>Estancias Agradables</h3>
 
-    <h3>
-        Estancias Agradables
-    </h3>
+    <p>Un lugar para disfrutar de una estancia agradable.</p>
 
-    <p>
-        Un lugar para disfrutar de una estancia agradable.
-    </p>
+    <nav class="ea-redes-contacto"
+         aria-label="Redes sociales de Estancias Agradables"
+         style="display: flex; justify-content: center; align-items: center;
+                flex-wrap: wrap; gap: 18px; margin: 12px 0;">
 
-    <p>
-        © 2026 Estancias Agradables
-    </p>
+        <a href="https://www.instagram.com/estanciasagradables/"
+           target="_blank" rel="noopener noreferrer"
+           style="display: inline-flex; flex-direction: row; align-items: center;
+                  gap: 6px; padding: 4px 0; border: 0; background: transparent;
+                  box-shadow: none; color: #fff; font-size: 14px;
+                  line-height: 1.2; text-decoration: none;">
+            <svg width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="#efc04a" stroke-width="1.8"
+                 style="display: block; width: 18px; height: 18px; flex: 0 0 18px;"
+                 aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.4" cy="6.7" r="1" fill="#efc04a" stroke="none"/>
+            </svg>
+            <span>Instagram</span>
+        </a>
 
+        <a href="https://www.tiktok.com/@estanciasagradables"
+           target="_blank" rel="noopener noreferrer"
+           style="display: inline-flex; flex-direction: row; align-items: center;
+                  gap: 6px; padding: 4px 0; border: 0; background: transparent;
+                  box-shadow: none; color: #fff; font-size: 14px;
+                  line-height: 1.2; text-decoration: none;">
+            <svg width="18" height="18" viewBox="0 0 24 24"
+                 fill="#efc04a"
+                 style="display: block; width: 18px; height: 18px; flex: 0 0 18px;"
+                 aria-hidden="true">
+                <path d="M16 3a5 5 0 0 0 5 5v3a8 8 0 0 1-5-1.8V16a6 6 0 1 1-6-6h1v3h-1a3 3 0 1 0 3 3V3z"/>
+            </svg>
+            <span>TikTok</span>
+        </a>
+    </nav>
+
+    <p>© 2026 Estancias Agradables</p>
 </footer>
 
 
@@ -366,6 +496,8 @@
 ></script>
 
 <script src="script.js"></script>
+
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
 
 </body>
 
