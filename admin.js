@@ -294,6 +294,168 @@ function cancelarFormulario() {
 // CARGAR ALOJAMIENTOS
 // ============================================================
 
+function mostrarOrdenCatalogo(alojamientos, contenedor) {
+    document.getElementById("ordenCatalogo")?.remove();
+
+    if (alojamientos.length < 2) return;
+
+    const panel = document.createElement("details");
+    panel.id = "ordenCatalogo";
+    panel.style.marginBottom = "16px";
+
+    panel.innerHTML = `
+        <summary style="cursor: pointer; font-weight: 600;">
+            Ordenar anuncios
+        </summary>
+        <p>Arrastra desde ⠿ o usa las flechas para mover un anuncio.</p>
+        <ol style="list-style: none; padding: 0;"></ol>
+        <button type="button" class="boton boton-principal" disabled>
+            Guardar orden
+        </button>
+        <p role="status"></p>
+    `;
+
+    const lista = panel.querySelector("ol");
+    const guardar = panel.querySelector("button");
+    const mensaje = panel.querySelector('[role="status"]');
+
+    const obtenerIds = () =>
+        Array.from(lista.children, fila => fila.dataset.id);
+
+    let ordenGuardado = alojamientos.map(alojamiento => String(alojamiento.id));
+    let filaArrastrada = null;
+
+    function actualizarControles() {
+        const filas = Array.from(lista.children);
+
+        filas.forEach((fila, indice) => {
+            fila.querySelector("[data-subir]").disabled = indice === 0;
+            fila.querySelector("[data-bajar]").disabled = indice === filas.length - 1;
+        });
+
+        const hayCambios = obtenerIds().some(
+            (id, indice) => id !== ordenGuardado[indice]
+        );
+
+        guardar.disabled = !hayCambios;
+        mensaje.textContent = hayCambios ? "Hay cambios sin guardar." : "";
+    }
+
+    for (const alojamiento of alojamientos) {
+        const fila = document.createElement("li");
+        fila.dataset.id = String(alojamiento.id);
+
+        fila.style.cssText = `
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px; border-bottom: 1px solid #dce8e6;
+        `;
+
+        fila.innerHTML = `
+            <span draggable="true" title="Arrastrar" aria-hidden="true"
+                  style="cursor: grab; font-size: 22px;">⠿</span>
+            <span data-nombre style="flex: 1;"></span>
+            <button type="button" data-subir>↑</button>
+            <button type="button" data-bajar>↓</button>
+        `;
+
+        fila.querySelector("[data-nombre]").textContent = alojamiento.nombre;
+
+        const agarrador = fila.querySelector("[draggable]");
+        const subir = fila.querySelector("[data-subir]");
+        const bajar = fila.querySelector("[data-bajar]");
+
+        subir.setAttribute("aria-label", "Subir " + alojamiento.nombre);
+        bajar.setAttribute("aria-label", "Bajar " + alojamiento.nombre);
+
+        agarrador.ondragstart = evento => {
+            filaArrastrada = fila;
+            evento.dataTransfer.effectAllowed = "move";
+            evento.dataTransfer.setData("text/plain", fila.dataset.id);
+        };
+
+        agarrador.ondragend = () => {
+            filaArrastrada = null;
+        };
+
+        fila.ondragover = evento => {
+            if (filaArrastrada) evento.preventDefault();
+        };
+
+        fila.ondrop = evento => {
+            if (!filaArrastrada) return;
+            evento.preventDefault();
+
+            if (filaArrastrada === fila) return;
+
+            const limite = fila.getBoundingClientRect();
+
+            if (evento.clientY < limite.top + limite.height / 2) {
+                fila.before(filaArrastrada);
+            } else {
+                fila.after(filaArrastrada);
+            }
+
+            filaArrastrada = null;
+            actualizarControles();
+        };
+
+        subir.onclick = () => {
+            fila.previousElementSibling?.before(fila);
+            actualizarControles();
+            (subir.disabled ? bajar : subir).focus();
+        };
+
+        bajar.onclick = () => {
+            fila.nextElementSibling?.after(fila);
+            actualizarControles();
+            (bajar.disabled ? subir : bajar).focus();
+        };
+
+        lista.appendChild(fila);
+    }
+
+    guardar.onclick = async () => {
+        const ids = obtenerIds();
+        guardar.disabled = true;
+        lista.inert = true;
+        mensaje.textContent = "Guardando orden…";
+
+        try {
+            const { error } = await clienteSupabase.rpc(
+                "guardar_orden_catalogo",
+                { ids }
+            );
+
+            if (error) throw error;
+
+            ordenGuardado = ids;
+
+            const tarjetasPorId = new Map(
+                Array.from(contenedor.children, tarjeta => [
+                    tarjeta.dataset.ordenId,
+                    tarjeta
+                ])
+            );
+
+            for (const id of ids) {
+                const tarjeta = tarjetasPorId.get(id);
+                if (tarjeta) contenedor.appendChild(tarjeta);
+            }
+
+            actualizarControles();
+            mensaje.textContent = "Orden guardado. Recarga la página pública para verlo.";
+        } catch (error) {
+            actualizarControles();
+            mensaje.textContent = "No se pudo guardar el orden. " + error.message;
+        } finally {
+            lista.inert = false;
+        }
+    };
+
+    actualizarControles();
+    contenedor.before(panel);
+}
+
 async function cargarAlojamientosAdmin() {
 
     const contenedor =
